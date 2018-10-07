@@ -1,0 +1,21 @@
+name: admin
+version: 0.1.0
+
+authors:
+  - Hengle Jiang <jianghengle@gmail.com>
+
+targets:
+  admin:
+    main: src/admin.cr
+
+crystal: 0.25.1
+
+license: MIT
+
+dependencies:
+  crecto-admin:
+    github: Crecto/crecto-admin
+    branch: master
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0
