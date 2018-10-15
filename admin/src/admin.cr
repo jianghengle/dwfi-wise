@@ -276,4 +276,4 @@ Kemal::Session.config do |config|
   config.secret = "my super secret"
 end
 
-Kemal.run 8080
+Kemal.run 3001
