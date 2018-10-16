@@ -51,24 +51,6 @@ module MyServer
         token = get_header!(ctx, "Authorization")
         User.get_user_by_token(token)
       end
-
-      private def json_array(arr)
-        result = String.build do |str|
-          first = true
-          str << "["
-          arr.each do |e|
-            if first
-              str << e
-              first = false
-            else
-              str << ","
-              str << e
-            end
-          end
-          str << "]"
-        end
-        result
-      end
     end
   end
 end

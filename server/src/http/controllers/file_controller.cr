@@ -11,10 +11,7 @@ module MyServer
           user = verify_token(ctx)
           items = MyFile.get_files
           arr = [] of String
-          items.each do |i|
-            arr << i.to_json
-          end
-          json_array(arr)
+          "[" + (items.join(", ") { |i| i.to_json }) + "]"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception

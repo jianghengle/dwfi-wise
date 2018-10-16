@@ -343,7 +343,7 @@
       <div class="field-body">
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" @click="submit">Submit</button>
+            <button class="button is-link" @click="create">Create</button>
           </div>
           <div class="control">
             <router-link class="button is-text" :to="'/table/programs'">Cancel</router-link>
@@ -359,7 +359,7 @@ import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'program',
+  name: 'new-program',
   components: {
     Datepicker
   },
@@ -396,23 +396,20 @@ export default {
   },
   methods: {
     requestResources () {
-      this.waiting = true
-      this.$http.get(xHTTPx + '/get_resources').then(response => {
-        var resp = response.body
-        this.allPeople = resp.people.map(function(p){
+      this.$http.get(xHTTPx + '/get_people').then(response => {
+        this.allPeople = response.body.map(function(p){
           return {id: p.id, label: p.firstName + ' ' + p.lastName + ' [' + p.id + ']'}
         })
-        this.allPublications = resp.publications.map(function(p){
+      })
+      this.$http.get(xHTTPx + '/get_publications').then(response => {
+        this.allPublications = response.body.map(function(p){
           return {id: p.id, label: p.title + ' [' + p.id + ']'}
         })
-        this.allFiles = resp.files.map(function(f){
+      })
+      this.$http.get(xHTTPx + '/get_files').then(response => {
+        this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
         })
-        this.waiting = false
-        this.error = ''
-      }, response => {
-        this.error = 'Failed to get resources!'
-        this.waiting = false
       })
     },
     startDateSelected (newDate) {
@@ -439,7 +436,7 @@ export default {
     removeFile (idx) {
       this.files.splice(idx, 1)
     },
-    submit () {
+    create () {
       var message = {
         title: this.title,
         description: this.description,
@@ -455,11 +452,18 @@ export default {
         pointOfContact: this.pointOfContact,
         website: this.website,
         isPublished: this.isPublished == 'Yes',
-        people: this.people,
-        publications: this.publications,
-        files: this.files
+        people: JSON.stringify(this.people),
+        publications: JSON.stringify(this.publications),
+        files: JSON.stringify(this.files)
       }
-      console.log(message)
+      this.$http.post(xHTTPx + '/create_program', message).then(response => {
+        var resp = response.body
+        this.waiting = false
+        this.error = ''
+      }, response => {
+        this.error = 'Failed to create program!'
+        this.waiting = false
+      })
     }
   },
   mounted () {

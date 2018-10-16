@@ -35,9 +35,7 @@ module MyServer
           str << "\"moreInformation\":" << @more_information.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
           str << "\"website\":" << @website.to_json << ","
-          str << "\"isPublished\":" << @is_published.to_json << ","
-          str << "\"createdAt\":" << @created_at.as(Time).epoch << ","
-          str << "\"updatedAt\":" << @updated_at.as(Time).epoch
+          str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
         result
@@ -47,6 +45,45 @@ module MyServer
         items = Repo.all(Program)
         return items.as(Array) unless items.nil?
         [] of Program
+      end
+
+      def self.get_program(id)
+        Repo.get(Program, id)
+      end
+
+      def self.create_program(program, people, publications, files)
+        changeset = Repo.insert(program)
+        raise changeset.errors.to_s unless changeset.valid?
+        program_id = nil.as(Int64?)
+        changeset.changes.each do |change|
+          if (change.has_key?(:id))
+            program_id = change[:id].as(Int64)
+          end
+        end
+        raise "cannot get new id!" if program_id.nil?
+
+        PeopleRelation.create_relations(people, "programs", program_id)
+        PublicationRelation.create_relations(publications, "programs", program_id)
+        FileRelation.create_relations(files, "programs", program_id)
+      end
+
+      def self.update_program(program, people, publications, files)
+        changeset = Repo.update(program)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        PeopleRelation.update_relations(people, "programs", program.id)
+        PublicationRelation.update_relations(publications, "programs", program.id)
+        FileRelation.update_relations(files, "programs", program.id)
+      end
+
+      def self.delete_program(program_id)
+        PeopleRelation.delete_relations("programs", program_id)
+        PublicationRelation.delete_relations("programs", program_id)
+        FileRelation.delete_relations("programs", program_id)
+
+        program = Repo.get!(Program, program_id)
+        changeset = Repo.delete(program)
+        raise changeset.errors.to_s unless changeset.valid?
       end
     end
   end

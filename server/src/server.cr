@@ -38,6 +38,22 @@ module MyServer
         HttpAPI::ProgramController.get_programs(env)
       end
 
+      get "/get_program/:id" do |env|
+        HttpAPI::ProgramController.get_program(env)
+      end
+
+      post "/create_program" do |env|
+        HttpAPI::ProgramController.create_program(env)
+      end
+
+      post "/update_program/:id" do |env|
+        HttpAPI::ProgramController.update_program(env)
+      end
+
+      post "/delete_program" do |env|
+        HttpAPI::ProgramController.delete_program(env)
+      end
+
       get "/get_projects" do |env|
         HttpAPI::ProjectController.get_projects(env)
       end
@@ -60,10 +76,6 @@ module MyServer
 
       get "/get_files" do |env|
         HttpAPI::FileController.get_files(env)
-      end
-
-      get "/get_resources" do |env|
-        HttpAPI::ResourceController.get_resources(env)
       end
 
       Kemal.run

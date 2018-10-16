@@ -37,9 +37,7 @@ module MyServer
           str << "\"collaborators\":" << @collaborators.to_json << ","
           str << "\"moreInformation\":" << @more_information.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
-          str << "\"isPublished\":" << @is_published.to_json << ","
-          str << "\"createdAt\":" << @created_at.as(Time).epoch << ","
-          str << "\"updatedAt\":" << @updated_at.as(Time).epoch
+          str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
         result

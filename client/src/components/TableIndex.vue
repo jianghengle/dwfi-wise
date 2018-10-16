@@ -48,7 +48,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in processedItems">
+            <tr v-for="(item, i) in processedItems" @click="showItem(item)" class="clickable">
               <td v-for="col in columns">
                 {{item[col.name]}}
               </td>
@@ -102,7 +102,7 @@ export default {
       var items = this.items.map(function(item){
         var obj = {}
         vm.columns.forEach(function(column){
-          if(column.type == 'time'){
+          if(column.type == 'time' && item[column.name]){
             obj[column.name] = DateForm(item[column.name]*1000, 'mmm dd yyyy')
           }else{
             obj[column.name] = item[column.name]
@@ -160,6 +160,9 @@ export default {
     },
     sortItems (index) {
       this.$store.commit('table/setSort', {table: this.tableName, sort: index})
+    },
+    showItem (item) {
+      this.$router.push('/' + this.tableName + '/' + item.id)
     }
   },
   mounted () {
