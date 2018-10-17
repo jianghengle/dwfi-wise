@@ -688,10 +688,10 @@ export default {
       var title = 'Delete Visiting Scholar'
       var message = 'Are you sure to delete the visiting scholar?'
       var confirmButton = 'Yes, delete it.'
-      var context = {callback: this.deleteQuestionConfirmed}
+      var context = {callback: this.deleteConfirmed}
       this.openConfirmModal(title, message, confirmButton, context)
     },
-    deleteQuestionConfirmed () {
+    deleteConfirmed () {
       var message = {visitingScholarId: this.visitingScholarId}
       this.$http.post(xHTTPx + '/delete_visiting_scholar', message).then(response => {
         if(response.body.ok){

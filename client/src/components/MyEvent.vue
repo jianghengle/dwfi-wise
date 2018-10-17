@@ -673,10 +673,10 @@ export default {
       var title = 'Delete Event'
       var message = 'Are you sure to delete the event?'
       var confirmButton = 'Yes, delete it.'
-      var context = {callback: this.deleteQuestionConfirmed}
+      var context = {callback: this.deleteConfirmed}
       this.openConfirmModal(title, message, confirmButton, context)
     },
-    deleteQuestionConfirmed () {
+    deleteConfirmed () {
       var message = {eventId: this.eventId}
       this.$http.post(xHTTPx + '/delete_event', message).then(response => {
         if(response.body.ok){

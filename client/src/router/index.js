@@ -10,6 +10,10 @@ import MyEvent from '@/components/MyEvent'
 import NewEvent from '@/components/NewEvent'
 import VisitingScholar from '@/components/VisitingScholar'
 import NewVisitingScholar from '@/components/NewVisitingScholar'
+import People from '@/components/People'
+import NewPeople from '@/components/NewPeople'
+import Publication from '@/components/Publication'
+import NewPublication from '@/components/NewPublication'
 
 Vue.use(Router)
 
@@ -68,6 +72,26 @@ export default new Router({
       path: '/visiting_scholars/:id',
       name: 'VisitingScholar',
       component: VisitingScholar
+    },
+    {
+      path: '/new/people',
+      name: 'NewPeople',
+      component: NewPeople
+    },
+    {
+      path: '/people/:id',
+      name: 'People',
+      component: People
+    },
+    {
+      path: '/new/publications',
+      name: 'NewPublication',
+      component: NewPublication
+    },
+    {
+      path: '/publications/:id',
+      name: 'Publication',
+      component: Publication
     },
   ]
 })

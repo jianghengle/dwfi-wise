@@ -19,9 +19,7 @@ module MyServer
           str << "\"abstract\":" << @abstract.to_json << ","
           str << "\"url\":" << @url.to_json << ","
           str << "\"status\":" << @status.to_json << ","
-          str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
-          str << "\"createdAt\":" << @created_at.as(Time).epoch << ","
-          str << "\"updatedAt\":" << @updated_at.as(Time).epoch
+          str << "\"pointOfContact\":" << @point_of_contact.to_json
           str << "}"
         end
         result
@@ -31,6 +29,40 @@ module MyServer
         items = Repo.all(Publication)
         return items.as(Array) unless items.nil?
         [] of Publication
+      end
+
+      def self.get_publication(id)
+        Repo.get(Publication, id)
+      end
+
+      def self.create_publication(publication, files)
+        changeset = Repo.insert(publication)
+        raise changeset.errors.to_s unless changeset.valid?
+        publication_id = nil.as(Int64?)
+        changeset.changes.each do |change|
+          if (change.has_key?(:id))
+            publication_id = change[:id].as(Int64)
+          end
+        end
+        raise "cannot get new id!" if publication_id.nil?
+
+        FileRelation.create_relations(files, "publications", publication_id)
+      end
+
+      def self.update_publication(publication, files)
+        changeset = Repo.update(publication)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        FileRelation.update_relations(files, "publications", publication.id)
+      end
+
+      def self.delete_publication(publication_id)
+        FileRelation.delete_relations("publications", publication_id)
+        PublicationRelation.delete_publication_relations(publication_id)
+
+        publication = Repo.get!(Publication, publication_id)
+        changeset = Repo.delete(publication)
+        raise changeset.errors.to_s unless changeset.valid?
       end
     end
 
@@ -93,6 +125,12 @@ module MyServer
       def self.delete_relations(for_table, for_id)
         query = Crecto::Repo::Query.new
         query.where(for_table: for_table).where(for_id: for_id)
+        Repo.delete_all(PublicationRelation, query)
+      end
+
+      def self.delete_publication_relations(publication_id)
+        query = Crecto::Repo::Query.new
+        query.where(publication_id: publication_id)
         Repo.delete_all(PublicationRelation, query)
       end
     end

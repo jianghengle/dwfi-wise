@@ -673,10 +673,10 @@ export default {
       var title = 'Delete Program'
       var message = 'Are you sure to delete the program?'
       var confirmButton = 'Yes, delete it.'
-      var context = {callback: this.deleteQuestionConfirmed}
+      var context = {callback: this.deleteConfirmed}
       this.openConfirmModal(title, message, confirmButton, context)
     },
-    deleteQuestionConfirmed () {
+    deleteConfirmed () {
       var message = {programId: this.programId}
       this.$http.post(xHTTPx + '/delete_program', message).then(response => {
         if(response.body.ok){

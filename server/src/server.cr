@@ -118,8 +118,40 @@ module MyServer
         HttpAPI::PeopleController.get_people(env)
       end
 
+      get "/get_one_people/:id" do |env|
+        HttpAPI::PeopleController.get_one_people(env)
+      end
+
+      post "/create_people" do |env|
+        HttpAPI::PeopleController.create_people(env)
+      end
+
+      post "/update_people/:id" do |env|
+        HttpAPI::PeopleController.update_people(env)
+      end
+
+      post "/delete_people" do |env|
+        HttpAPI::PeopleController.delete_people(env)
+      end
+
       get "/get_publications" do |env|
         HttpAPI::PublicationController.get_publications(env)
+      end
+
+      get "/get_publication/:id" do |env|
+        HttpAPI::PublicationController.get_publication(env)
+      end
+
+      post "/create_publication" do |env|
+        HttpAPI::PublicationController.create_publication(env)
+      end
+
+      post "/update_publication/:id" do |env|
+        HttpAPI::PublicationController.update_publication(env)
+      end
+
+      post "/delete_publication" do |env|
+        HttpAPI::PublicationController.delete_publication(env)
       end
 
       get "/get_files" do |env|

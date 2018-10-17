@@ -35,6 +35,40 @@ module MyServer
         return items.as(Array) unless items.nil?
         [] of People
       end
+
+      def self.get_one_people(id)
+        Repo.get(People, id)
+      end
+
+      def self.create_people(people, files)
+        changeset = Repo.insert(people)
+        raise changeset.errors.to_s unless changeset.valid?
+        people_id = nil.as(Int64?)
+        changeset.changes.each do |change|
+          if (change.has_key?(:id))
+            people_id = change[:id].as(Int64)
+          end
+        end
+        raise "cannot get new id!" if people_id.nil?
+
+        FileRelation.create_relations(files, "people", people_id)
+      end
+
+      def self.update_people(people, files)
+        changeset = Repo.update(people)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        FileRelation.update_relations(files, "people", people.id)
+      end
+
+      def self.delete_people(people_id)
+        FileRelation.delete_relations("people", people_id)
+        PeopleRelation.delete_people_relations(people_id)
+
+        people = Repo.get!(People, people_id)
+        changeset = Repo.delete(people)
+        raise changeset.errors.to_s unless changeset.valid?
+      end
     end
 
     class PeopleRelation < Crecto::Model
@@ -96,6 +130,12 @@ module MyServer
       def self.delete_relations(for_table, for_id)
         query = Crecto::Repo::Query.new
         query.where(for_table: for_table).where(for_id: for_id)
+        Repo.delete_all(PeopleRelation, query)
+      end
+
+      def self.delete_people_relations(people_id)
+        query = Crecto::Repo::Query.new
+        query.where(people_id: people_id)
         Repo.delete_all(PeopleRelation, query)
       end
     end

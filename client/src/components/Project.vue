@@ -702,10 +702,10 @@ export default {
       var title = 'Delete Project'
       var message = 'Are you sure to delete the project?'
       var confirmButton = 'Yes, delete it.'
-      var context = {callback: this.deleteQuestionConfirmed}
+      var context = {callback: this.deleteConfirmed}
       this.openConfirmModal(title, message, confirmButton, context)
     },
-    deleteQuestionConfirmed () {
+    deleteConfirmed () {
       var message = {projectId: this.projectId}
       this.$http.post(xHTTPx + '/delete_project', message).then(response => {
         if(response.body.ok){

@@ -13,9 +13,7 @@ module MyServer
           str << "\"id\":" << @id << ","
           str << "\"name\":" << @name.to_json << ","
           str << "\"fileType\":" << @file_type.to_json << ","
-          str << "\"url\":" << @url.to_json << ","
-          str << "\"createdAt\":" << @created_at.as(Time).epoch << ","
-          str << "\"updatedAt\":" << @updated_at.as(Time).epoch
+          str << "\"url\":" << @url.to_json
           str << "}"
         end
         result
