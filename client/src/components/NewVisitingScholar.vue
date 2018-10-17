@@ -1,17 +1,43 @@
 <template>
   <div>
     <h4 class="title is-4">
-      New Program
+      New Visiting Scholar
     </h4>
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Title</label>
+        <label class="label">First Name</label>
       </div>
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="title">
+            <input class="input" type="text" v-model="firstName">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Last Name</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="lastName">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Research Topic</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="researchTopic">
           </div>
         </div>
       </div>
@@ -77,9 +103,7 @@
               <select v-model="status">
                 <option>Pending</option>
                 <option>In progress</option>
-                <option>On-going</option>
-                <option>On hold</option>
-                <option>Other</option>
+                <option>Completed</option>
                 <option>Unknown - refer to point of contact</option>
               </select>
             </div>
@@ -267,19 +291,6 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Website</label>
-      </div>
-      <div class="field-body">
-        <div class="field">
-          <div class="control">
-            <input class="input" type="text" v-model="website">
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="field is-horizontal item-row" v-for="(f, i) in files">
       <div class="field-label is-normal">
         <label class="label" v-if="i==0">Files</label>
@@ -346,7 +357,7 @@
             <button class="button is-link" @click="create">Create</button>
           </div>
           <div class="control">
-            <router-link class="button is-text" :to="'/table/programs'">Cancel</router-link>
+            <router-link class="button is-text" :to="'/table/visiting_scholars'">Cancel</router-link>
           </div>
         </div>
       </div>
@@ -359,7 +370,7 @@ import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'new-program',
+  name: 'new-visiting-scholar',
   components: {
     Datepicker
   },
@@ -370,7 +381,9 @@ export default {
       allPeople: [],
       allPublications: [],
       allFiles: [],
-      title: '',
+      firstName: '',
+      lastName: '',
+      researchTopic: '',
       description: '',
       people: [],
       status: '',
@@ -384,7 +397,6 @@ export default {
       moreInformation: '',
       publications: [],
       pointOfContact: '',
-      website: '',
       files: [],
       isPublished: 'No'
     }
@@ -438,7 +450,9 @@ export default {
     },
     create () {
       var message = {
-        title: this.title,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        researchTopic: this.researchTopic,
         description: this.description,
         status: this.status,
         country: this.country,
@@ -450,19 +464,18 @@ export default {
         collaborators: this.collaborators,
         moreInformation: this.moreInformation,
         pointOfContact: this.pointOfContact,
-        website: this.website,
         isPublished: this.isPublished == 'Yes',
         people: JSON.stringify(this.people),
         publications: JSON.stringify(this.publications),
         files: JSON.stringify(this.files)
       }
-      this.$http.post(xHTTPx + '/create_program', message).then(response => {
+      this.$http.post(xHTTPx + '/create_visiting_scholar', message).then(response => {
         var resp = response.body
         this.waiting = false
         this.error = ''
-        this.$router.push('/table/programs')
+        this.$router.push('/table/visiting_scholars')
       }, response => {
-        this.error = 'Failed to create program!'
+        this.error = 'Failed to create visiting_scholar!'
         this.waiting = false
       })
     },

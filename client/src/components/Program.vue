@@ -521,14 +521,6 @@ export default {
       return changed
     }
   },
-   watch: {
-    people: function (val) {
-      
-    },
-    changed: function (val) {
-      
-    },
-  },
   methods: {
     collectProgram () {
       return {

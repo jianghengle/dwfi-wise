@@ -58,12 +58,60 @@ module MyServer
         HttpAPI::ProjectController.get_projects(env)
       end
 
+      get "/get_project/:id" do |env|
+        HttpAPI::ProjectController.get_project(env)
+      end
+
+      post "/create_project" do |env|
+        HttpAPI::ProjectController.create_project(env)
+      end
+
+      post "/update_project/:id" do |env|
+        HttpAPI::ProjectController.update_project(env)
+      end
+
+      post "/delete_project" do |env|
+        HttpAPI::ProjectController.delete_project(env)
+      end
+
       get "/get_events" do |env|
         HttpAPI::EventController.get_events(env)
       end
 
+      get "/get_event/:id" do |env|
+        HttpAPI::EventController.get_event(env)
+      end
+
+      post "/create_event" do |env|
+        HttpAPI::EventController.create_event(env)
+      end
+
+      post "/update_event/:id" do |env|
+        HttpAPI::EventController.update_event(env)
+      end
+
+      post "/delete_event" do |env|
+        HttpAPI::EventController.delete_event(env)
+      end
+
       get "/get_visiting_scholars" do |env|
         HttpAPI::VisitingScholarController.get_visiting_scholars(env)
+      end
+
+      get "/get_visiting_scholar/:id" do |env|
+        HttpAPI::VisitingScholarController.get_visiting_scholar(env)
+      end
+
+      post "/create_visiting_scholar" do |env|
+        HttpAPI::VisitingScholarController.create_visiting_scholar(env)
+      end
+
+      post "/update_visiting_scholar/:id" do |env|
+        HttpAPI::VisitingScholarController.update_visiting_scholar(env)
+      end
+
+      post "/delete_visiting_scholar" do |env|
+        HttpAPI::VisitingScholarController.delete_visiting_scholar(env)
       end
 
       get "/get_people" do |env|

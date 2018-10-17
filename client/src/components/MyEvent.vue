@@ -1,8 +1,17 @@
 <template>
   <div>
     <h4 class="title is-4">
-      New Program
+      Event {{eventId}}
     </h4>
+
+    <div class="has-text-centered" v-if="waiting">
+      <icon name="spinner" class="icon is-medium fa-spin"></icon>
+    </div>
+
+    <div v-if="error" class="notification is-danger">
+      <button class="delete" @click="error=''"></button>
+      {{error}}
+    </div>
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
@@ -30,9 +39,9 @@
       </div>
     </div>
 
-    <div class="field is-horizontal item-row" v-for="(p, i) in people">
+    <div class="field is-horizontal item-row" v-for="(p, i) in people" v-if="p.people_id">
       <div class="field-label is-normal">
-        <label class="label" v-if="i==0">People</label>
+        <label class="label" v-if="i==firstPeople">People</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -55,7 +64,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label">
-        <label class="label" v-if="!people.length">People</label>
+        <label class="label" v-if="firstPeople >= people.length">People</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -218,9 +227,9 @@
       </div>
     </div>
 
-    <div class="field is-horizontal item-row" v-for="(p, i) in publications">
+    <div class="field is-horizontal item-row" v-for="(p, i) in publications" v-if="p.publication_id">
       <div class="field-label is-normal">
-        <label class="label" v-if="i==0">Publications</label>
+        <label class="label" v-if="i==firstPublication">Publications</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -243,7 +252,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label">
-        <label class="label" v-if="!publications.length">Publications</label>
+        <label class="label" v-if="firstPublication >= publications.length">Publications</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -280,9 +289,9 @@
       </div>
     </div>
 
-    <div class="field is-horizontal item-row" v-for="(f, i) in files">
+    <div class="field is-horizontal item-row" v-for="(f, i) in files" v-if="f.file_id">
       <div class="field-label is-normal">
-        <label class="label" v-if="i==0">Files</label>
+        <label class="label" v-if="i==firstFile">Files</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -305,7 +314,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label">
-        <label class="label" v-if="!files.length">Files</label>
+        <label class="label" v-if="firstFile >= files.length">Files</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -336,6 +345,16 @@
       </div>
     </div>
 
+    <div v-if="error" class="notification is-danger">
+      <button class="delete" @click="error=''"></button>
+      {{error}}
+    </div>
+
+    <div v-if="success" class="notification is-success">
+      <button class="delete" @click="success=''"></button>
+      {{success}}
+    </div>
+
     <div class="field is-horizontal">
       <div class="field-label">
         <!-- Left empty for spacing -->
@@ -343,30 +362,48 @@
       <div class="field-body">
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" @click="create">Create</button>
+            <button class="button is-link" @click="update" :disabled="!changed" :class="{'is-loading': waiting}">Update</button>
           </div>
           <div class="control">
-            <router-link class="button is-text" :to="'/table/programs'">Cancel</router-link>
+            <button class="button is-danger" @click="deleteSelf" :disabled="changed" :class="{'is-loading': waiting}">Delete</button>
+          </div>
+          <div class="control">
+            <router-link class="button is-text" :to="'/table/events'">Cancel</router-link>
           </div>
         </div>
       </div>
     </div>
+
+    <confirm-modal
+      :opened="confirmModal.opened"
+      :title="confirmModal.title"
+      :message="confirmModal.message"
+      :confirm-button="confirmModal.confirmButton"
+      @close-confirm-modal="closeConfirmModal">
+    </confirm-modal>
   </div>
 </template>
 
 <script>
 import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
+import ConfirmModal from './modals/ConfirmModal'
 
 export default {
-  name: 'new-program',
+  name: 'my-event',
   components: {
-    Datepicker
+    Datepicker,
+    ConfirmModal
   },
   data () {
     return {
       waiting: false,
       error: '',
+      success: '',
+      oldEvent: null,
+      oldPeople: null,
+      oldPublications: null,
+      oldFiles: null,
       allPeople: [],
       allPublications: [],
       allFiles: [],
@@ -386,15 +423,164 @@ export default {
       pointOfContact: '',
       website: '',
       files: [],
-      isPublished: 'No'
+      isPublished: 'No',
+      confirmModal: {
+        opened: false,
+        message: '',
+        button: '',
+        context: null
+      },
     }
   },
   computed: {
+    eventId () {
+      return this.$route.params.id
+    },
     countries () {
       return this.$store.state.table.countries
+    },
+    firstPeople () {
+      var i = 0
+      while(i < this.people.length && (!this.people[i].people_id))
+        i++
+      return i
+    },
+    firstPublication () {
+      var i = 0
+      while(i < this.publications.length && (!this.publications[i].publication_id))
+        i++
+      return i
+    },
+    firstFile () {
+      var i = 0
+      while(i < this.files.length && (!this.files[i].file_id))
+        i++
+      return i
+    },
+    changed () {
+      var event = this.collectEvent()
+      if(JSON.stringify(event) != JSON.stringify(this.oldEvent))
+        return true
+      if(JSON.stringify(this.people) != JSON.stringify(this.oldPeople))
+        return true
+      if(JSON.stringify(this.publications) != JSON.stringify(this.oldPublications))
+        return true
+      if(JSON.stringify(this.files) != JSON.stringify(this.oldFiles))
+        return true
+      return false
+    },
+    changedPeople () {
+      var changed = []
+      for(var i=0;i<this.people.length;i++){
+        var p = this.people[i]
+        if(!p.people_id){
+          changed.push(p)
+        }else if(p.id){
+          var old = this.oldPeople[i]
+          if(p.people_id != old.people_id || p.role != old.role){
+            changed.push(p)
+          }
+        }else{
+          changed.push(p)
+        }
+      }
+      return changed
+    },
+    changedPublications () {
+      var changed = []
+      for(var i=0;i<this.publications.length;i++){
+        var p = this.publications[i]
+        if(!p.publication_id){
+          changed.push(p)
+        }else if(p.id){
+          var old = this.oldPublications[i]
+          if(p.publication_id != old.publication_id || p.comment != old.comment){
+            changed.push(p)
+          }
+        }else{
+          changed.push(p)
+        }
+      }
+      return changed
+    },
+    changedFiles () {
+      var changed = []
+      for(var i=0;i<this.files.length;i++){
+        var f = this.files[i]
+        if(!f.file_id){
+          changed.push(f)
+        }else if(f.id){
+          var old = this.oldFiles[i]
+          if(f.file_id != old.file_id || f.comment != old.comment){
+            changed.push(f)
+          }
+        }else{
+          changed.push(f)
+        }
+      }
+      return changed
     }
   },
   methods: {
+    collectEvent () {
+      return {
+        title: this.title,
+        description: this.description,
+        status: this.status,
+        country: this.country,
+        state: this.state,
+        focusArea: this.focusArea,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        funding: this.funding,
+        collaborators: this.collaborators,
+        moreInformation: this.moreInformation,
+        pointOfContact: this.pointOfContact,
+        website: this.website,
+        isPublished: this.isPublished
+      }
+    },
+    getEvent () {
+      this.waiting = true
+      this.$http.get(xHTTPx + '/get_event/' + this.eventId).then(response => {
+        var resp = response.body
+        this.title = resp[0].title
+        this.description = resp[0].description
+        this.status = resp[0].status
+        this.country = resp[0].country
+        this.state = resp[0].state
+        this.focusArea = resp[0].focusArea
+        this.startDate = resp[0].startDate? (new Date(resp[0].startDate*1000)) : null
+        this.endDate = resp[0].endDate? (new Date(resp[0].endDate*1000)) : null
+        this.funding = resp[0].funding
+        this.collaborators = resp[0].collaborators
+        this.moreInformation = resp[0].moreInformation
+        this.pointOfContact = resp[0].pointOfContact
+        this.website = resp[0].website
+        this.isPublished = resp[0].isPublished ? "Yes" : "No"
+        this.oldEvent = this.collectEvent()
+        this.people = resp[1].map(function(p){
+          return {id: p.id, people_id: p.peopleId, role: p.role}
+        })
+        this.oldPeople = JSON.parse(JSON.stringify(this.people))
+        this.publications = resp[2].map(function(p){
+          return {id: p.id, publication_id: p.publicationId, comment: p.comment}
+        })
+        this.oldPublications = JSON.parse(JSON.stringify(this.publications))
+        this.files = resp[3].map(function(f){
+          return {id: f.id, file_id: f.fileId, comment: f.comment}
+        })
+        this.oldFiles = JSON.parse(JSON.stringify(this.files))
+        this.waiting = false
+        this.error = ''
+        this.$nextTick(() => {
+          this.descriptionChanged()
+        })
+      }, response => {
+        this.error = 'Failed to get event!'
+        this.waiting = false
+      })
+    },
     requestResources () {
       this.$http.get(xHTTPx + '/get_people').then(response => {
         this.allPeople = response.body.map(function(p){
@@ -419,24 +605,42 @@ export default {
       this.endDate = newDate
     },
     addPeople () {
-      this.people.push({people_id: (this.allPeople.length ? this.allPeople[0].id : null), role: ''})
+      if(this.allPeople.length){
+        this.people.push({people_id: this.allPeople[0].id, role: ''})
+      }
     },
     removePeople (idx) {
-      this.people.splice(idx, 1)
+      if(this.people[idx].id){
+        this.people[idx].people_id = null
+      }else{
+        this.people.splice(idx, 1)
+      }
     },
     addPublication () {
-      this.publications.push({publication_id: (this.allPublications.length ? this.allPublications[0].id : null), comment: ''})
+      if(this.allPublications.length){
+        this.publications.push({publication_id: this.allPublications[0].id, comment: ''})
+      }
     },
     removePublication (idx) {
-      this.publications.splice(idx, 1)
+      if(this.publications[idx].id){
+        this.publications[idx].publication_id = null
+      }else{
+        this.publications.splice(idx, 1)
+      }
     },
     addFile () {
-      this.files.push({file_id: (this.allFiles.length ? this.allFiles[0].id : null), comment: ''})
+      if(this.allFiles.length){
+        this.files.push({file_id: this.allFiles[0].id, comment: ''})
+      }
     },
     removeFile (idx) {
-      this.files.splice(idx, 1)
+      if(this.files[idx].id){
+        this.files[idx].file_id = null
+      }else{
+        this.files.splice(idx, 1)
+      }
     },
-    create () {
+    update () {
       var message = {
         title: this.title,
         description: this.description,
@@ -452,19 +656,56 @@ export default {
         pointOfContact: this.pointOfContact,
         website: this.website,
         isPublished: this.isPublished == 'Yes',
-        people: JSON.stringify(this.people),
-        publications: JSON.stringify(this.publications),
-        files: JSON.stringify(this.files)
+        people: JSON.stringify(this.changedPeople),
+        publications: JSON.stringify(this.changedPublications),
+        files: JSON.stringify(this.changedFiles)
       }
-      this.$http.post(xHTTPx + '/create_program', message).then(response => {
+      this.$http.post(xHTTPx + '/update_event/' + this.eventId, message).then(response => {
         var resp = response.body
-        this.waiting = false
-        this.error = ''
-        this.$router.push('/table/programs')
+        this.success = 'Data updated successfully!'
+        this.getEvent()
       }, response => {
-        this.error = 'Failed to create program!'
+        this.error = 'Failed to update event!'
         this.waiting = false
       })
+    },
+    deleteSelf () {
+      var title = 'Delete Event'
+      var message = 'Are you sure to delete the event?'
+      var confirmButton = 'Yes, delete it.'
+      var context = {callback: this.deleteQuestionConfirmed}
+      this.openConfirmModal(title, message, confirmButton, context)
+    },
+    deleteQuestionConfirmed () {
+      var message = {eventId: this.eventId}
+      this.$http.post(xHTTPx + '/delete_event', message).then(response => {
+        if(response.body.ok){
+          this.$router.replace('/table/events')
+        }
+      }, response => {
+        this.error = 'Failed to delete event!'
+        this.waiting = false
+      })
+    },
+    openConfirmModal (title, message, confirmButton, context) {
+      this.confirmModal.title = title
+      this.confirmModal.message = message
+      this.confirmModal.confirmButton = confirmButton
+      this.confirmModal.context = context
+      this.confirmModal.opened = true
+    },
+    closeConfirmModal (result) {
+      this.confirmModal.title = ''
+      this.confirmModal.message = ''
+      this.confirmModal.confirmButton = ''
+      this.confirmModal.opened = false
+      if(result && this.confirmModal.context){
+        var context = this.confirmModal.context
+        if(context.callback){
+          context.callback.apply(this, context.args)
+        }
+      }
+      this.confirmModal.context = null
     },
     descriptionChanged () {
       var el = document.getElementById('textarea-description');
@@ -473,6 +714,7 @@ export default {
     }
   },
   mounted () {
+    this.getEvent()
     this.requestResources()
   }
 }

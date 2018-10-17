@@ -81,6 +81,8 @@ module MyServer
         PublicationRelation.delete_relations("programs", program_id)
         FileRelation.delete_relations("programs", program_id)
 
+        Project.null_project_program(program_id)
+
         program = Repo.get!(Program, program_id)
         changeset = Repo.delete(program)
         raise changeset.errors.to_s unless changeset.valid?

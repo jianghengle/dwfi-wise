@@ -48,6 +48,45 @@ module MyServer
         return items.as(Array) unless items.nil?
         [] of VisitingScholar
       end
+
+      def self.get_visiting_scholar(id)
+        Repo.get(VisitingScholar, id)
+      end
+
+      def self.create_visiting_scholar(visiting_scholar, people, publications, files)
+        changeset = Repo.insert(visiting_scholar)
+        raise changeset.errors.to_s unless changeset.valid?
+        visiting_scholar_id = nil.as(Int64?)
+        changeset.changes.each do |change|
+          if (change.has_key?(:id))
+            visiting_scholar_id = change[:id].as(Int64)
+          end
+        end
+        raise "cannot get new id!" if visiting_scholar_id.nil?
+
+        PeopleRelation.create_relations(people, "visiting_scholars", visiting_scholar_id)
+        PublicationRelation.create_relations(publications, "visiting_scholars", visiting_scholar_id)
+        FileRelation.create_relations(files, "visiting_scholars", visiting_scholar_id)
+      end
+
+      def self.update_visiting_scholar(visiting_scholar, people, publications, files)
+        changeset = Repo.update(visiting_scholar)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        PeopleRelation.update_relations(people, "visiting_scholars", visiting_scholar.id)
+        PublicationRelation.update_relations(publications, "visiting_scholars", visiting_scholar.id)
+        FileRelation.update_relations(files, "visiting_scholars", visiting_scholar.id)
+      end
+
+      def self.delete_visiting_scholar(visiting_scholar_id)
+        PeopleRelation.delete_relations("visiting_scholars", visiting_scholar_id)
+        PublicationRelation.delete_relations("visiting_scholars", visiting_scholar_id)
+        FileRelation.delete_relations("visiting_scholars", visiting_scholar_id)
+
+        visiting_scholar = Repo.get!(VisitingScholar, visiting_scholar_id)
+        changeset = Repo.delete(visiting_scholar)
+        raise changeset.errors.to_s unless changeset.valid?
+      end
     end
   end
 end

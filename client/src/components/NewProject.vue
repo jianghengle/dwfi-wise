@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="title is-4">
-      New Program
+      New Project
     </h4>
 
     <div class="field is-horizontal">
@@ -79,6 +79,7 @@
                 <option>In progress</option>
                 <option>On-going</option>
                 <option>On hold</option>
+                <option>Completed</option>
                 <option>Other</option>
                 <option>Unknown - refer to point of contact</option>
               </select>
@@ -134,6 +135,23 @@
                 <option>[FA5] Management of Agricultural Drought</option>
                 <option>Education & Engagement Projects & Programs</option>
                 <option>Communications</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Program</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="programId">
+                <option v-for="opt in allPrograms" v-bind:value="opt.id">{{opt.label}}</option>
               </select>
             </div>
           </div>
@@ -346,7 +364,7 @@
             <button class="button is-link" @click="create">Create</button>
           </div>
           <div class="control">
-            <router-link class="button is-text" :to="'/table/programs'">Cancel</router-link>
+            <router-link class="button is-text" :to="'/table/projects'">Cancel</router-link>
           </div>
         </div>
       </div>
@@ -359,7 +377,7 @@ import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'new-program',
+  name: 'new-project',
   components: {
     Datepicker
   },
@@ -370,6 +388,7 @@ export default {
       allPeople: [],
       allPublications: [],
       allFiles: [],
+      allPrograms: [],
       title: '',
       description: '',
       people: [],
@@ -377,6 +396,7 @@ export default {
       country: '',
       state: '',
       focusArea: '',
+      programId: null,
       startDate: null,
       endDate: null,
       funding: '',
@@ -411,6 +431,12 @@ export default {
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
         })
       })
+      this.$http.get(xHTTPx + '/get_programs').then(response => {
+        this.allPrograms = response.body.map(function(p){
+          return {id: p.id, label: p.title + ' [' + p.id + ']'}
+        })
+        this.allPrograms.unshift({id: null, label: 'None'})
+      })
     },
     startDateSelected (newDate) {
       this.startDate = newDate
@@ -444,6 +470,7 @@ export default {
         country: this.country,
         state: this.state,
         focusArea: this.focusArea,
+        programId: this.programId,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,
@@ -456,13 +483,13 @@ export default {
         publications: JSON.stringify(this.publications),
         files: JSON.stringify(this.files)
       }
-      this.$http.post(xHTTPx + '/create_program', message).then(response => {
+      this.$http.post(xHTTPx + '/create_project', message).then(response => {
         var resp = response.body
         this.waiting = false
         this.error = ''
-        this.$router.push('/table/programs')
+        this.$router.push('/table/projects')
       }, response => {
-        this.error = 'Failed to create program!'
+        this.error = 'Failed to create project!'
         this.waiting = false
       })
     },

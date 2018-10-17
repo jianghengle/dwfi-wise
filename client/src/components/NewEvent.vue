@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="title is-4">
-      New Program
+      New Event
     </h4>
 
     <div class="field is-horizontal">
@@ -75,10 +75,10 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select v-model="status">
-                <option>Pending</option>
+                <option>Scheduled - Upcoming</option>
                 <option>In progress</option>
-                <option>On-going</option>
-                <option>On hold</option>
+                <option>Completed</option>
+                <option>Annual/Bi-annual</option>
                 <option>Other</option>
                 <option>Unknown - refer to point of contact</option>
               </select>
@@ -346,7 +346,7 @@
             <button class="button is-link" @click="create">Create</button>
           </div>
           <div class="control">
-            <router-link class="button is-text" :to="'/table/programs'">Cancel</router-link>
+            <router-link class="button is-text" :to="'/table/events'">Cancel</router-link>
           </div>
         </div>
       </div>
@@ -359,7 +359,7 @@ import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'new-program',
+  name: 'new-event',
   components: {
     Datepicker
   },
@@ -456,13 +456,13 @@ export default {
         publications: JSON.stringify(this.publications),
         files: JSON.stringify(this.files)
       }
-      this.$http.post(xHTTPx + '/create_program', message).then(response => {
+      this.$http.post(xHTTPx + '/create_event', message).then(response => {
         var resp = response.body
         this.waiting = false
         this.error = ''
-        this.$router.push('/table/programs')
+        this.$router.push('/table/events')
       }, response => {
-        this.error = 'Failed to create program!'
+        this.error = 'Failed to create event!'
         this.waiting = false
       })
     },

@@ -46,6 +46,45 @@ module MyServer
         return items.as(Array) unless items.nil?
         [] of MyEvent
       end
+
+      def self.get_event(id)
+        Repo.get(MyEvent, id)
+      end
+
+      def self.create_event(event, people, publications, files)
+        changeset = Repo.insert(event)
+        raise changeset.errors.to_s unless changeset.valid?
+        event_id = nil.as(Int64?)
+        changeset.changes.each do |change|
+          if (change.has_key?(:id))
+            event_id = change[:id].as(Int64)
+          end
+        end
+        raise "cannot get new id!" if event_id.nil?
+
+        PeopleRelation.create_relations(people, "events", event_id)
+        PublicationRelation.create_relations(publications, "events", event_id)
+        FileRelation.create_relations(files, "events", event_id)
+      end
+
+      def self.update_event(event, people, publications, files)
+        changeset = Repo.update(event)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        PeopleRelation.update_relations(people, "events", event.id)
+        PublicationRelation.update_relations(publications, "events", event.id)
+        FileRelation.update_relations(files, "events", event.id)
+      end
+
+      def self.delete_event(event_id)
+        PeopleRelation.delete_relations("events", event_id)
+        PublicationRelation.delete_relations("events", event_id)
+        FileRelation.delete_relations("events", event_id)
+
+        event = Repo.get!(MyEvent, event_id)
+        changeset = Repo.delete(event)
+        raise changeset.errors.to_s unless changeset.valid?
+      end
     end
   end
 end
