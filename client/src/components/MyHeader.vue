@@ -24,6 +24,8 @@
                 <router-link v-for="t in tables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
                   {{t.label}}
                 </router-link>
+                <hr class="dropdown-divider">
+                <a class="navbar-item" :href="staticUrl" target="_blank">List Static Files</a>
             </div>
             </div>
           </div>
@@ -65,7 +67,8 @@ export default {
         {name: 'people', label: 'People', path: '/table/people'},
         {name: 'publications', label: 'Publications', path: '/table/publications'},
         {name: 'files', label: 'Files', path: '/table/files'},
-      ]
+      ],
+      staticUrl: xHTTPx + '/dwfi_wise_files'
     }
   },
   computed: {

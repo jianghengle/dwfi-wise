@@ -22,6 +22,7 @@ import 'vue-awesome/icons/sort-asc'
 import 'vue-awesome/icons/sort-desc'
 import 'vue-awesome/icons/remove'
 import 'vue-awesome/icons/search'
+import 'vue-awesome/icons/chevron-left'
 import Icon from 'vue-awesome/components/Icon'
 Vue.component('icon', Icon)
 

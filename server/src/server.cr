@@ -158,6 +158,24 @@ module MyServer
         HttpAPI::FileController.get_files(env)
       end
 
+      get "/get_file/:id" do |env|
+        HttpAPI::FileController.get_file(env)
+      end
+
+      post "/create_file" do |env|
+        HttpAPI::FileController.create_file(env)
+      end
+
+      post "/update_file/:id" do |env|
+        HttpAPI::FileController.update_file(env)
+      end
+
+      post "/delete_file" do |env|
+        HttpAPI::FileController.delete_file(env)
+      end
+
+      serve_static({"gzip" => true, "dir_listing" => true})
+
       Kemal.run
     end
   end

@@ -14,6 +14,8 @@ import People from '@/components/People'
 import NewPeople from '@/components/NewPeople'
 import Publication from '@/components/Publication'
 import NewPublication from '@/components/NewPublication'
+import MyFile from '@/components/MyFile'
+import NewFile from '@/components/NewFile'
 
 Vue.use(Router)
 
@@ -92,6 +94,16 @@ export default new Router({
       path: '/publications/:id',
       name: 'Publication',
       component: Publication
+    },
+    {
+      path: '/files/:id',
+      name: 'MyFile',
+      component: MyFile
+    },
+    {
+      path: '/new/files',
+      name: 'NewFile',
+      component: NewFile
     },
   ]
 })

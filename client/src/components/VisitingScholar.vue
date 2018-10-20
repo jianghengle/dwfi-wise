@@ -1,6 +1,9 @@
 <template>
   <div>
     <h4 class="title is-4">
+      <a class="button back-button" @click="$router.go(-1)">
+        <icon name="chevron-left"></icon>
+      </a>&nbsp;&nbsp;&nbsp;&nbsp;
       Visitiong Scholar {{visitingScholarId}}
     </h4>
 

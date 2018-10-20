@@ -37,4 +37,9 @@ export default {
   text-align: center;
   font-size: 1rem;
 }
+
+.back-button {
+  position: relative;
+  top: -5px;
+}
 </style>
