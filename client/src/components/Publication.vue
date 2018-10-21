@@ -23,7 +23,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="title">
+            <input class="input" type="text" v-model="title" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="authors">
+            <input class="input" type="text" v-model="authors" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <textarea id="textarea-description" class="textarea" v-model="abstract" @change="descriptionChanged"></textarea>
+            <textarea id="textarea-description" class="textarea" v-model="abstract" @change="descriptionChanged" :disabled="privileges == 'Read Only'"></textarea>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              <select v-model="status">
+              <select v-model="status" :disabled="privileges == 'Read Only'">
                 <option>In progress</option>
                 <option>Under review</option>
                 <option>Accepted</option>
@@ -83,7 +83,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="url">
+            <input class="input" type="text" v-model="url" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="pointOfContact">
+            <input class="input" type="text" v-model="pointOfContact" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -109,14 +109,14 @@
       <div class="field-body">
         <div class="field is-grouped">
           <p class="select">
-            <select v-model="f.file_id">
+            <select v-model="f.file_id" :disabled="privileges == 'Read Only'">
               <option v-for="opt in allFiles" v-bind:value="opt.id">{{opt.label}}</option>
             </select>
           </p>&nbsp;&nbsp;&nbsp;
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Comment" v-model="f.comment">
+            <input class="input" type="text" placeholder="Comment" v-model="f.comment" :disabled="privileges == 'Read Only'">
           </p>
-          <p class="control">
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
             <a class="button is-text" @click="removeFile(i)">
               <icon name="remove"></icon>
             </a>
@@ -125,7 +125,7 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <label class="label" v-if="firstFile >= files.length">Files</label>
       </div>
@@ -148,7 +148,7 @@
       {{success}}
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <!-- Left empty for spacing -->
       </div>
@@ -212,6 +212,9 @@ export default {
     }
   },
   computed: {
+    privileges () {
+      return this.$store.state.user.privileges
+    },
     publicationId () {
       return this.$route.params.id
     },

@@ -23,7 +23,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="firstName">
+            <input class="input" type="text" v-model="firstName" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="lastName">
+            <input class="input" type="text" v-model="lastName" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="researchTopic">
+            <input class="input" type="text" v-model="researchTopic" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <textarea id="textarea-description" class="textarea" v-model="description" @change="descriptionChanged"></textarea>
+            <textarea id="textarea-description" class="textarea" v-model="description" @change="descriptionChanged" :disabled="privileges == 'Read Only'"></textarea>
           </div>
         </div>
       </div>
@@ -75,14 +75,14 @@
       <div class="field-body">
         <div class="field is-grouped">
           <p class="select">
-            <select v-model="p.people_id">
+            <select v-model="p.people_id" :disabled="privileges == 'Read Only'">
               <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
             </select>
           </p>&nbsp;&nbsp;&nbsp;
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Role" v-model="p.role">
+            <input class="input" type="text" placeholder="Role" v-model="p.role" :disabled="privileges == 'Read Only'">
           </p>
-          <p class="control">
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
             <a class="button is-text" @click="removePeople(i)">
               <icon name="remove"></icon>
             </a>
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <label class="label" v-if="firstPeople >= people.length">People</label>
       </div>
@@ -112,7 +112,7 @@
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              <select v-model="status">
+              <select v-model="status" :disabled="privileges == 'Read Only'">
                 <option>Pending</option>
                 <option>In progress</option>
                 <option>Completed</option>
@@ -132,7 +132,7 @@
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              <select v-model="country">
+              <select v-model="country" :disabled="privileges == 'Read Only'">
                 <option v-for="c in countries">{{c}}</option>
               </select>
             </div>
@@ -148,7 +148,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="state">
+            <input class="input" type="text" v-model="state" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              <select v-model="focusArea">
+              <select v-model="focusArea" :disabled="privileges == 'Read Only'">
                 <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
                 <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
                 <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
@@ -185,12 +185,16 @@
         <div class="field">
           <div class="control">
             <datepicker
+              v-if="privileges == 'Edit' || privileges == 'Approve'"
               wrapper-class="date-picker-wrapper"
               input-class="date-picker-input"
               format="MMM dd yyyy"
               :value="startDate"
               v-on:selected="startDateSelected">
             </datepicker>
+            <div v-if="privileges == 'Read Only'">
+              <input class="input" type="text" :value="startDateLabel" :disabled="privileges == 'Read Only'">
+            </div>
           </div>
         </div>
       </div>
@@ -204,12 +208,16 @@
         <div class="field">
           <div class="control">
             <datepicker
+              v-if="privileges == 'Edit' || privileges == 'Approve'"
               wrapper-class="date-picker-wrapper"
               input-class="date-picker-input"
               format="MMM dd yyyy"
               :value="endDate"
               v-on:selected="endDateSelected">
             </datepicker>
+            <div v-if="privileges == 'Read Only'">
+              <input class="input" type="text" :value="endDateLabel" :disabled="privileges == 'Read Only'">
+            </div>
           </div>
         </div>
       </div>
@@ -222,7 +230,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="funding">
+            <input class="input" type="text" v-model="funding" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -235,7 +243,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="collaborators">
+            <input class="input" type="text" v-model="collaborators" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -248,7 +256,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="moreInformation">
+            <input class="input" type="text" v-model="moreInformation" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -261,14 +269,14 @@
       <div class="field-body">
         <div class="field is-grouped">
           <p class="select">
-            <select v-model="p.publication_id">
+            <select v-model="p.publication_id" :disabled="privileges == 'Read Only'">
               <option v-for="opt in allPublications" v-bind:value="opt.id">{{opt.label}}</option>
             </select>
           </p>&nbsp;&nbsp;&nbsp;
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Comment" v-model="p.comment">
+            <input class="input" type="text" placeholder="Comment" v-model="p.comment" :disabled="privileges == 'Read Only'">
           </p>
-          <p class="control">
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
             <a class="button is-text" @click="removePublication(i)">
               <icon name="remove"></icon>
             </a>
@@ -277,7 +285,7 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <label class="label" v-if="firstPublication >= publications.length">Publications</label>
       </div>
@@ -297,7 +305,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="pointOfContact">
+            <input class="input" type="text" v-model="pointOfContact" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -310,14 +318,14 @@
       <div class="field-body">
         <div class="field is-grouped">
           <p class="select">
-            <select v-model="f.file_id">
+            <select v-model="f.file_id" :disabled="privileges == 'Read Only'">
               <option v-for="opt in allFiles" v-bind:value="opt.id">{{opt.label}}</option>
             </select>
           </p>&nbsp;&nbsp;&nbsp;
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Comment" v-model="f.comment">
+            <input class="input" type="text" placeholder="Comment" v-model="f.comment" :disabled="privileges == 'Read Only'">
           </p>
-          <p class="control">
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
             <a class="button is-text" @click="removeFile(i)">
               <icon name="remove"></icon>
             </a>
@@ -326,7 +334,7 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <label class="label" v-if="firstFile >= files.length">Files</label>
       </div>
@@ -347,11 +355,11 @@
         <div class="field is-narrow">
           <div class="control">
             <label class="radio">
-              <input type="radio" value="Yes" v-model="isPublished">
+              <input type="radio" value="Yes" v-model="isPublished" :disabled="privileges == 'Read Only'">
               Yes
             </label>
             <label class="radio">
-              <input type="radio" value="No" v-model="isPublished">
+              <input type="radio" value="No" v-model="isPublished" :disabled="privileges == 'Read Only'">
               No
             </label>
           </div>
@@ -369,7 +377,7 @@
       {{success}}
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <!-- Left empty for spacing -->
       </div>
@@ -448,6 +456,9 @@ export default {
     }
   },
   computed: {
+    privileges () {
+      return this.$store.state.user.privileges
+    },
     visitingScholarId () {
       return this.$route.params.id
     },
@@ -534,6 +545,12 @@ export default {
         }
       }
       return changed
+    },
+    startDateLabel () {
+      return this.startDate? DateForm(this.startDate, 'mmm dd yyyy') : ''
+    },
+    endDateLabel () {
+      return this.endDate? DateForm(this.endDate, 'mmm dd yyyy') : ''
     }
   },
   methods: {

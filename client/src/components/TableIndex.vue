@@ -15,7 +15,7 @@
                 {{processedItems.length}} of total {{items.length}} items
               </a>
             </p>
-            <p class="control">
+            <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
               <router-link class="button" :to="'/new/' + tableName">
                 <icon name="plus"></icon>&nbsp;New
               </router-link>
@@ -76,6 +76,9 @@ export default {
   computed: {
     token () {
       return this.$store.state.user.token
+    },
+    privileges () {
+      return this.$store.state.user.privileges
     },
     tableName () {
       return this.$route.params.tableName

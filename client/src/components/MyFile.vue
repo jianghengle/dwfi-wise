@@ -23,7 +23,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="name">
+            <input class="input" type="text" v-model="name" :disabled="privileges == 'Read Only'">
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              <select v-model="fileType">
+              <select v-model="fileType" :disabled="privileges == 'Read Only'">
                 <option>document</option>
                 <option>photo</option>
                 <option>video</option>
@@ -55,7 +55,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="url">
+            <input class="input" type="text" v-model="url" :disabled="privileges == 'Read Only'">
             <div class="file-container">
               <div v-if="fileType=='photo'">
                 <img :src="fullUrl"/>
@@ -85,7 +85,7 @@
       {{success}}
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <!-- Left empty for spacing -->
       </div>
@@ -143,6 +143,9 @@ export default {
     }
   },
   computed: {
+    privileges () {
+      return this.$store.state.user.privileges
+    },
     fileId () {
       return this.$route.params.id
     },
