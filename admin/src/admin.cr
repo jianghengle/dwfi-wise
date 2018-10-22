@@ -273,7 +273,8 @@ admin_resource(MyEvent, Repo)
 admin_resource(VisitingScholar, Repo)
 
 Kemal::Session.config do |config|
-  config.secret = "my super secret"
+  config.secret = "sTHxjX3R"
+  config.secret = ENV["ADMIN_SECRET"] if ENV.has_key?("ADMIN_SECRET")
 end
 
-Kemal.run 3001
+Kemal.run 4001

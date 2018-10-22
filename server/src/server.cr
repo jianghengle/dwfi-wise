@@ -176,7 +176,7 @@ module MyServer
 
       serve_static({"gzip" => true, "dir_listing" => true})
 
-      Kemal.run
+      Kemal.run 4000
     end
   end
 end

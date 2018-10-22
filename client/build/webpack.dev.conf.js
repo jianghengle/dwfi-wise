@@ -20,7 +20,7 @@ module.exports = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': config.dev.env,
-      'xHTTPx': JSON.stringify('http://localhost:3000')
+      'xHTTPx': JSON.stringify('http://localhost:4000')
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
