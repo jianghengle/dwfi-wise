@@ -37,19 +37,7 @@ module MyServer
           user = verify_token(ctx)
           raise "Permission denied" unless (user.privileges.to_s == "Edit" || user.privileges.to_s == "Approve")
 
-          uploadFile = get_body!(ctx, "uploadFile")
-          if uploadFile == "Yes"
-            file = ctx.params.files["file"]
-            file_type = get_body!(ctx, "fileType")
-            MyFile.create_file_by_upload(file, file_type)
-          else
-            file = MyFile.new
-            file.name = get_body!(ctx, "name")
-            file.file_type = get_body!(ctx, "fileType")
-            file.url = get_body!(ctx, "url")
-            MyFile.create_file(file)
-          end
-
+          MyFile.create_file(ctx)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")

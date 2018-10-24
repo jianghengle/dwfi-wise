@@ -133,13 +133,13 @@ export default {
   methods: {
     create () {
       var formData = new FormData()
-      if(this.file){
-        formData.append('file', this.file)
-      }
       formData.append('uploadFile', this.uploadFile)
       formData.append('name', this.name)
       formData.append('fileType', this.fileType)
       formData.append('url', this.url)
+      if(this.file){
+        formData.append('file', this.file)
+      }
 
       this.$http.post(xHTTPx + '/create_file', formData).then(response => {
         var resp = response.body

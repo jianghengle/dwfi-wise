@@ -29,37 +29,52 @@ module MyServer
         Repo.get(MyFile, id)
       end
 
-      def self.create_file(file)
+      def self.create_file(env)
+        upload_file = "Yes"
+        file = MyFile.new
+        HTTP::FormData.parse(env.request) do |part|
+          if part.name == "uploadFile"
+            upload_file = part.body.gets_to_end
+          elsif part.name == "name"
+            file.name = part.body.gets_to_end
+          elsif part.name == "fileType"
+            file.file_type = part.body.gets_to_end
+          elsif part.name == "url"
+            file.url = part.body.gets_to_end
+          elsif part.name == "file"
+            if upload_file == "Yes"
+              raise "No static dir setup" unless ENV.has_key?("DWFI_WISE_STATIC")
+              data_dir = File.join(ENV["DWFI_WISE_STATIC"], "dwfi_wise_files")
+
+              filename = part.filename
+              raise "No filename included in upload" unless filename.is_a?(String)
+
+              unique_name = MyFile.get_unique_filename(data_dir, filename)
+              target_path = File.join(data_dir, unique_name)
+              File.open(target_path, "w") do |f|
+                IO.copy(part.body, f)
+              end
+
+              file.name = unique_name
+              file.url = "/dwfi_wise_files/" + unique_name
+            end
+          end
+        end
+
         changeset = Repo.insert(file)
         raise changeset.errors.to_s unless changeset.valid?
       end
 
-      def self.create_file_by_upload(file, file_type)
-        raise "No static dir setup" unless ENV.has_key?("DWFI_WISE_STATIC")
-        data_dir = File.join(ENV["DWFI_WISE_STATIC"], "dwfi_wise_files")
-
-        filename = file.filename
-        raise "No filename included in upload" unless filename.is_a?(String)
-
+      def self.get_unique_filename(path, filename)
         ext = File.extname(filename)
         name = filename[0, (filename.size - ext.size)]
         new_name = filename
         i = 0
-        while File.exists?(File.join(data_dir, new_name))
+        while File.exists?(File.join(path, new_name))
           i = i + 1
           new_name = name + "_" + i.to_s + ext
         end
-
-        target_path = File.join(data_dir, new_name)
-        File.open(target_path, "w") do |f|
-          IO.copy(file.tmpfile, f)
-        end
-
-        f = MyFile.new
-        f.name = new_name
-        f.file_type = file_type
-        f.url = "/dwfi_wise_files/" + new_name
-        MyFile.create_file(f)
+        new_name
       end
 
       def self.update_file(file)

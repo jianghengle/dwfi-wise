@@ -8,13 +8,13 @@ targets:
   admin:
     main: src/admin.cr
 
-crystal: 0.25.1
+crystal: 0.26.1
 
 license: MIT
 
 dependencies:
   crecto-admin:
-    github: Crecto/crecto-admin
+    github: jianghengle/crecto-admin
     branch: master
   pg:
     github: will/crystal-pg
