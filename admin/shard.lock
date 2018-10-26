@@ -2,15 +2,15 @@ version: 1.0
 shards:
   baked_file_system:
     github: schovi/baked_file_system
-    version: 0.9.7
+    version: 0.9.8
 
   crecto:
     github: crecto/crecto
-    commit: d07fd8ac88867dd745ccf5ddbc0df6ebbbf77229
+    commit: 813ccdf796b71ebeb156b0bf6611c8eba8042d35
 
   crecto-admin:
-    github: jianghengle/crecto-admin
-    commit: e0ef36da40a8173fc9f12bc41019d79f7a654b99
+    github: Crecto/crecto-admin
+    version: 0.2.0
 
   db:
     github: crystal-lang/crystal-db

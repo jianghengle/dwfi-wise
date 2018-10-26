@@ -14,11 +14,11 @@ license: MIT
 
 dependencies:
   crecto-admin:
-    github: jianghengle/crecto-admin
-    branch: master
+    github: Crecto/crecto-admin
+
   pg:
     github: will/crystal-pg
     version: 0.15.0
+
   micrate:
     github: amberframework/micrate
-  
