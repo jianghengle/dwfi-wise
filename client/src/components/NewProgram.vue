@@ -90,13 +90,16 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Country</label>
+        <label class="label">Countries</label>
       </div>
       <div class="field-body">
         <div class="field is-narrow">
           <div class="control">
-            <div class="select is-fullwidth">
-              <select v-model="country">
+            <div class="selected-countries">
+              {{countryInput.join(', ')}}
+            </div>
+            <div class="select is-multiple">
+              <select multiple v-model="countryInput" size="3">
                 <option v-for="c in countries">{{c}}</option>
               </select>
             </div>
@@ -105,9 +108,26 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="countryInput.length == 1 && countryInput[0] == 'United States of America'">
       <div class="field-label is-normal">
         <label class="label">State</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <select v-model="state">
+                <option v-for="s in states">{{s}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="countryInput.length == 1 && countryInput[0] != 'United States of America'">
+      <div class="field-label is-normal">
+        <label class="label">State/Province</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -181,7 +201,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Funding</label>
+        <label class="label">Other Funding</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -375,6 +395,7 @@ export default {
       people: [],
       status: '',
       country: '',
+      countryInput: [],
       state: '',
       focusArea: '',
       startDate: null,
@@ -392,7 +413,10 @@ export default {
   computed: {
     countries () {
       return this.$store.state.table.countries
-    }
+    },
+    states () {
+      return this.$store.state.table.states
+    },
   },
   methods: {
     requestResources () {
@@ -441,7 +465,7 @@ export default {
         title: this.title,
         description: this.description,
         status: this.status,
-        country: this.country,
+        country: this.countryInput.join(', '),
         state: this.state,
         focusArea: this.focusArea,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
@@ -482,4 +506,10 @@ export default {
 .item-row {
   margin-bottom: 8px;
 }
+
+.selected-countries {
+  margin-top: 0.375em;
+  margin-bottom: 0.375em;
+}
+
 </style>

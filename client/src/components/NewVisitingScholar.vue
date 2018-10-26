@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="title is-4">
-      New Visiting Scholar
+      New Scholar
     </h4>
 
     <div class="field is-horizontal">
@@ -129,9 +129,26 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="country== 'United States of America'">
       <div class="field-label is-normal">
         <label class="label">State</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <select v-model="state">
+                <option v-for="s in states">{{s}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="country != 'United States of America'">
+      <div class="field-label is-normal">
+        <label class="label">State/Province</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -205,7 +222,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Funding</label>
+        <label class="label">Other Funding</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -404,7 +421,10 @@ export default {
   computed: {
     countries () {
       return this.$store.state.table.countries
-    }
+    },
+    states () {
+      return this.$store.state.table.states
+    },
   },
   methods: {
     requestResources () {
@@ -475,7 +495,7 @@ export default {
         this.error = ''
         this.$router.push('/table/visiting_scholars')
       }, response => {
-        this.error = 'Failed to create visiting_scholar!'
+        this.error = 'Failed to create scholar!'
         this.waiting = false
       })
     },

@@ -103,13 +103,19 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Country</label>
+        <label class="label">Countries</label>
       </div>
       <div class="field-body">
         <div class="field is-narrow">
           <div class="control">
-            <div class="select is-fullwidth">
-              <select v-model="country" :disabled="privileges == 'Read Only'">
+            <div class="selected-countries">
+              {{countryInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') != country" @click="countryInput = country.split(', ')">
+                <icon name="reply"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple" v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <select multiple v-model="countryInput" size="3">
                 <option v-for="c in countries">{{c}}</option>
               </select>
             </div>
@@ -118,9 +124,26 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="countryInput.length == 1 && countryInput[0] == 'United States of America'">
       <div class="field-label is-normal">
         <label class="label">State</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <select v-model="state" :disabled="privileges == 'Read Only'">
+                <option v-for="s in states">{{s}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="countryInput.length == 1 && countryInput[0] != 'United States of America'">
+      <div class="field-label is-normal">
+        <label class="label">State/Province</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -219,7 +242,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Funding</label>
+        <label class="label">Other Funding</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -442,6 +465,7 @@ export default {
       people: [],
       status: '',
       country: '',
+      countryInput: [],
       state: '',
       focusArea: '',
       programId: null,
@@ -472,6 +496,9 @@ export default {
     },
     countries () {
       return this.$store.state.table.countries
+    },
+    states () {
+      return this.$store.state.table.states
     },
     firstPeople () {
       var i = 0
@@ -567,7 +594,7 @@ export default {
         title: this.title,
         description: this.description,
         status: this.status,
-        country: this.country,
+        country: this.countryInput.join(', '),
         state: this.state,
         focusArea: this.focusArea,
         programId: this.programId,
@@ -589,6 +616,7 @@ export default {
         this.description = resp[0].description
         this.status = resp[0].status
         this.country = resp[0].country
+        this.countryInput = resp[0].country.split(', ')
         this.state = resp[0].state
         this.focusArea = resp[0].focusArea
         this.programId = resp[0].programId
@@ -693,7 +721,7 @@ export default {
         title: this.title,
         description: this.description,
         status: this.status,
-        country: this.country,
+        country: this.countryInput.join(', '),
         state: this.state,
         focusArea: this.focusArea,
         programId: this.programId,
@@ -772,5 +800,17 @@ export default {
 <style lang="scss" scoped>
 .item-row {
   margin-bottom: 8px;
+}
+
+.selected-countries {
+  margin-top: 0.375em;
+  margin-bottom: 0.375em;
+}
+
+.restore-icon {
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  left: 5px;
 }
 </style>

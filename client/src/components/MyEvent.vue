@@ -117,9 +117,26 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="country == 'United States of America'">
       <div class="field-label is-normal">
         <label class="label">State</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <select v-model="state" :disabled="privileges == 'Read Only'">
+                <option v-for="s in states">{{s}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="country != 'United States of America'">
+      <div class="field-label is-normal">
+        <label class="label">State/Province</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -201,7 +218,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Funding</label>
+        <label class="label">Other Funding</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -452,6 +469,9 @@ export default {
     },
     countries () {
       return this.$store.state.table.countries
+    },
+    states () {
+      return this.$store.state.table.states
     },
     firstPeople () {
       var i = 0

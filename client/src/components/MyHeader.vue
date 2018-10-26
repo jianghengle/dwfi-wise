@@ -21,7 +21,11 @@
                 {{activeTable.label}}
               </router-link>
               <div class="navbar-dropdown is-boxed">
-                <router-link v-for="t in tables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
+                <router-link v-for="t in basicTables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
+                  {{t.label}}
+                </router-link>
+                <hr class="dropdown-divider">
+                <router-link v-for="t in otherTables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
                   {{t.label}}
                 </router-link>
                 <hr class="dropdown-divider">
@@ -59,11 +63,13 @@ export default {
   data () {
     return {
       menuActive: false,
-      tables: [
+      basicTables: [
         {name: 'programs', label: 'Programs', path: '/table/programs'},
         {name: 'projects', label: 'Projects', path: '/table/projects'},
         {name: 'events', label: 'Events', path: '/table/events'},
-        {name: 'visiting_scholars', label: 'Visiting Scholars', path: '/table/visiting_scholars'},
+        {name: 'visiting_scholars', label: 'Scholars', path: '/table/visiting_scholars'},
+      ],
+      otherTables: [
         {name: 'people', label: 'People', path: '/table/people'},
         {name: 'publications', label: 'Publications', path: '/table/publications'},
         {name: 'files', label: 'Files', path: '/table/files'},
@@ -84,7 +90,12 @@ export default {
     activeTable () {
       var routePath = this.routePath
       var table = {}
-      this.tables.forEach(function(t){
+      this.basicTables.forEach(function(t){
+        if(routePath.indexOf(t.name) != -1){
+          table = t
+        }
+      })
+      this.otherTables.forEach(function(t){
         if(routePath.indexOf(t.name) != -1){
           table = t
         }

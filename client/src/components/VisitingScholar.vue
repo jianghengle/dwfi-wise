@@ -4,7 +4,7 @@
       <a class="button back-button" @click="$router.go(-1)">
         <icon name="chevron-left"></icon>
       </a>&nbsp;&nbsp;&nbsp;&nbsp;
-      Visitiong Scholar {{visitingScholarId}}
+      Scholar {{visitingScholarId}}
     </h4>
 
     <div class="has-text-centered" v-if="waiting">
@@ -141,9 +141,26 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal" v-if="country == 'United States of America'">
       <div class="field-label is-normal">
         <label class="label">State</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <select v-model="state" :disabled="privileges == 'Read Only'">
+                <option v-for="s in states">{{s}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="country != 'United States of America'">
+      <div class="field-label is-normal">
+        <label class="label">State/Province</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -225,7 +242,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Funding</label>
+        <label class="label">Other Funding</label>
       </div>
       <div class="field-body">
         <div class="field">
@@ -465,6 +482,9 @@ export default {
     countries () {
       return this.$store.state.table.countries
     },
+    states () {
+      return this.$store.state.table.states
+    },
     firstPeople () {
       var i = 0
       while(i < this.people.length && (!this.people[i].people_id))
@@ -611,7 +631,7 @@ export default {
           this.descriptionChanged()
         })
       }, response => {
-        this.error = 'Failed to get visitingScholar!'
+        this.error = 'Failed to get scholar!'
         this.waiting = false
       })
     },
@@ -700,13 +720,13 @@ export default {
         this.success = 'Data updated successfully!'
         this.getVisitingScholar()
       }, response => {
-        this.error = 'Failed to update visitingScholar!'
+        this.error = 'Failed to update scholar!'
         this.waiting = false
       })
     },
     deleteSelf () {
-      var title = 'Delete Visiting Scholar'
-      var message = 'Are you sure to delete the visiting scholar?'
+      var title = 'Delete Scholar'
+      var message = 'Are you sure to delete the scholar?'
       var confirmButton = 'Yes, delete it.'
       var context = {callback: this.deleteConfirmed}
       this.openConfirmModal(title, message, confirmButton, context)
@@ -718,7 +738,7 @@ export default {
           this.$router.replace('/table/visiting_scholars')
         }
       }, response => {
-        this.error = 'Failed to delete visiting scholar!'
+        this.error = 'Failed to delete scholar!'
         this.waiting = false
       })
     },
