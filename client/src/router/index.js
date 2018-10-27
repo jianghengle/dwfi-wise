@@ -16,6 +16,8 @@ import Publication from '@/components/Publication'
 import NewPublication from '@/components/NewPublication'
 import MyFile from '@/components/MyFile'
 import NewFile from '@/components/NewFile'
+import Grant from '@/components/Grant'
+import NewGrant from '@/components/NewGrant'
 
 Vue.use(Router)
 
@@ -104,6 +106,16 @@ export default new Router({
       path: '/new/files',
       name: 'NewFile',
       component: NewFile
+    },
+    {
+      path: '/grants/:id',
+      name: 'Grant',
+      component: Grant
+    },
+    {
+      path: '/new/grants',
+      name: 'NewGrant',
+      component: NewGrant
     },
   ]
 })

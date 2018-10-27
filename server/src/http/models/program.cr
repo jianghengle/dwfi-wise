@@ -51,7 +51,7 @@ module MyServer
         Repo.get(Program, id)
       end
 
-      def self.create_program(program, people, publications, files)
+      def self.create_program(program, people, publications, files, grants)
         changeset = Repo.insert(program)
         raise changeset.errors.to_s unless changeset.valid?
         program_id = nil.as(Int64?)
@@ -65,21 +65,24 @@ module MyServer
         PeopleRelation.create_relations(people, "programs", program_id)
         PublicationRelation.create_relations(publications, "programs", program_id)
         FileRelation.create_relations(files, "programs", program_id)
+        GrantRelation.create_relations(grants, "programs", program_id)
       end
 
-      def self.update_program(program, people, publications, files)
+      def self.update_program(program, people, publications, files, grants)
         changeset = Repo.update(program)
         raise changeset.errors.to_s unless changeset.valid?
 
         PeopleRelation.update_relations(people, "programs", program.id)
         PublicationRelation.update_relations(publications, "programs", program.id)
         FileRelation.update_relations(files, "programs", program.id)
+        GrantRelation.update_relations(grants, "programs", program.id)
       end
 
       def self.delete_program(program_id)
         PeopleRelation.delete_relations("programs", program_id)
         PublicationRelation.delete_relations("programs", program_id)
         FileRelation.delete_relations("programs", program_id)
+        GrantRelation.delete_relations("programs", program_id)
 
         Project.null_project_program(program_id)
 

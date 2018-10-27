@@ -222,6 +222,42 @@
       </div>
     </div>
 
+    <div class="field is-horizontal item-row" v-for="(g, i) in grants" v-if="g.grant_id">
+      <div class="field-label is-normal">
+        <label class="label" v-if="i==firstGrant">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <p class="select">
+            <select v-model="g.grant_id" :disabled="privileges == 'Read Only'">
+              <option v-for="opt in allGrants" v-bind:value="opt.id">{{opt.label}}</option>
+            </select>
+          </p>&nbsp;&nbsp;&nbsp;
+          <p class="control is-expanded">
+            <input class="input" type="text" placeholder="Comment" v-model="g.comment" :disabled="privileges == 'Read Only'">
+          </p>
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
+            <a class="button is-text" @click="removeGrant(i)">
+              <icon name="remove"></icon>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
+      <div class="field-label">
+        <label class="label" v-if="firstGrant >= grants.length">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button" @click="addGrant"><icon name="plus"></icon>&nbsp;Grant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Other Funding</label>
@@ -438,9 +474,11 @@ export default {
       oldPeople: null,
       oldPublications: null,
       oldFiles: null,
+      oldGrants: null,
       allPeople: [],
       allPublications: [],
       allFiles: [],
+      allGrants: [],
       title: '',
       description: '',
       people: [],
@@ -451,6 +489,7 @@ export default {
       focusArea: '',
       startDate: null,
       endDate: null,
+      grants: [],
       funding: '',
       collaborators: '',
       moreInformation: '',
@@ -498,6 +537,12 @@ export default {
         i++
       return i
     },
+    firstGrant () {
+      var i = 0
+      while(i < this.grants.length && (!this.grants[i].grant_id))
+        i++
+      return i
+    },
     changed () {
       var program = this.collectProgram()
       if(JSON.stringify(program) != JSON.stringify(this.oldProgram))
@@ -507,6 +552,8 @@ export default {
       if(JSON.stringify(this.publications) != JSON.stringify(this.oldPublications))
         return true
       if(JSON.stringify(this.files) != JSON.stringify(this.oldFiles))
+        return true
+      if(JSON.stringify(this.grants) != JSON.stringify(this.oldGrants))
         return true
       return false
     },
@@ -557,6 +604,23 @@ export default {
           }
         }else{
           changed.push(f)
+        }
+      }
+      return changed
+    },
+    changedGrants () {
+      var changed = []
+      for(var i=0;i<this.grants.length;i++){
+        var g = this.grants[i]
+        if(!g.grant_id){
+          changed.push(g)
+        }else if(g.id){
+          var old = this.oldGrants[i]
+          if(g.grant_id != old.grant_id || g.comment != old.comment){
+            changed.push(g)
+          }
+        }else{
+          changed.push(g)
         }
       }
       return changed
@@ -619,6 +683,10 @@ export default {
           return {id: f.id, file_id: f.fileId, comment: f.comment}
         })
         this.oldFiles = JSON.parse(JSON.stringify(this.files))
+        this.grants = resp[4].map(function(g){
+          return {id: g.id, grant_id: g.grantId, comment: g.comment}
+        })
+        this.oldGrants = JSON.parse(JSON.stringify(this.grants))
         this.waiting = false
         this.error = ''
         this.$nextTick(() => {
@@ -643,6 +711,11 @@ export default {
       this.$http.get(xHTTPx + '/get_files').then(response => {
         this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
+        })
+      })
+      this.$http.get(xHTTPx + '/get_grants').then(response => {
+        this.allGrants = response.body.map(function(g){
+          return {id: g.id, label: g.organization + ' [' + g.id + ']'}
         })
       })
     },
@@ -688,6 +761,18 @@ export default {
         this.files.splice(idx, 1)
       }
     },
+    addGrant () {
+      if(this.allGrants.length){
+        this.grants.push({grant_id: this.allGrants[0].id, comment: ''})
+      }
+    },
+    removeGrant (idx) {
+      if(this.grants[idx].id){
+        this.grants[idx].grant_id = null
+      }else{
+        this.grants.splice(idx, 1)
+      }
+    },
     update () {
       var message = {
         title: this.title,
@@ -706,7 +791,8 @@ export default {
         isPublished: this.isPublished == 'Yes',
         people: JSON.stringify(this.changedPeople),
         publications: JSON.stringify(this.changedPublications),
-        files: JSON.stringify(this.changedFiles)
+        files: JSON.stringify(this.changedFiles),
+        grants: JSON.stringify(this.changedGrants)
       }
       this.$http.post(xHTTPx + '/update_program/' + this.programId, message).then(response => {
         var resp = response.body

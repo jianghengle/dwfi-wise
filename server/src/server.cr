@@ -174,6 +174,26 @@ module MyServer
         HttpAPI::FileController.delete_file(env)
       end
 
+      get "/get_grants" do |env|
+        HttpAPI::GrantController.get_grants(env)
+      end
+
+      get "/get_grant/:id" do |env|
+        HttpAPI::GrantController.get_grant(env)
+      end
+
+      post "/create_grant" do |env|
+        HttpAPI::GrantController.create_grant(env)
+      end
+
+      post "/update_grant/:id" do |env|
+        HttpAPI::GrantController.update_grant(env)
+      end
+
+      post "/delete_grant" do |env|
+        HttpAPI::GrantController.delete_grant(env)
+      end
+
       serve_static({"gzip" => true, "dir_listing" => true})
 
       Kemal.run 4000

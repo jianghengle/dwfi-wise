@@ -63,6 +63,37 @@ class FileRelation < Crecto::Model
   end
 end
 
+class Grant < Crecto::Model
+  schema "grants" do
+    field :organization, String
+  end
+
+  def self.can_create(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+
+  def can_edit(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+end
+
+class GrantRelation < Crecto::Model
+  schema "grant_relations" do
+    field :grant_id, Int64
+    field :for_table, String
+    field :for_id, Int64
+    field :comment, String
+  end
+
+  def self.can_create(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+
+  def can_edit(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+end
+
 class People < Crecto::Model
   schema "people" do
     field :first_name, String
@@ -263,6 +294,8 @@ init_admin()
 admin_resource(User, Repo)
 admin_resource(MyFile, Repo)
 admin_resource(FileRelation, Repo)
+admin_resource(Grant, Repo)
+admin_resource(GrantRelation, Repo)
 admin_resource(People, Repo)
 admin_resource(PeopleRelation, Repo)
 admin_resource(Publication, Repo)

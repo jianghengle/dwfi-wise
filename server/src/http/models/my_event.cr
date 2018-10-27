@@ -51,7 +51,7 @@ module MyServer
         Repo.get(MyEvent, id)
       end
 
-      def self.create_event(event, people, publications, files)
+      def self.create_event(event, people, publications, files, grants)
         changeset = Repo.insert(event)
         raise changeset.errors.to_s unless changeset.valid?
         event_id = nil.as(Int64?)
@@ -65,21 +65,24 @@ module MyServer
         PeopleRelation.create_relations(people, "events", event_id)
         PublicationRelation.create_relations(publications, "events", event_id)
         FileRelation.create_relations(files, "events", event_id)
+        GrantRelation.create_relations(grants, "events", event_id)
       end
 
-      def self.update_event(event, people, publications, files)
+      def self.update_event(event, people, publications, files, grants)
         changeset = Repo.update(event)
         raise changeset.errors.to_s unless changeset.valid?
 
         PeopleRelation.update_relations(people, "events", event.id)
         PublicationRelation.update_relations(publications, "events", event.id)
         FileRelation.update_relations(files, "events", event.id)
+        GrantRelation.update_relations(grants, "events", event.id)
       end
 
       def self.delete_event(event_id)
         PeopleRelation.delete_relations("events", event_id)
         PublicationRelation.delete_relations("events", event_id)
         FileRelation.delete_relations("events", event_id)
+        GrantRelation.delete_relations("events", event_id)
 
         event = Repo.get!(MyEvent, event_id)
         changeset = Repo.delete(event)

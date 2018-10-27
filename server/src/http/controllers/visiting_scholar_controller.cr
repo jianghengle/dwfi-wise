@@ -29,7 +29,9 @@ module MyServer
           publication_relations_json = "[" + publication_relations.join(", ") { |r| r.to_json } + "]"
           file_relations = FileRelation.get_relations("visiting_scholars", id)
           file_relations_json = "[" + file_relations.join(", ") { |r| r.to_json } + "]"
-          "[ #{visiting_scholar.to_json}, #{people_relations_json}, #{publication_relations_json}, #{file_relations_json}]"
+          grant_relations = GrantRelation.get_relations("visiting_scholars", id)
+          grant_relations_json = "[" + grant_relations.join(", ") { |r| r.to_json } + "]"
+          "[ #{visiting_scholar.to_json}, #{people_relations_json}, #{publication_relations_json}, #{file_relations_json}, #{grant_relations_json}]"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception
@@ -64,8 +66,9 @@ module MyServer
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
           publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
 
-          VisitingScholar.create_visiting_scholar(visiting_scholar, people, publications, files)
+          VisitingScholar.create_visiting_scholar(visiting_scholar, people, publications, files, grants)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
@@ -102,8 +105,9 @@ module MyServer
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
           publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
 
-          VisitingScholar.update_visiting_scholar(visiting_scholar, people, publications, files)
+          VisitingScholar.update_visiting_scholar(visiting_scholar, people, publications, files, grants)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")

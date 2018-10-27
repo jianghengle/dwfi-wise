@@ -71,6 +71,7 @@ export default {
       ],
       otherTables: [
         {name: 'people', label: 'People', path: '/table/people'},
+        {name: 'grants', label: 'Grants', path: '/table/grants'},
         {name: 'publications', label: 'Publications', path: '/table/publications'},
         {name: 'files', label: 'Files', path: '/table/files'},
       ],

@@ -53,7 +53,7 @@ module MyServer
         Repo.get(VisitingScholar, id)
       end
 
-      def self.create_visiting_scholar(visiting_scholar, people, publications, files)
+      def self.create_visiting_scholar(visiting_scholar, people, publications, files, grants)
         changeset = Repo.insert(visiting_scholar)
         raise changeset.errors.to_s unless changeset.valid?
         visiting_scholar_id = nil.as(Int64?)
@@ -67,21 +67,24 @@ module MyServer
         PeopleRelation.create_relations(people, "visiting_scholars", visiting_scholar_id)
         PublicationRelation.create_relations(publications, "visiting_scholars", visiting_scholar_id)
         FileRelation.create_relations(files, "visiting_scholars", visiting_scholar_id)
+        GrantRelation.create_relations(grants, "visiting_scholars", visiting_scholar_id)
       end
 
-      def self.update_visiting_scholar(visiting_scholar, people, publications, files)
+      def self.update_visiting_scholar(visiting_scholar, people, publications, files, grants)
         changeset = Repo.update(visiting_scholar)
         raise changeset.errors.to_s unless changeset.valid?
 
         PeopleRelation.update_relations(people, "visiting_scholars", visiting_scholar.id)
         PublicationRelation.update_relations(publications, "visiting_scholars", visiting_scholar.id)
         FileRelation.update_relations(files, "visiting_scholars", visiting_scholar.id)
+        GrantRelation.update_relations(grants, "visiting_scholars", visiting_scholar.id)
       end
 
       def self.delete_visiting_scholar(visiting_scholar_id)
         PeopleRelation.delete_relations("visiting_scholars", visiting_scholar_id)
         PublicationRelation.delete_relations("visiting_scholars", visiting_scholar_id)
         FileRelation.delete_relations("visiting_scholars", visiting_scholar_id)
+        GrantRelation.delete_relations("visiting_scholars", visiting_scholar_id)
 
         visiting_scholar = Repo.get!(VisitingScholar, visiting_scholar_id)
         changeset = Repo.delete(visiting_scholar)

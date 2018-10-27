@@ -53,7 +53,7 @@ module MyServer
         Repo.get(Project, id)
       end
 
-      def self.create_project(project, people, publications, files)
+      def self.create_project(project, people, publications, files, grants)
         changeset = Repo.insert(project)
         raise changeset.errors.to_s unless changeset.valid?
         project_id = nil.as(Int64?)
@@ -67,21 +67,24 @@ module MyServer
         PeopleRelation.create_relations(people, "projects", project_id)
         PublicationRelation.create_relations(publications, "projects", project_id)
         FileRelation.create_relations(files, "projects", project_id)
+        GrantRelation.create_relations(grants, "projects", project_id)
       end
 
-      def self.update_project(project, people, publications, files)
+      def self.update_project(project, people, publications, files, grants)
         changeset = Repo.update(project)
         raise changeset.errors.to_s unless changeset.valid?
 
         PeopleRelation.update_relations(people, "projects", project.id)
         PublicationRelation.update_relations(publications, "projects", project.id)
         FileRelation.update_relations(files, "projects", project.id)
+        GrantRelation.update_relations(grants, "projects", project.id)
       end
 
       def self.delete_project(project_id)
         PeopleRelation.delete_relations("projects", project_id)
         PublicationRelation.delete_relations("projects", project_id)
         FileRelation.delete_relations("projects", project_id)
+        GrantRelation.delete_relations("projects", project_id)
 
         project = Repo.get!(Project, project_id)
         changeset = Repo.delete(project)

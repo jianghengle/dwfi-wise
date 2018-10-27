@@ -217,6 +217,42 @@
       </div>
     </div>
 
+    <div class="field is-horizontal item-row" v-for="(g, i) in grants">
+      <div class="field-label is-normal">
+        <label class="label" v-if="i==0">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <p class="select">
+            <select v-model="g.grant_id">
+              <option v-for="opt in allGrants" v-bind:value="opt.id">{{opt.label}}</option>
+            </select>
+          </p>&nbsp;&nbsp;&nbsp;
+          <p class="control is-expanded">
+            <input class="input" type="text" placeholder="Comment" v-model="g.comment">
+          </p>
+          <p class="control">
+            <a class="button is-text" @click="removeGrant(i)">
+              <icon name="remove"></icon>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label">
+        <label class="label" v-if="!grants.length">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button" @click="addGrant"><icon name="plus"></icon>&nbsp;Grant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Other Funding</label>
@@ -409,6 +445,7 @@ export default {
       allPublications: [],
       allFiles: [],
       allPrograms: [],
+      allGrants: [],
       title: '',
       description: '',
       people: [],
@@ -427,6 +464,7 @@ export default {
       pointOfContact: '',
       website: '',
       files: [],
+      grants: [],
       isPublished: 'No'
     }
   },
@@ -461,6 +499,11 @@ export default {
         })
         this.allPrograms.unshift({id: null, label: 'None'})
       })
+      this.$http.get(xHTTPx + '/get_grants').then(response => {
+        this.allGrants = response.body.map(function(g){
+          return {id: g.id, label: g.organization + ' [' + g.id + ']'}
+        })
+      })
     },
     startDateSelected (newDate) {
       this.startDate = newDate
@@ -486,6 +529,12 @@ export default {
     removeFile (idx) {
       this.files.splice(idx, 1)
     },
+    addGrant () {
+      this.grants.push({grant_id: (this.allGrants.length ? this.allGrants[0].id : null), comment: ''})
+    },
+    removeGrant (idx) {
+      this.grants.splice(idx, 1)
+    },
     create () {
       var message = {
         title: this.title,
@@ -505,7 +554,8 @@ export default {
         isPublished: this.isPublished == 'Yes',
         people: JSON.stringify(this.people),
         publications: JSON.stringify(this.publications),
-        files: JSON.stringify(this.files)
+        files: JSON.stringify(this.files),
+        grants: JSON.stringify(this.grants)
       }
       this.$http.post(xHTTPx + '/create_project', message).then(response => {
         var resp = response.body

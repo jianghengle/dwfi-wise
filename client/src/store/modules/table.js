@@ -89,6 +89,15 @@ var tables = {
     ],
     sort: {index: 0, asc: false},
     search: ''
+  },
+  grants: {
+    label: 'Grants',
+    columns: [
+      {name: 'id', type: 'int', label: 'Id'},
+      {name: 'organization', type: 'str', label: 'Organization'}
+    ],
+    sort: {index: 0, asc: false},
+    search: ''
   }
 }
 
