@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+</head>
+<body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+
+  <nav class="navbar has-shadow">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item is-size-4 has-text-weight-bold has-text-black">
+          See Our Work Map
+        </a>
+      </div>
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <a class="navbar-item" href="https://glodet.nebraska.edu:4000">
+            Edit
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="vue-root" style="padding: 10px;">
+    <div id="map-container" style="position: relative; margin-bottom: 10px; width: 100%; height: 100%;"></div>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label class="label">Work</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="workCategory">
+                <option>All</option>
+                <option>Program</option>
+                <option>Project</option>
+                <option>Event</option>
+                <option>Scholar</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="field">
+          <label class="label">Focus Area</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="focusArea">
+                <option>All</option>
+                <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
+                <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
+                <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
+                <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
+                <option>[FA5] Management of Agricultural Drought</option>
+                <option>Education & Engagement Projects & Programs</option>
+                <option>Communications</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="field">
+          <label class="label">Grant</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="grant">
+                <option>All</option>
+                <option v-for="g in allGrants" v-bind:value="g.id">{{g.organization}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="field">
+      <label class="label">Country</label>
+      <div class="control">
+        <div class="select">
+          <select v-model="activeCountry">
+            <option v-for="c in countryNames">{{c}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div v-if="activeCount" class="is-size-6">There is/are
+        <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program(s)</span>
+        <span v-if="activeCountryCount[1]">, <span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project(s)</span>
+        <span v-if="activeCountryCount[2]">, <span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event(s)</span>
+        <span v-if="activeCountryCount[3]">, <span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar(s)</span>
+        <span> in/from <span class="has-text-weight-bold">{{activeCountry}}</span></span>
+      </div>
+      <div v-else>
+        There is nothing applying the filters in <span class="has-text-weight-bold">{{activeCountry}}</span>
+      </div>
+      <div id="projects-container" class="container">
+        <div class="has-text-centered" v-if="loading">
+          <span class="icon is-large fa-spin">
+            <i class="fas fa-lg fa-spinner"></i>
+          </span>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    const SERVER = 'http://localhost:4000'
+    const GREEN = '#23b39c'
+    const GRAY = '#a7a9ac'
+    var themap = null
+
+    new Vue({
+      el: '#vue-root',
+      data: {
+        themap: null,
+        workCategory: 'All',
+        focusArea: 'All',
+        grant: 'All',
+        allGrants: [],
+        countries: {},
+        countryNames: [],
+        activeCountry: null,
+        loadingPrograms: false,
+        loadingProjects: false,
+        loadingEvents: false,
+        loadingScholars: false
+      },
+      computed: {
+        countryCounts () {
+          var counts = {}
+          var vm = this
+          this.countryNames.forEach(function(c){
+            var programCount = 0
+            if(vm.workCategory == 'All' || vm.workCategory == 'Program'){
+              programCount = vm.countries[c].countPrograms.filter(vm.itemFilter).length
+            }
+            var projectCount = 0
+            if(vm.workCategory == 'All' || vm.workCategory == 'Project'){
+              projectCount = vm.countries[c].countProjects.filter(vm.itemFilter).length
+            }
+            var eventCount = 0
+            if(vm.workCategory == 'All' || vm.workCategory == 'Event'){
+              eventCount = vm.countries[c].countEvents.filter(vm.itemFilter).length
+            }
+            var scholarCount = 0
+            if(vm.workCategory == 'All' || vm.workCategory == 'Scholar'){
+              scholarCount = vm.countries[c].countScholars.filter(vm.itemFilter).length
+            }
+            counts[c] = [programCount, projectCount, eventCount, scholarCount]
+          })
+          return counts
+        },
+        activeCountryCount () {
+          return this.countryCounts[this.activeCountry]
+        },
+        activeCount () {
+          if(this.activeCountryCount) {
+            return this.activeCountryCount[0] + this.activeCountryCount[1] + this.activeCountryCount[2] + this.activeCountryCount[3]
+          }
+          return 0
+        },
+        loading () {
+          return this.loadingPrograms || this.loadingProjects || this.loadingEvents || this.loadingScholars
+        }
+      },
+      watch: {
+        countryCounts: function (val) {
+          var colors = {}
+          var vm = this
+
+          this.countryNames.forEach(function(countryName){
+            var country = vm.countries[countryName]
+            var counts = val[countryName]
+            if(counts[0] + counts[1] + counts[2] + counts[3] > 0){
+              colors[country.id] = GREEN
+              if(vm.activeCountry == null){
+                vm.activeCountry = countryName
+              }
+            }else{
+              colors[country.id] = GRAY
+            }
+          })
+          themap.updateChoropleth(colors)
+        },
+        activeCountry: function (val) {
+          this.showCountry()
+        }
+      },
+      methods: {
+        initMap () {
+          var vm = this
+          themap = new Datamap({
+            element: document.getElementById("map-container"),
+            projection: 'mercator',
+            fills: {
+              defaultFill: GRAY,
+            },
+            responsive: true,
+            geographyConfig: {
+              popupTemplate: function(geography, data) {
+                var countryName = geography.properties.name
+                var counts = vm.countryCounts[countryName]
+                var html = '<div class="hoverinfo">' + countryName
+                if(counts[0] > 0)
+                  html += '<br/>Programs: ' + counts[0]
+                if(counts[1] > 0)
+                  html += '<br/>Projects: ' + counts[1]
+                if(counts[2] > 0)
+                  html += '<br/>Events: ' + counts[2]
+                if(counts[3] > 0)
+                  html += '<br/>Scholars: ' + counts[3]
+                return html
+              },
+            },
+            done: function(datamap) {
+              var countries = {}
+              datamap.svg.selectAll('.datamaps-subunit')[0].forEach(function(a){
+                var g = a.__data__
+                if(g.id != '-99'){
+                  countries[g.properties.name] = {
+                    id: g.id,
+                    name: g.properties.name,
+                    countPrograms: [],
+                    countProjects: [],
+                    countEvents: [],
+                    countScholars: [],
+                    programs: null,
+                    projects: null,
+                    events: null,
+                    scholars: null
+                  }
+                }
+              })
+              vm.countryNames = Object.keys(countries).sort()
+              vm.countries = countries
+              vm.requestCountryCounts()
+              datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                vm.activeCountry = geography.properties.name
+              })
+            }
+          })
+        },
+        requestGrants () {
+          this.$http.get(SERVER + '/get_grants').then(response => {
+            this.allGrants = response.body
+          })
+        },
+        requestCountryCounts () {
+          this.$http.get(SERVER + '/count_programs_for_map').then(response => {
+            this.pushItems('countPrograms', response.body)
+          })
+          this.$http.get(SERVER + '/count_projects_for_map').then(response => {
+            this.pushItems('countProjects', response.body)
+          })
+          this.$http.get(SERVER + '/count_events_for_map').then(response => {
+            this.pushItems('countEvents', response.body)
+          })
+          this.$http.get(SERVER + '/count_visiting_scholars_for_map').then(response => {
+            this.pushItems('countScholars', response.body)
+          })
+        },
+        pushItems (category, items) {
+          var vm = this
+          items.forEach(function(i){
+            i.country.split(', ').forEach(function(c){
+              if(vm.countries[c]){
+                vm.countries[c][category].push(i)
+              }
+            })
+          })
+        },
+        itemFilter (item) {
+          if(this.focusArea != 'All') {
+            if(item.focusArea != this.focusArea)
+              return false
+          }
+          if(this.grant != 'All') {
+            if(!item.grants.includes(this.grant))
+              return false
+          }
+          return true
+        },
+        showCountry () {
+          console.log('show ' + this.activeCountry)
+          var country = this.countries[this.activeCountry]
+          if(country.countPrograms.length == 0){
+            country.programs = []
+          }else if(country.programs == null){
+            requestCountryPrograms()
+          }
+        },
+        requestCountryPrograms () {
+          this.loadingPrograms = true
+          var url = SERVER + '/get_programs_for_map/' + encodeURIComponent(this.activeCountry)
+          this.$http.get(url).then(response => {
+            this.countries[this.activeCountry].programs = response.body
+            this.loadingPrograms = false
+          }, response => {
+            this.loadingPrograms = false
+          })
+        }
+      },
+      mounted () {
+        this.initMap()
+        this.requestGrants()
+        this.$nextTick(function(){
+          var vm = this
+          window.addEventListener('resize', function() {
+            themap.resize()
+          })
+        })
+      }
+    })
+  }());
+  </script>
+</body>

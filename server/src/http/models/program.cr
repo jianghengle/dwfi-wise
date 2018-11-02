@@ -19,7 +19,7 @@ module MyServer
       end
 
       def to_json
-        result = String.build do |str|
+        String.build do |str|
           str << "{"
           str << "\"id\":" << @id << ","
           str << "\"title\":" << @title.to_json << ","
@@ -38,11 +38,28 @@ module MyServer
           str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
-        result
+      end
+
+      def to_json_with_grants(grand_ids)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"grants\":" << "[#{grand_ids.join(", ")}]"
+          str << "}"
+        end
       end
 
       def self.get_programs
         items = Repo.all(Program)
+        return items.as(Array) unless items.nil?
+        [] of Program
+      end
+
+      def self.get_published_programs
+        query = Query.where(is_published: "true")
+        items = Repo.all(Program, query)
         return items.as(Array) unless items.nil?
         [] of Program
       end

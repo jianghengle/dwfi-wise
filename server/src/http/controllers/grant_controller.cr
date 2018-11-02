@@ -8,7 +8,6 @@ module MyServer
 
       def get_grants(ctx)
         begin
-          user = verify_token(ctx)
           items = Grant.get_grants
           arr = [] of String
           "[" + (items.join(", ") { |i| i.to_json }) + "]"

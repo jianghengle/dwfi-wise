@@ -43,8 +43,26 @@ module MyServer
         result
       end
 
+      def to_json_with_grants(grand_ids)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"grants\":" << "[#{grand_ids.join(", ")}]"
+          str << "}"
+        end
+      end
+
       def self.get_visiting_scholars
         items = Repo.all(VisitingScholar)
+        return items.as(Array) unless items.nil?
+        [] of VisitingScholar
+      end
+
+      def self.get_published_visiting_scholars
+        query = Query.where(is_published: "true")
+        items = Repo.all(VisitingScholar, query)
         return items.as(Array) unless items.nil?
         [] of VisitingScholar
       end

@@ -41,8 +41,26 @@ module MyServer
         result
       end
 
+      def to_json_with_grants(grand_ids)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"grants\":" << "[#{grand_ids.join(", ")}]"
+          str << "}"
+        end
+      end
+
       def self.get_events
         items = Repo.all(MyEvent)
+        return items.as(Array) unless items.nil?
+        [] of MyEvent
+      end
+
+      def self.get_published_events
+        query = Query.where(is_published: "true")
+        items = Repo.all(MyEvent, query)
         return items.as(Array) unless items.nil?
         [] of MyEvent
       end

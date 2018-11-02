@@ -54,6 +54,10 @@ module MyServer
         HttpAPI::ProgramController.delete_program(env)
       end
 
+      get "/count_programs_for_map" do |env|
+        HttpAPI::ProgramController.count_programs_for_map(env)
+      end
+
       get "/get_projects" do |env|
         HttpAPI::ProjectController.get_projects(env)
       end
@@ -72,6 +76,10 @@ module MyServer
 
       post "/delete_project" do |env|
         HttpAPI::ProjectController.delete_project(env)
+      end
+
+      get "/count_projects_for_map" do |env|
+        HttpAPI::ProjectController.count_projects_for_map(env)
       end
 
       get "/get_events" do |env|
@@ -94,6 +102,10 @@ module MyServer
         HttpAPI::EventController.delete_event(env)
       end
 
+      get "/count_events_for_map" do |env|
+        HttpAPI::EventController.count_events_for_map(env)
+      end
+
       get "/get_visiting_scholars" do |env|
         HttpAPI::VisitingScholarController.get_visiting_scholars(env)
       end
@@ -112,6 +124,10 @@ module MyServer
 
       post "/delete_visiting_scholar" do |env|
         HttpAPI::VisitingScholarController.delete_visiting_scholar(env)
+      end
+
+      get "/count_visiting_scholars_for_map" do |env|
+        HttpAPI::VisitingScholarController.count_visiting_scholars_for_map(env)
       end
 
       get "/get_people" do |env|

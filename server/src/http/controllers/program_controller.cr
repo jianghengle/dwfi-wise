@@ -128,6 +128,30 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def count_programs_for_map(ctx)
+        begin
+          items = Program.get_published_programs
+          ids = items.map { |i| i.id }
+          relations = GrantRelation.get_relations_for_ids("programs", ids)
+          relation_map = Hash(String, Array(String)).new
+          relations.each do |r|
+            id = r.for_id.to_s
+            relation_map[id] = ([] of String) unless relation_map.has_key?(id)
+            relation_map[id] << r.grant_id.to_s
+          end
+          str = items.join(", ") do |i|
+            grands = [] of String
+            grands = relation_map[i.id.to_s] if relation_map.has_key?(i.id.to_s)
+            i.to_json_with_grants(grands)
+          end
+          "[#{str}]"
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end
