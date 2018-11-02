@@ -58,6 +58,10 @@ module MyServer
         HttpAPI::ProgramController.count_programs_for_map(env)
       end
 
+      get "/get_programs_for_map/:country" do |env|
+        HttpAPI::ProgramController.get_programs_for_map(env)
+      end
+
       get "/get_projects" do |env|
         HttpAPI::ProjectController.get_projects(env)
       end
@@ -80,6 +84,10 @@ module MyServer
 
       get "/count_projects_for_map" do |env|
         HttpAPI::ProjectController.count_projects_for_map(env)
+      end
+
+      get "/get_projects_for_map/:country" do |env|
+        HttpAPI::ProjectController.get_projects_for_map(env)
       end
 
       get "/get_events" do |env|
@@ -106,6 +114,10 @@ module MyServer
         HttpAPI::EventController.count_events_for_map(env)
       end
 
+      get "/get_events_for_map/:country" do |env|
+        HttpAPI::EventController.get_events_for_map(env)
+      end
+
       get "/get_visiting_scholars" do |env|
         HttpAPI::VisitingScholarController.get_visiting_scholars(env)
       end
@@ -128,6 +140,10 @@ module MyServer
 
       get "/count_visiting_scholars_for_map" do |env|
         HttpAPI::VisitingScholarController.count_visiting_scholars_for_map(env)
+      end
+
+      get "/get_visiting_scholars_for_map/:country" do |env|
+        HttpAPI::VisitingScholarController.get_visiting_scholars_for_map(env)
       end
 
       get "/get_people" do |env|

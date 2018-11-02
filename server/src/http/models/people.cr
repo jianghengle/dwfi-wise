@@ -108,6 +108,19 @@ module MyServer
         relations.as(Array)
       end
 
+      def self.get_relation_map(for_table, ids)
+        relation_map = Hash(String, Array(PeopleRelation)).new
+        query = Query.where(for_table: for_table).where(:for_id, ids)
+        relations = Repo.all(PeopleRelation, query)
+        return relation_map if relations.nil?
+        relations.as(Array).each do |r|
+          id = r.for_id.to_s
+          relation_map[id] = ([] of PeopleRelation) unless relation_map.has_key?(id)
+          relation_map[id] << r
+        end
+        relation_map
+      end
+
       def self.update_relations(relations, for_table, for_id)
         relations.each do |r|
           r.for_table = for_table

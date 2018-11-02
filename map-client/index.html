@@ -29,90 +29,223 @@
     </div>
   </nav>
 
-  <div id="vue-root" style="padding: 10px;">
-    <div id="map-container" style="position: relative; margin-bottom: 10px; width: 100%; height: 100%;"></div>
-    <div class="columns">
-      <div class="column">
-        <div class="field">
-          <label class="label">Work</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="workCategory">
-                <option>All</option>
-                <option>Program</option>
-                <option>Project</option>
-                <option>Event</option>
-                <option>Scholar</option>
-              </select>
+  <div class="container">
+    <div id="vue-root" style="padding: 10px;">
+      <div id="map-container" style="position: relative; margin-bottom: 10px; width: 100%; height: 100%;"></div>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">Work</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select v-model="workCategory">
+                  <option>All</option>
+                  <option>Program</option>
+                  <option>Project</option>
+                  <option>Event</option>
+                  <option>Scholar</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Focus Area</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select v-model="focusArea">
+                  <option>All</option>
+                  <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
+                  <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
+                  <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
+                  <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
+                  <option>[FA5] Management of Agricultural Drought</option>
+                  <option>Education & Engagement Projects & Programs</option>
+                  <option>Communications</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Grant</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select v-model="grant">
+                  <option>All</option>
+                  <option v-for="g in allGrants" v-bind:value="g.id">{{g.organization}}</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="column">
-        <div class="field">
-          <label class="label">Focus Area</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="focusArea">
-                <option>All</option>
-                <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
-                <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
-                <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
-                <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
-                <option>[FA5] Management of Agricultural Drought</option>
-                <option>Education & Engagement Projects & Programs</option>
-                <option>Communications</option>
-              </select>
-            </div>
+      <div class="field">
+        <label class="label">Country</label>
+        <div class="control">
+          <div class="select">
+            <select v-model="activeCountryName">
+              <option v-for="c in countryNames">{{c}}</option>
+            </select>
           </div>
         </div>
       </div>
 
-      <div class="column">
-        <div class="field">
-          <label class="label">Grant</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="grant">
-                <option>All</option>
-                <option v-for="g in allGrants" v-bind:value="g.id">{{g.organization}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="field">
-      <label class="label">Country</label>
-      <div class="control">
-        <div class="select">
-          <select v-model="activeCountry">
-            <option v-for="c in countryNames">{{c}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div v-if="activeCount" class="is-size-6">There is/are
-        <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program(s)</span>
-        <span v-if="activeCountryCount[1]">, <span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project(s)</span>
-        <span v-if="activeCountryCount[2]">, <span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event(s)</span>
-        <span v-if="activeCountryCount[3]">, <span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar(s)</span>
-        <span> in/from <span class="has-text-weight-bold">{{activeCountry}}</span></span>
+      <div v-if="activeCount" class="is-size-6">There <span v-if="activeCount == 1">is</span><span v-if="activeCount > 1">are</span>
+        <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program<span v-if="activeCountryCount[0]>1">s</span> </span>
+        <span v-if="activeCountryCount[1]"><span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project<span v-if="activeCountryCount[1]>1">s</span> </span>
+        <span v-if="activeCountryCount[2]"><span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event<span v-if="activeCountryCount[2]>1">s</span> </span>
+        <span v-if="activeCountryCount[3]"><span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar<span v-if="activeCountryCount[3]>1">s</span> </span>
+        <span> related to <span class="has-text-weight-bold">{{activeCountryName}}</span></span>
       </div>
       <div v-else>
-        There is nothing applying the filters in <span class="has-text-weight-bold">{{activeCountry}}</span>
+        There is nothing applying the filters related to <span class="has-text-weight-bold">{{activeCountryName}}</span>
       </div>
-      <div id="projects-container" class="container">
+      <div id="projects-container" v-if="activeCountry">
         <div class="has-text-centered" v-if="loading">
           <span class="icon is-large fa-spin">
             <i class="fas fa-lg fa-spinner"></i>
           </span>
         </div>
 
+        <div v-if="workCategory=='All' || workCategory=='Program'">
+          <div v-for="program in activeCountry.programs" :key="'program-'+program.id"
+            v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant))">
+            <div class="card" style="margin-top: 15px;">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4"><a v-if="program.website" :href="program.website">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
+                    <p class="subtitle is-6">
+                      Program &nbsp; | &nbsp; {{program.country}} &nbsp; | &nbsp; {{program.startDate}} ~ {{program.endDate}} &nbsp; | &nbsp; {{program.status}}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p style="white-space:pre">{{program.description}}</p>
+                  <p>Focus Area: {{program.focusArea}}</p>
+                  <p>Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                  <p>People:
+                    <span v-for="(p, i) in program.people">
+                      <span v-if="i!=0">, </span>
+                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                      <span v-if="p.role"> ({{p.role}})</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="workCategory=='All' || workCategory=='Project'">
+          <div v-for="project in activeCountry.projects" :key="'project-'+project.id"
+            v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant))">
+            <div class="card" style="margin-top: 15px;">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4"><a v-if="project.website" :href="project.website">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
+                    <p class="subtitle is-6">
+                      Project &nbsp; | &nbsp; {{project.country}} &nbsp; | &nbsp; {{project.startDate}} ~ {{project.endDate}} &nbsp; | &nbsp; {{project.status}}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p style="white-space:pre">{{project.description}}</p>
+                  <p>Focus Area: {{project.focusArea}}</p>
+                  <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
+                  <p>Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                  <p>People:
+                    <span v-for="(p, i) in project.people">
+                      <span v-if="i!=0">, </span>
+                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                      <span v-if="p.role"> ({{p.role}})</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="workCategory=='All' || workCategory=='Event'">
+          <div v-for="myEvent in activeCountry.events" :key="'my-event-'+myEvent.id"
+            v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant))">
+            <div class="card" style="margin-top: 15px;">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
+                    <p class="subtitle is-6">
+                      Event &nbsp; | &nbsp; <span v-if="myEvent.state">{{myEvent.state}},</span> {{myEvent.country}} &nbsp; | &nbsp; {{myEvent.startDate}} ~ {{myEvent.endDate}} &nbsp; | &nbsp; {{myEvent.status}}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p style="white-space:pre">{{myEvent.description}}</p>
+                  <p>Focus Area: {{myEvent.focusArea}}</p>
+                  <p>Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                  <p>People:
+                    <span v-for="(p, i) in myEvent.people">
+                      <span v-if="i!=0">, </span>
+                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                      <span v-if="p.role"> ({{p.role}})</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="workCategory=='All' || workCategory=='Scholar'">
+          <div v-for="scholar in activeCountry.scholars" :key="'scholar-'+scholar.id"
+            v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant))">
+            <div class="card" style="margin-top: 15px;">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4">{{scholar.firstName + ' ' + scholar.lastName}}</p>
+                    <p class="subtitle is-6">
+                      Scholar &nbsp; | &nbsp; <span v-if="scholar.state">{{scholar.state}},</span> {{scholar.country}} &nbsp; | &nbsp; {{scholar.startDate}} ~ {{scholar.endDate}} &nbsp; | &nbsp; {{scholar.status}}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p>Research Topic: {{scholar.researchTopic}}</p>
+                  <p style="white-space:pre">{{scholar.description}}</p>
+                  <p>Focus Area: {{scholar.focusArea}}</p>
+                  <p>Grants: <span v-for="(g, i) in scholar.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                  <p>People:
+                    <span v-for="(p, i) in scholar.people">
+                      <span v-if="i!=0">, </span>
+                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                      <span v-if="p.role"> ({{p.role}})</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -123,60 +256,84 @@
     const SERVER = 'http://localhost:4000'
     const GREEN = '#23b39c'
     const GRAY = '#a7a9ac'
-    var themap = null
+    var theMap = null
 
     new Vue({
       el: '#vue-root',
       data: {
-        themap: null,
         workCategory: 'All',
         focusArea: 'All',
         grant: 'All',
         allGrants: [],
+        allPeople: [],
         countries: {},
         countryNames: [],
-        activeCountry: null,
-        loadingPrograms: false,
-        loadingProjects: false,
-        loadingEvents: false,
-        loadingScholars: false
+        activeCountryName: null,
+        loadings: {program: false, project: false, event: false, scholar: false},
+        categories: [
+          {name: 'program', label: 'Program', url: 'programs'},
+          {name: 'project', label: 'Project', url: 'projects'},
+          {name: 'event', label: 'Event', url: 'events'},
+          {name: 'scholar', label: 'Scholar', url: 'visiting_scholars'},
+        ]
       },
       computed: {
         countryCounts () {
           var counts = {}
           var vm = this
           this.countryNames.forEach(function(c){
-            var programCount = 0
-            if(vm.workCategory == 'All' || vm.workCategory == 'Program'){
-              programCount = vm.countries[c].countPrograms.filter(vm.itemFilter).length
-            }
-            var projectCount = 0
-            if(vm.workCategory == 'All' || vm.workCategory == 'Project'){
-              projectCount = vm.countries[c].countProjects.filter(vm.itemFilter).length
-            }
-            var eventCount = 0
-            if(vm.workCategory == 'All' || vm.workCategory == 'Event'){
-              eventCount = vm.countries[c].countEvents.filter(vm.itemFilter).length
-            }
-            var scholarCount = 0
-            if(vm.workCategory == 'All' || vm.workCategory == 'Scholar'){
-              scholarCount = vm.countries[c].countScholars.filter(vm.itemFilter).length
-            }
-            counts[c] = [programCount, projectCount, eventCount, scholarCount]
+            counts[c] = vm.categories.map(function(category){
+              var count = 0
+              if(vm.workCategory == 'All' || vm.workCategory == category.label){
+                count = vm.countries[c]['count' + category.label + 's'].filter(function(item){
+                  if(vm.focusArea != 'All')
+                    if(item.focusArea != vm.focusArea)
+                      return false
+                  if(vm.grant != 'All')
+                    if(!item.grants.includes(vm.grant))
+                      return false
+                  return true
+                }).length
+              }
+              return count
+            })
           })
           return counts
         },
         activeCountryCount () {
-          return this.countryCounts[this.activeCountry]
+          return this.countryCounts[this.activeCountryName]
         },
         activeCount () {
+          var count = 0
           if(this.activeCountryCount) {
-            return this.activeCountryCount[0] + this.activeCountryCount[1] + this.activeCountryCount[2] + this.activeCountryCount[3]
+            for(var i=0;i<this.activeCountryCount.length;i++){
+              count += this.activeCountryCount[i]
+            }
           }
-          return 0
+          return count
         },
         loading () {
-          return this.loadingPrograms || this.loadingProjects || this.loadingEvents || this.loadingScholars
+          for(var i=0;i<this.categories.length;i++)
+            if(this.loadings[this.categories[i].name])
+              return true
+          return false
+        },
+        grantMap () {
+          var map = {}
+          this.allGrants.forEach(function(g){
+            map[g.id] = g
+          })
+          return map
+        },
+        peopleMap () {
+          var map = {}
+          this.allPeople.forEach(function(p){
+            map[p.id] = p
+          })
+          return map
+        },
+        activeCountry () {
+          return this.countries[this.activeCountryName]
         }
       },
       watch: {
@@ -189,23 +346,23 @@
             var counts = val[countryName]
             if(counts[0] + counts[1] + counts[2] + counts[3] > 0){
               colors[country.id] = GREEN
-              if(vm.activeCountry == null){
-                vm.activeCountry = countryName
+              if(vm.activeCountryName == null){
+                vm.activeCountryName = countryName
               }
             }else{
               colors[country.id] = GRAY
             }
           })
-          themap.updateChoropleth(colors)
+          theMap.updateChoropleth(colors)
         },
-        activeCountry: function (val) {
+        activeCountryName: function (val) {
           this.showCountry()
         }
       },
       methods: {
         initMap () {
           var vm = this
-          themap = new Datamap({
+          theMap = new Datamap({
             element: document.getElementById("map-container"),
             projection: 'mercator',
             fills: {
@@ -217,14 +374,9 @@
                 var countryName = geography.properties.name
                 var counts = vm.countryCounts[countryName]
                 var html = '<div class="hoverinfo">' + countryName
-                if(counts[0] > 0)
-                  html += '<br/>Programs: ' + counts[0]
-                if(counts[1] > 0)
-                  html += '<br/>Projects: ' + counts[1]
-                if(counts[2] > 0)
-                  html += '<br/>Events: ' + counts[2]
-                if(counts[3] > 0)
-                  html += '<br/>Scholars: ' + counts[3]
+                for(var i=0;i<vm.categories.length;i++)
+                  if(counts[i] > 0)
+                    html += '<br/>' + vm.categories[i].label + 's: ' + counts[i]
                 return html
               },
             },
@@ -251,78 +403,73 @@
               vm.countries = countries
               vm.requestCountryCounts()
               datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                vm.activeCountry = geography.properties.name
+                vm.activeCountryName = geography.properties.name
               })
             }
           })
         },
-        requestGrants () {
-          this.$http.get(SERVER + '/get_grants').then(response => {
-            this.allGrants = response.body
-          })
-        },
         requestCountryCounts () {
-          this.$http.get(SERVER + '/count_programs_for_map').then(response => {
-            this.pushItems('countPrograms', response.body)
-          })
-          this.$http.get(SERVER + '/count_projects_for_map').then(response => {
-            this.pushItems('countProjects', response.body)
-          })
-          this.$http.get(SERVER + '/count_events_for_map').then(response => {
-            this.pushItems('countEvents', response.body)
-          })
-          this.$http.get(SERVER + '/count_visiting_scholars_for_map').then(response => {
-            this.pushItems('countScholars', response.body)
-          })
-        },
-        pushItems (category, items) {
           var vm = this
-          items.forEach(function(i){
-            i.country.split(', ').forEach(function(c){
-              if(vm.countries[c]){
-                vm.countries[c][category].push(i)
-              }
+          vm.categories.forEach(function(category){
+            vm.$http.get(SERVER + '/count_' + category.url + '_for_map').then(response => {
+              response.body.forEach(function(i){
+                i.country.split(', ').forEach(function(c){
+                  if(vm.countries[c]){
+                    vm.countries[c]['count' + category.label + 's'].push(i)
+                  }
+                })
+              })
             })
           })
         },
-        itemFilter (item) {
-          if(this.focusArea != 'All') {
-            if(item.focusArea != this.focusArea)
-              return false
-          }
-          if(this.grant != 'All') {
-            if(!item.grants.includes(this.grant))
-              return false
-          }
-          return true
-        },
         showCountry () {
-          console.log('show ' + this.activeCountry)
-          var country = this.countries[this.activeCountry]
-          if(country.countPrograms.length == 0){
-            country.programs = []
-          }else if(country.programs == null){
-            requestCountryPrograms()
-          }
-        },
-        requestCountryPrograms () {
-          this.loadingPrograms = true
-          var url = SERVER + '/get_programs_for_map/' + encodeURIComponent(this.activeCountry)
-          this.$http.get(url).then(response => {
-            this.countries[this.activeCountry].programs = response.body
-            this.loadingPrograms = false
-          }, response => {
-            this.loadingPrograms = false
+          vm = this
+          vm.categories.forEach(function(category){
+            var country = vm.countries[vm.activeCountryName]
+            if(country['count' + category.label + 's'].length == 0){
+              country[category.name + 's'] = []
+            }else if(country[category.name + 's'] == null){
+              vm.loadings[category.name] = true
+              var url = SERVER + '/get_' + category.url + '_for_map/' + encodeURIComponent(vm.activeCountryName)
+              vm.$http.get(url).then(response => {
+                var items = response.body
+                if(items){
+                  items.forEach(function(item){
+                    item.people.forEach(function(p){
+                      Object.assign(p, vm.peopleMap[p.peopleId])
+                    })
+                    var grantIds = []
+                    item.grants.forEach(function(g){
+                      Object.assign(g, vm.grantMap[g.grantId])
+                      grantIds.push(g.grantId)
+                    })
+                    item.grantIds = grantIds
+                  })
+                }
+                country[category.name + 's'] = items
+                vm.loadings[category.name] = false
+              }, response => {
+                vm.loadings[category.name] = false
+              })
+            }
           })
         }
       },
       mounted () {
-        this.initMap()
-        this.requestGrants()
-        this.$nextTick(function(){
-          var vm = this
-          window.addEventListener('resize', function() {
-            themap.resize()
+        var vm = this
+        var promises = []
+        promises.push(vm.$http.get(SERVER + '/get_grants').then(response => {
+          vm.allGrants = response.body
+        }))
+        promises.push(vm.$http.get(SERVER + '/get_people').then(response => {
+          vm.allPeople = response.body
+        }))
+        Promise.all(promises).then((response) => {
+          vm.initMap()
+          vm.$nextTick(function(){
+            window.addEventListener('resize', function() {
+              theMap.resize()
+            })
           })
         })
       }

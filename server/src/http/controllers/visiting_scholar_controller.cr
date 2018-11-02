@@ -135,17 +135,34 @@ module MyServer
         begin
           items = VisitingScholar.get_published_visiting_scholars
           ids = items.map { |i| i.id }
-          relations = GrantRelation.get_relations_for_ids("visiting_scholars", ids)
-          relation_map = Hash(String, Array(String)).new
-          relations.each do |r|
-            id = r.for_id.to_s
-            relation_map[id] = ([] of String) unless relation_map.has_key?(id)
-            relation_map[id] << r.grant_id.to_s
-          end
+          relation_map = GrantRelation.get_relation_map("visiting_scholars", ids)
           str = items.join(", ") do |i|
-            grands = [] of String
-            grands = relation_map[i.id.to_s] if relation_map.has_key?(i.id.to_s)
-            i.to_json_with_grants(grands)
+            grants = [] of GrantRelation
+            grants = relation_map[i.id.to_s] if relation_map.has_key?(i.id.to_s)
+            i.to_json_for_count(grants)
+          end
+          "[#{str}]"
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
+      def get_visiting_scholars_for_map(ctx)
+        begin
+          country = URI.unescape(get_param!(ctx, "country"))
+          items = VisitingScholar.get_published_visiting_scholars(country)
+          ids = items.map { |i| i.id }
+          people_relation_map = PeopleRelation.get_relation_map("visiting_scholars", ids)
+          grant_relation_map = GrantRelation.get_relation_map("visiting_scholars", ids)
+          str = items.join(", ") do |i|
+            id = i.id.to_s
+            people = [] of PeopleRelation
+            people = people_relation_map[id] if people_relation_map.has_key?(id)
+            grants = [] of GrantRelation
+            grants = grant_relation_map[id] if grant_relation_map.has_key?(id)
+            i.to_json_for_map(people, grants)
           end
           "[#{str}]"
         rescue ex : InsufficientParameters

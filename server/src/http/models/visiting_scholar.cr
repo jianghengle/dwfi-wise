@@ -20,7 +20,7 @@ module MyServer
       end
 
       def to_json
-        result = String.build do |str|
+        String.build do |str|
           str << "{"
           str << "\"id\":" << @id << ","
           str << "\"firstName\":" << @first_name.to_json << ","
@@ -40,16 +40,39 @@ module MyServer
           str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
-        result
       end
 
-      def to_json_with_grants(grand_ids)
+      def to_json_for_count(grands)
         String.build do |str|
           str << "{"
           str << "\"id\":" << @id << ","
           str << "\"country\":" << @country.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
-          str << "\"grants\":" << "[#{grand_ids.join(", ")}]"
+          str << "\"grants\":" << "[" << (grands.join(", ") { |g| g.grant_id.to_s }) << "]"
+          str << "}"
+        end
+      end
+
+      def to_json_for_map(people, grants)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"firstName\":" << @first_name.to_json << ","
+          str << "\"lastName\":" << @last_name.to_json << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"state\":" << @state.to_json << ","
+          str << "\"researchTopic\":" << @research_topic.to_json << ","
+          str << "\"description\":" << @description.to_json << ","
+          str << "\"status\":" << @status.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"startDate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
+          str << "\"endDate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
+          str << "\"funding\":" << @funding.to_json << ","
+          str << "\"collaborators\":" << @collaborators.to_json << ","
+          str << "\"moreInformation\":" << @more_information.to_json << ","
+          str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
+          str << "\"people\": [" << (people.join(", ") { |p| p.to_json }) << "],"
+          str << "\"grants\": [" << (grants.join(", ") { |g| g.to_json }) << "]"
           str << "}"
         end
       end
@@ -60,8 +83,9 @@ module MyServer
         [] of VisitingScholar
       end
 
-      def self.get_published_visiting_scholars
+      def self.get_published_visiting_scholars(country = "")
         query = Query.where(is_published: "true")
+        query.where(country: country) unless country.empty?
         items = Repo.all(VisitingScholar, query)
         return items.as(Array) unless items.nil?
         [] of VisitingScholar

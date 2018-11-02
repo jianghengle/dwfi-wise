@@ -8,7 +8,6 @@ module MyServer
 
       def get_people(ctx)
         begin
-          user = verify_token(ctx)
           items = People.get_all_people
           "[" + (items.join(", ") { |i| i.to_json }) + "]"
         rescue ex : InsufficientParameters
