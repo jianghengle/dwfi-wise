@@ -4,17 +4,20 @@
     <div class="container main-window">
       <router-view></router-view>
     </div>
+    <confirm-modal></confirm-modal>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import MyHeader from './components/MyHeader'
+import ConfirmModal from './components/modals/ConfirmModal'
 
 export default {
   name: 'app',
   components: {
-    MyHeader
+    MyHeader,
+    ConfirmModal
   }
 }
 </script>

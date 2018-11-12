@@ -456,26 +456,17 @@
       </div>
     </div>
 
-    <confirm-modal
-      :opened="confirmModal.opened"
-      :title="confirmModal.title"
-      :message="confirmModal.message"
-      :confirm-button="confirmModal.confirmButton"
-      @close-confirm-modal="closeConfirmModal">
-    </confirm-modal>
   </div>
 </template>
 
 <script>
 import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
-import ConfirmModal from './modals/ConfirmModal'
 
 export default {
   name: 'my-event',
   components: {
-    Datepicker,
-    ConfirmModal
+    Datepicker
   },
   data () {
     return {
@@ -509,13 +500,7 @@ export default {
       pointOfContact: null,
       website: '',
       files: [],
-      isPublished: 'No',
-      confirmModal: {
-        opened: false,
-        message: '',
-        button: '',
-        context: null
-      },
+      isPublished: 'No'
     }
   },
   computed: {
@@ -816,11 +801,17 @@ export default {
       })
     },
     deleteSelf () {
-      var title = 'Delete Event'
-      var message = 'Are you sure to delete the event?'
-      var confirmButton = 'Yes, delete it.'
-      var context = {callback: this.deleteConfirmed}
-      this.openConfirmModal(title, message, confirmButton, context)
+      var confirm = {
+        title: 'Delete Event',
+        message: 'Are you sure to delete the event?',
+        button: 'Yes, delete it.',
+        callback: {
+          context: this,
+          method: this.deleteConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
     },
     deleteConfirmed () {
       var message = {eventId: this.eventId}
@@ -832,26 +823,6 @@ export default {
         this.error = 'Failed to delete event!'
         this.waiting = false
       })
-    },
-    openConfirmModal (title, message, confirmButton, context) {
-      this.confirmModal.title = title
-      this.confirmModal.message = message
-      this.confirmModal.confirmButton = confirmButton
-      this.confirmModal.context = context
-      this.confirmModal.opened = true
-    },
-    closeConfirmModal (result) {
-      this.confirmModal.title = ''
-      this.confirmModal.message = ''
-      this.confirmModal.confirmButton = ''
-      this.confirmModal.opened = false
-      if(result && this.confirmModal.context){
-        var context = this.confirmModal.context
-        if(context.callback){
-          context.callback.apply(this, context.args)
-        }
-      }
-      this.confirmModal.context = null
     },
     descriptionChanged () {
       var el = document.getElementById('textarea-description');
