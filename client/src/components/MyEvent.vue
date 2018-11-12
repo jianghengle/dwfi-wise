@@ -154,8 +154,14 @@
       <div class="field-body">
         <div class="field is-narrow">
           <div class="control">
-            <div class="select is-fullwidth">
-              <select v-model="focusArea" :disabled="privileges == 'Read Only'">
+            <div class="selected-multiple-options">
+              {{focusAreaInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="focusAreaInput.join(', ') != focusArea" @click="focusAreaInput = focusArea.split(', ')">
+                <icon name="reply"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple is-fullwidth">
+              <select multiple v-model="focusAreaInput" size="7" :disabled="privileges == 'Read Only'">
                 <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
                 <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
                 <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
@@ -480,6 +486,7 @@ export default {
       country: '',
       state: '',
       focusArea: '',
+      focusAreaInput: [],
       startDate: null,
       endDate: null,
       grants: [],
@@ -633,7 +640,7 @@ export default {
         status: this.status,
         country: this.country,
         state: this.state,
-        focusArea: this.focusArea,
+        focusArea: this.focusAreaInput.join(', '),
         startDate: this.startDate,
         endDate: this.endDate,
         funding: this.funding,
@@ -654,6 +661,7 @@ export default {
         this.country = resp[0].country
         this.state = resp[0].state
         this.focusArea = resp[0].focusArea
+        this.focusAreaInput = resp[0].focusArea.split(', ')
         this.startDate = resp[0].startDate? (new Date(resp[0].startDate*1000)) : null
         this.endDate = resp[0].endDate? (new Date(resp[0].endDate*1000)) : null
         this.funding = resp[0].funding
@@ -772,7 +780,7 @@ export default {
         status: this.status,
         country: this.country,
         state: this.state,
-        focusArea: this.focusArea,
+        focusArea: this.focusAreaInput.join(', '),
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,
@@ -849,5 +857,10 @@ export default {
 <style lang="scss" scoped>
 .item-row {
   margin-bottom: 8px;
+}
+
+.selected-multiple-options {
+  margin-top: 0.375em;
+  margin-bottom: 0.375em;
 }
 </style>

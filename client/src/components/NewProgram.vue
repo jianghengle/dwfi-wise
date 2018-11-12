@@ -95,7 +95,7 @@
       <div class="field-body">
         <div class="field is-narrow">
           <div class="control">
-            <div class="selected-countries">
+            <div class="selected-multiple-options">
               {{countryInput.join(', ')}}
             </div>
             <div class="select is-multiple">
@@ -145,8 +145,11 @@
       <div class="field-body">
         <div class="field is-narrow">
           <div class="control">
-            <div class="select is-fullwidth">
-              <select v-model="focusArea">
+            <div class="selected-multiple-options">
+              {{focusAreaInput.join(', ')}}
+            </div>
+            <div class="select is-multiple is-fullwidth">
+              <select multiple v-model="focusAreaInput" size="7" :disabled="privileges == 'Read Only'">
                 <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
                 <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
                 <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
@@ -435,6 +438,7 @@ export default {
       countryInput: [],
       state: '',
       focusArea: '',
+      focusAreaInput: [],
       startDate: null,
       endDate: null,
       funding: '',
@@ -516,7 +520,7 @@ export default {
         status: this.status,
         country: this.countryInput.join(', '),
         state: this.state,
-        focusArea: this.focusArea,
+        focusArea: this.focusAreaInput.join(', '),
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,
@@ -557,7 +561,7 @@ export default {
   margin-bottom: 8px;
 }
 
-.selected-countries {
+.selected-multiple-options {
   margin-top: 0.375em;
   margin-bottom: 0.375em;
 }
