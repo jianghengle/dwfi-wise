@@ -7,7 +7,7 @@ module MyServer
         field :abstract, String
         field :url, String
         field :status, String
-        field :point_of_contact, String
+        field :point_of_contact, Int64
       end
 
       def to_json

@@ -354,7 +354,11 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="pointOfContact" :disabled="privileges == 'Read Only'">
+            <div class="select">
+              <select v-model="pointOfContact" :disabled="privileges == 'Read Only'">
+                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -509,7 +513,7 @@ export default {
       collaborators: '',
       moreInformation: '',
       publications: [],
-      pointOfContact: '',
+      pointOfContact: null,
       website: '',
       files: [],
       isPublished: 'No',

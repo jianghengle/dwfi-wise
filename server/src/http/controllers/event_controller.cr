@@ -58,7 +58,8 @@ module MyServer
           event.funding = get_param!(ctx, "funding")
           event.collaborators = get_param!(ctx, "collaborators")
           event.more_information = get_param!(ctx, "moreInformation")
-          event.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          event.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           event.website = get_param!(ctx, "website")
           event.is_published = get_param!(ctx, "isPublished") == "true"
 
@@ -96,7 +97,8 @@ module MyServer
           event.funding = get_param!(ctx, "funding")
           event.collaborators = get_param!(ctx, "collaborators")
           event.more_information = get_param!(ctx, "moreInformation")
-          event.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          event.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           event.website = get_param!(ctx, "website")
           event.is_published = get_param!(ctx, "isPublished") == "true"
 

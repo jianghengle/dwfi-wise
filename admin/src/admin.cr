@@ -140,7 +140,7 @@ class Publication < Crecto::Model
     field :abstract, String
     field :url, String
     field :status, String
-    field :point_of_contact, String
+    field :point_of_contact, Int64
   end
 
   def self.can_create(user)
@@ -182,7 +182,7 @@ class Program < Crecto::Model
     field :funding, String
     field :collaborators, String
     field :more_information, String
-    field :point_of_contact, String
+    field :point_of_contact, Int64
     field :website, String
     field :is_published, Bool
   end
@@ -210,7 +210,7 @@ class Project < Crecto::Model
     field :funding, String
     field :collaborators, String
     field :more_information, String
-    field :point_of_contact, String
+    field :point_of_contact, Int64
     field :website, String
     field :is_published, Bool
   end
@@ -237,7 +237,7 @@ class MyEvent < Crecto::Model
     field :funding, String
     field :collaborators, String
     field :more_information, String
-    field :point_of_contact, String
+    field :point_of_contact, Int64
     field :website, String
     field :is_published, Bool
   end
@@ -266,7 +266,7 @@ class VisitingScholar < Crecto::Model
     field :funding, String
     field :collaborators, String
     field :more_information, String
-    field :point_of_contact, String
+    field :point_of_contact, Int64
     field :is_published, Bool
   end
 

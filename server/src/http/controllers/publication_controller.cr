@@ -44,7 +44,8 @@ module MyServer
           publication.abstract = get_param!(ctx, "abstract")
           publication.status = get_param!(ctx, "status")
           publication.url = get_param!(ctx, "url")
-          publication.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          publication.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
 
@@ -69,7 +70,8 @@ module MyServer
           publication.abstract = get_param!(ctx, "abstract")
           publication.status = get_param!(ctx, "status")
           publication.url = get_param!(ctx, "url")
-          publication.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          publication.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
 

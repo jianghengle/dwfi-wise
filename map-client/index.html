@@ -128,7 +128,7 @@
                 </div>
 
                 <div class="content">
-                  <p style="white-space:pre">{{program.description}}</p>
+                  <p style="white-space:pre-line">{{program.description}}</p>
                   <p>Focus Area: {{program.focusArea}}</p>
                   <p>Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
                   <p>People:
@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="content">
-                  <p style="white-space:pre">{{project.description}}</p>
+                  <p style="white-space:pre-line">{{project.description}}</p>
                   <p>Focus Area: {{project.focusArea}}</p>
                   <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
                   <p>Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="content">
-                  <p style="white-space:pre">{{myEvent.description}}</p>
+                  <p style="white-space:pre-line">{{myEvent.description}}</p>
                   <p>Focus Area: {{myEvent.focusArea}}</p>
                   <p>Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
                   <p>People:
@@ -229,7 +229,7 @@
 
                 <div class="content">
                   <p>Research Topic: {{scholar.researchTopic}}</p>
-                  <p style="white-space:pre">{{scholar.description}}</p>
+                  <p style="white-space:pre-line">{{scholar.description}}</p>
                   <p>Focus Area: {{scholar.focusArea}}</p>
                   <p>Grants: <span v-for="(g, i) in scholar.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
                   <p>People:

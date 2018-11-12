@@ -58,7 +58,8 @@ module MyServer
           program.funding = get_param!(ctx, "funding")
           program.collaborators = get_param!(ctx, "collaborators")
           program.more_information = get_param!(ctx, "moreInformation")
-          program.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          program.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           program.website = get_param!(ctx, "website")
           program.is_published = get_param!(ctx, "isPublished") == "true"
 
@@ -96,7 +97,8 @@ module MyServer
           program.funding = get_param!(ctx, "funding")
           program.collaborators = get_param!(ctx, "collaborators")
           program.more_information = get_param!(ctx, "moreInformation")
-          program.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          program.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           program.website = get_param!(ctx, "website")
           program.is_published = get_param!(ctx, "isPublished") == "true"
 

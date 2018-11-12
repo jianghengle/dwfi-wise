@@ -84,7 +84,11 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="pointOfContact">
+            <div class="select">
+              <select v-model="pointOfContact">
+                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -158,17 +162,23 @@ export default {
       waiting: false,
       error: '',
       allFiles: [],
+      allPeople: [],
       title: '',
       authors: '',
       abstract: '',
       url: '',
       status: '',
-      pointOfContact: '',
+      pointOfContact: null,
       files: [],
     }
   },
   methods: {
     requestResources () {
+      this.$http.get(xHTTPx + '/get_people').then(response => {
+        this.allPeople = response.body.map(function(p){
+          return {id: p.id, label: p.firstName + ' ' + p.lastName + ' [' + p.id + ']'}
+        })
+      })
       this.$http.get(xHTTPx + '/get_files').then(response => {
         this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}

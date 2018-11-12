@@ -60,7 +60,8 @@ module MyServer
           project.funding = get_param!(ctx, "funding")
           project.collaborators = get_param!(ctx, "collaborators")
           project.more_information = get_param!(ctx, "moreInformation")
-          project.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          project.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           project.website = get_param!(ctx, "website")
           project.is_published = get_param!(ctx, "isPublished") == "true"
 
@@ -100,7 +101,8 @@ module MyServer
           project.funding = get_param!(ctx, "funding")
           project.collaborators = get_param!(ctx, "collaborators")
           project.more_information = get_param!(ctx, "moreInformation")
-          project.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          project.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           project.website = get_param!(ctx, "website")
           project.is_published = get_param!(ctx, "isPublished") == "true"
 

@@ -13,7 +13,7 @@ module MyServer
         field :funding, String
         field :collaborators, String
         field :more_information, String
-        field :point_of_contact, String
+        field :point_of_contact, Int64
         field :website, String
         field :is_published, Bool
       end

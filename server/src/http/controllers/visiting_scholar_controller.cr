@@ -60,7 +60,8 @@ module MyServer
           visiting_scholar.funding = get_param!(ctx, "funding")
           visiting_scholar.collaborators = get_param!(ctx, "collaborators")
           visiting_scholar.more_information = get_param!(ctx, "moreInformation")
-          visiting_scholar.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          visiting_scholar.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           visiting_scholar.is_published = get_param!(ctx, "isPublished") == "true"
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
@@ -99,7 +100,8 @@ module MyServer
           visiting_scholar.funding = get_param!(ctx, "funding")
           visiting_scholar.collaborators = get_param!(ctx, "collaborators")
           visiting_scholar.more_information = get_param!(ctx, "moreInformation")
-          visiting_scholar.point_of_contact = get_param!(ctx, "pointOfContact")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          visiting_scholar.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           visiting_scholar.is_published = get_param!(ctx, "isPublished") == "true"
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))

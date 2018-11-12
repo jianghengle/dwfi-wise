@@ -96,7 +96,11 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" v-model="pointOfContact" :disabled="privileges == 'Read Only'">
+            <div class="select">
+              <select v-model="pointOfContact" :disabled="privileges == 'Read Only'">
+                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -196,6 +200,7 @@ export default {
       oldPublication: null,
       oldFiles: null,
       allFiles: [],
+      allPeople: [],
       title: '',
       authors: '',
       abstract: '',
@@ -287,6 +292,11 @@ export default {
       })
     },
     requestResources () {
+      this.$http.get(xHTTPx + '/get_people').then(response => {
+        this.allPeople = response.body.map(function(p){
+          return {id: p.id, label: p.firstName + ' ' + p.lastName + ' [' + p.id + ']'}
+        })
+      })
       this.$http.get(xHTTPx + '/get_files').then(response => {
         this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
