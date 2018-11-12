@@ -196,6 +196,9 @@
               :value="startDate"
               v-on:selected="startDateSelected">
             </datepicker>
+            <a class="button is-text" @click="startDate = null">
+              <icon name="remove"></icon>
+            </a>
           </div>
         </div>
       </div>
@@ -215,6 +218,9 @@
               :value="endDate"
               v-on:selected="endDateSelected">
             </datepicker>
+            <a class="button is-text" @click="endDate = null">
+              <icon name="remove"></icon>
+            </a>
           </div>
         </div>
       </div>

@@ -207,14 +207,18 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <datepicker
-              v-if="privileges == 'Edit' || privileges == 'Approve'"
-              wrapper-class="date-picker-wrapper"
-              input-class="date-picker-input"
-              format="MMM dd yyyy"
-              :value="startDate"
-              v-on:selected="startDateSelected">
-            </datepicker>
+            <div v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <datepicker
+                wrapper-class="date-picker-wrapper"
+                input-class="date-picker-input"
+                format="MMM dd yyyy"
+                :value="startDate"
+                v-on:selected="startDateSelected">
+              </datepicker>
+              <a class="button is-text" @click="startDate = null">
+                <icon name="remove"></icon>
+              </a>
+            </div>
             <div v-if="privileges == 'Read Only'">
               <input class="input" type="text" :value="startDateLabel" :disabled="privileges == 'Read Only'">
             </div>
@@ -230,14 +234,18 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <datepicker
-              v-if="privileges == 'Edit' || privileges == 'Approve'"
-              wrapper-class="date-picker-wrapper"
-              input-class="date-picker-input"
-              format="MMM dd yyyy"
-              :value="endDate"
-              v-on:selected="endDateSelected">
-            </datepicker>
+            <div v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <datepicker
+                wrapper-class="date-picker-wrapper"
+                input-class="date-picker-input"
+                format="MMM dd yyyy"
+                :value="endDate"
+                v-on:selected="endDateSelected">
+              </datepicker>
+              <a class="button is-text" @click="endDate = null">
+                <icon name="remove"></icon>
+              </a>
+            </div>
             <div v-if="privileges == 'Read Only'">
               <input class="input" type="text" :value="endDateLabel" :disabled="privileges == 'Read Only'">
             </div>

@@ -30,8 +30,8 @@ module MyServer
           str << "\"state\":" << @state.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
           str << "\"programId\":" << @program_id.to_json << ","
-          str << "\"startAate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
-          str << "\"endAate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
+          str << "\"startDate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
+          str << "\"endDate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
           str << "\"funding\":" << @funding.to_json << ","
           str << "\"collaborators\":" << @collaborators.to_json << ","
           str << "\"moreInformation\":" << @more_information.to_json << ","
