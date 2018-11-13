@@ -5,6 +5,7 @@
       <router-view></router-view>
     </div>
     <confirm-modal></confirm-modal>
+    <import-modal></import-modal>
   </div>
 </template>
 
@@ -12,12 +13,14 @@
 import Vue from 'vue'
 import MyHeader from './components/MyHeader'
 import ConfirmModal from './components/modals/ConfirmModal'
+import ImportModal from './components/modals/ImportModal'
 
 export default {
   name: 'app',
   components: {
     MyHeader,
-    ConfirmModal
+    ConfirmModal,
+    ImportModal
   }
 }
 </script>

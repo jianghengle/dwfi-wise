@@ -20,6 +20,11 @@
                 <icon name="plus"></icon>&nbsp;New
               </router-link>
             </p>
+            <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <a class="button" @click="openImportModal">
+                <icon name="upload"></icon>&nbsp;Import
+              </a>
+            </p>
           </div>
         </div>
         <div class="column">
@@ -70,7 +75,7 @@ export default {
       items: [],
       waiting: false,
       error: '',
-      searchInput: ''
+      searchInput: '',
     }
   },
   computed: {
@@ -166,7 +171,15 @@ export default {
     },
     showItem (item) {
       this.$router.push('/' + this.tableName + '/' + item.id)
-    }
+    },
+    openImportModal () {
+      var callback = {
+        context: this,
+        method: this.getItems,
+        args: []
+      }
+      this.$store.commit('modals/openImportModal', callback)
+    },
   },
   mounted () {
     this.getItems()

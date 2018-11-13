@@ -11,7 +11,18 @@ var tables = {
       {name: 'isPublished', type: 'str', label: 'Is Published'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
+      relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
+      notes: [
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>pointOfContact</strong> is the people id from the people table',
+        'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+      ],
+      url: '/create_program'
+    }
   },
   projects: {
     label: 'Projects',
@@ -26,7 +37,19 @@ var tables = {
       {name: 'isPublished', type: 'str', label: 'Is Published'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
+      relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
+      notes: [
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>programId</strong> is the program id from the programs table',
+        'The <strong>pointOfContact</strong> is the people id from the people table',
+        'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+      ],
+      url: '/create_project'
+    }
   },
   events: {
     label: 'Events',
@@ -40,7 +63,18 @@ var tables = {
       {name: 'isPublished', type: 'str', label: 'Is Published'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
+      relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
+      notes: [
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>pointOfContact</strong> is the people id from the people table',
+        'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+      ],
+      url: '/create_event'
+    }
   },
   visiting_scholars: {
     label: 'Scholars',
@@ -55,7 +89,18 @@ var tables = {
       {name: 'isPublished', type: 'str', label: 'Is Published'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['firstName', 'lastName', 'researchTopic', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'isPublished'],
+      relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
+      notes: [
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>pointOfContact</strong> is the people id from the people table',
+        'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+      ],
+      url: '/create_visiting_scholar'
+    }
   },
   people: {
     label: 'People',
@@ -67,7 +112,15 @@ var tables = {
       {name: 'dwfiAffiliation', type: 'str', label: 'DWFI Affiliation'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['firstName', 'lastName', 'credentials', 'title', 'employer', 'dwfiAffiliation', 'email', 'phone', 'website'],
+      relations: {files: ['file_id', 'comment']},
+      notes: [
+        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+      ],
+      url: '/create_people'
+    }
   },
   publications: {
     label: 'Publications',
@@ -78,7 +131,16 @@ var tables = {
       {name: 'status', type: 'str', label: 'Status'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
+      relations: {files: ['file_id', 'comment']},
+      notes: [
+        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>pointOfContact</strong> is the people id from the people table',
+      ],
+      url: '/create_publication'
+    }
   },
   files: {
     label: 'Files',
@@ -88,7 +150,13 @@ var tables = {
       {name: 'fileType', type: 'str', label: 'File Type'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['name', 'fileType', 'url'],
+      relations: {},
+      notes: ['You only only import without uploading files'],
+      url: '/create_file'
+    }
   },
   grants: {
     label: 'Grants',
@@ -97,7 +165,13 @@ var tables = {
       {name: 'organization', type: 'str', label: 'Organization'}
     ],
     sort: {index: 0, asc: false},
-    search: ''
+    search: '',
+    importOption: {
+      columns: ['organization'],
+      relations: {},
+      notes: [],
+      url: '/create_grant'
+    }
   }
 }
 

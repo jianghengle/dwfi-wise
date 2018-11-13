@@ -6,7 +6,11 @@ export const state = {
     message: '',
     button: '',
     callback: null
-  }
+  },
+  importModal: {
+    opened: false,
+    callback: null
+  },
 }
 
 // mutations
@@ -26,6 +30,16 @@ export const mutations = {
     state.confirmModal.message = ''
     state.confirmModal.button = ''
     state.confirmModal.callback = null
+  },
+
+  openImportModal (state, callback) {
+    state.importModal.callback = callback
+    state.importModal.opened = true
+  },
+
+  closeImportModal (state) {
+    state.importModal.opened = false
+    state.importModal.callback = null
   },
 }
 
