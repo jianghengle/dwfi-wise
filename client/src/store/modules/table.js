@@ -19,7 +19,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_program'
     }
@@ -46,7 +46,7 @@ var tables = {
         'The <strong>programId</strong> is the program id from the programs table',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_project'
     }
@@ -71,7 +71,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_event'
     }
@@ -97,7 +97,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_visiting_scholar'
     }
@@ -117,7 +117,7 @@ var tables = {
       columns: ['firstName', 'lastName', 'credentials', 'title', 'employer', 'dwfiAffiliation', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
-        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_people'
     }
@@ -136,7 +136,7 @@ var tables = {
       columns: ['title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
-        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
+        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
         'The <strong>pointOfContact</strong> is the people id from the people table',
       ],
       url: '/create_publication'

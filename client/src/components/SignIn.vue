@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="welcome">
-      Welcome! Please sign in to access the DWFI Wise data.
+      Welcome! Please sign in to access the UNDA database.
     </div>
 
     <div class="field">

@@ -4,7 +4,7 @@
       <div class="container">
         <div class="navbar-brand">
           <router-link class="navbar-item is-size-4 has-text-weight-bold has-text-black" :to="'/'">
-            DWFI Wise
+            UNDA
           </router-link>
           <div class="navbar-burger burger app-burger" :class="{'is-active': menuActive && token}"
             v-if="token"
