@@ -8,252 +8,284 @@
   <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 </head>
 <body>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="http://d3js.org/topojson.v1.min.js"></script>
-  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script src="./datamaps.world.min.js"></script>
 
-  <nav class="navbar has-shadow">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item is-size-4 has-text-weight-bold has-text-black">
-          See Our Work Map
-        </a>
+  <div id="vue-root" style="padding: 10px">
+    <div style="text-align:center;color:#17475C; margin-bottom:10px">
+      <h1 class="title" style="color:#17475C;margin-bottom:15px">OVERVIEW</h1>
+      <nav class="level is-mobile" style="max-width:800px; margin:auto">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Countries</p>
+            <p class="title">{{overview.countries.length}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Programs</p>
+            <p class="title">{{overview.programs}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Projects</p>
+            <p class="title">{{overview.projects}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Events</p>
+            <p class="title">{{overview.events}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Scholars</p>
+            <p class="title">{{overview.scholars}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Grantors</p>
+            <p class="title">{{overview.grantors}}</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div id="map-container" style="position: relative; margin-bottom: 10px; width: 100%; height: 100%;"></div>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label class="label" style="color:#17475C">Work</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="workCategory">
+                <option>All</option>
+                <option>Program</option>
+                <option>Project</option>
+                <option>Event</option>
+                <option>Scholar</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="navbar-menu is-active">
-        <div class="navbar-start">
-          <a class="navbar-item" href="https://glodet.nebraska.edu:4000">
-            Edit
-          </a>
+
+      <div class="column">
+        <div class="field">
+          <label class="label" style="color:#17475C">Country</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="activeCountryName">
+                <option v-for="c in countryOptions">{{c}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="field">
+          <label class="label" style="color:#17475C">Focus Area</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="focusArea">
+                <option>All</option>
+                <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
+                <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
+                <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
+                <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
+                <option>[FA5] Management of Agricultural Drought</option>
+                <option>Education & Engagement Projects & Programs</option>
+                <option>Communications</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="field">
+          <label class="label" style="color:#17475C">Grant</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="grant">
+                <option>All</option>
+                <option v-for="g in allGrants" v-bind:value="g.id">{{g.organization}}</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </nav>
 
-  <div class="container">
-    <div id="vue-root" style="padding: 10px;">
-      <div id="map-container" style="position: relative; margin-bottom: 10px; width: 100%; height: 100%;"></div>
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label">Work</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select v-model="workCategory">
-                  <option>All</option>
-                  <option>Program</option>
-                  <option>Project</option>
-                  <option>Event</option>
-                  <option>Scholar</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="column">
-          <div class="field">
-            <label class="label">Focus Area</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select v-model="focusArea">
-                  <option>All</option>
-                  <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
-                  <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
-                  <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
-                  <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
-                  <option>[FA5] Management of Agricultural Drought</option>
-                  <option>Education & Engagement Projects & Programs</option>
-                  <option>Communications</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="column">
-          <div class="field">
-            <label class="label">Grant</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select v-model="grant">
-                  <option>All</option>
-                  <option v-for="g in allGrants" v-bind:value="g.id">{{g.organization}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Country</label>
-        <div class="control">
-          <div class="select">
-            <select v-model="activeCountryName">
-              <option v-for="c in countryNames">{{c}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="activeCount" class="is-size-6">There <span v-if="activeCount == 1">is</span><span v-if="activeCount > 1">are</span>
-        <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program<span v-if="activeCountryCount[0]>1">s</span> </span>
-        <span v-if="activeCountryCount[1]"><span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project<span v-if="activeCountryCount[1]>1">s</span> </span>
-        <span v-if="activeCountryCount[2]"><span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event<span v-if="activeCountryCount[2]>1">s</span> </span>
-        <span v-if="activeCountryCount[3]"><span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar<span v-if="activeCountryCount[3]>1">s</span> </span>
-        <span> related to <span class="has-text-weight-bold">{{activeCountryName}}</span></span>
+    <div v-if="activeCount" class="is-size-6">There <span v-if="activeCount == 1">is</span><span v-if="activeCount > 1">are</span>
+      <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program<span v-if="activeCountryCount[0]>1">s</span> </span>
+      <span v-if="activeCountryCount[1]"><span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project<span v-if="activeCountryCount[1]>1">s</span> </span>
+      <span v-if="activeCountryCount[2]"><span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event<span v-if="activeCountryCount[2]>1">s</span> </span>
+      <span v-if="activeCountryCount[3]"><span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar<span v-if="activeCountryCount[3]>1">s</span> </span>
+      <span> related to <span class="has-text-weight-bold">{{activeCountryName}}</span></span>
+    </div>
+    <div v-else>
+      <div v-if="activeCountryName == 'All'">
+        Please select a country to see all our work there.
       </div>
       <div v-else>
         There is nothing applying the filters related to <span class="has-text-weight-bold">{{activeCountryName}}</span>
       </div>
-      <div id="projects-container" v-if="activeCountry">
-        <div class="has-text-centered" v-if="loading">
-          <span class="icon is-large fa-spin">
-            <i class="fas fa-lg fa-spinner"></i>
-          </span>
-        </div>
+    </div>
 
-        <div v-if="workCategory=='All' || workCategory=='Program'">
-          <div v-for="program in activeCountry.programs" :key="'program-'+program.id"
-            v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant))">
-            <div class="card" style="margin-top: 15px;">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4"><a v-if="program.website" :href="program.website">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
-                    <p class="subtitle is-6">
-                      Program &nbsp; | &nbsp; {{program.country}} &nbsp; | &nbsp; {{program.startDate}} ~ {{program.endDate}} &nbsp; | &nbsp; {{program.status}}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p style="white-space:pre-line">{{program.description}}</p>
-                  <p>Focus Area: {{program.focusArea}}</p>
-                  <p>Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                  <p>People:
-                    <span v-for="(p, i) in program.people">
-                      <span v-if="i!=0">, </span>
-                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                      <span v-if="p.role"> ({{p.role}})</span>
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="workCategory=='All' || workCategory=='Project'">
-          <div v-for="project in activeCountry.projects" :key="'project-'+project.id"
-            v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant))">
-            <div class="card" style="margin-top: 15px;">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4"><a v-if="project.website" :href="project.website">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
-                    <p class="subtitle is-6">
-                      Project &nbsp; | &nbsp; {{project.country}} &nbsp; | &nbsp; {{project.startDate}} ~ {{project.endDate}} &nbsp; | &nbsp; {{project.status}}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p style="white-space:pre-line">{{project.description}}</p>
-                  <p>Focus Area: {{project.focusArea}}</p>
-                  <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
-                  <p>Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                  <p>People:
-                    <span v-for="(p, i) in project.people">
-                      <span v-if="i!=0">, </span>
-                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                      <span v-if="p.role"> ({{p.role}})</span>
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="workCategory=='All' || workCategory=='Event'">
-          <div v-for="myEvent in activeCountry.events" :key="'my-event-'+myEvent.id"
-            v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant))">
-            <div class="card" style="margin-top: 15px;">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
-                    <p class="subtitle is-6">
-                      Event &nbsp; | &nbsp; <span v-if="myEvent.state">{{myEvent.state}},</span> {{myEvent.country}} &nbsp; | &nbsp; {{myEvent.startDate}} ~ {{myEvent.endDate}} &nbsp; | &nbsp; {{myEvent.status}}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p style="white-space:pre-line">{{myEvent.description}}</p>
-                  <p>Focus Area: {{myEvent.focusArea}}</p>
-                  <p>Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                  <p>People:
-                    <span v-for="(p, i) in myEvent.people">
-                      <span v-if="i!=0">, </span>
-                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                      <span v-if="p.role"> ({{p.role}})</span>
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="workCategory=='All' || workCategory=='Scholar'">
-          <div v-for="scholar in activeCountry.scholars" :key="'scholar-'+scholar.id"
-            v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant))">
-            <div class="card" style="margin-top: 15px;">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4">{{scholar.firstName + ' ' + scholar.lastName}}</p>
-                    <p class="subtitle is-6">
-                      Scholar &nbsp; | &nbsp; <span v-if="scholar.state">{{scholar.state}},</span> {{scholar.country}} &nbsp; | &nbsp; {{scholar.startDate}} ~ {{scholar.endDate}} &nbsp; | &nbsp; {{scholar.status}}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p>Research Topic: {{scholar.researchTopic}}</p>
-                  <p style="white-space:pre-line">{{scholar.description}}</p>
-                  <p>Focus Area: {{scholar.focusArea}}</p>
-                  <p>Grants: <span v-for="(g, i) in scholar.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                  <p>People:
-                    <span v-for="(p, i) in scholar.people">
-                      <span v-if="i!=0">, </span>
-                      <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                      <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                      <span v-if="p.role"> ({{p.role}})</span>
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    <div id="projects-container" v-if="activeCountry">
+      <div class="has-text-centered" v-if="loading">
+        <span class="icon is-large fa-spin">
+          <i class="fas fa-lg fa-spinner"></i>
+        </span>
       </div>
+
+      <div v-if="workCategory=='All' || workCategory=='Program'">
+        <div v-for="program in activeCountry.programs" :key="'program-'+program.id"
+          v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant))">
+          <div class="card" style="margin-top: 15px;">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4"><a v-if="program.website" :href="program.website">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
+                  <p class="subtitle is-6">
+                    Program &nbsp; | &nbsp; {{program.country}} &nbsp; | &nbsp; {{program.startDate}} ~ {{program.endDate}} &nbsp; | &nbsp; {{program.status}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="content">
+                <p style="white-space:pre-line">{{program.description}}</p>
+                <p>Focus Area: {{program.focusArea}}</p>
+                <p>Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p>People:
+                  <span v-for="(p, i) in program.people">
+                    <span v-if="i!=0">, </span>
+                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                    <span v-if="p.role"> ({{p.role}})</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="workCategory=='All' || workCategory=='Project'">
+        <div v-for="project in activeCountry.projects" :key="'project-'+project.id"
+          v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant))">
+          <div class="card" style="margin-top: 15px;">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4"><a v-if="project.website" :href="project.website">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
+                  <p class="subtitle is-6">
+                    Project &nbsp; | &nbsp; {{project.country}} &nbsp; | &nbsp; {{project.startDate}} ~ {{project.endDate}} &nbsp; | &nbsp; {{project.status}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="content">
+                <p style="white-space:pre-line">{{project.description}}</p>
+                <p>Focus Area: {{project.focusArea}}</p>
+                <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
+                <p>Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p>People:
+                  <span v-for="(p, i) in project.people">
+                    <span v-if="i!=0">, </span>
+                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                    <span v-if="p.role"> ({{p.role}})</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="workCategory=='All' || workCategory=='Event'">
+        <div v-for="myEvent in activeCountry.events" :key="'my-event-'+myEvent.id"
+          v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant))">
+          <div class="card" style="margin-top: 15px;">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
+                  <p class="subtitle is-6">
+                    Event &nbsp; | &nbsp; <span v-if="myEvent.state">{{myEvent.state}},</span> {{myEvent.country}} &nbsp; | &nbsp; {{myEvent.startDate}} ~ {{myEvent.endDate}} &nbsp; | &nbsp; {{myEvent.status}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="content">
+                <p style="white-space:pre-line">{{myEvent.description}}</p>
+                <p>Focus Area: {{myEvent.focusArea}}</p>
+                <p>Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p>People:
+                  <span v-for="(p, i) in myEvent.people">
+                    <span v-if="i!=0">, </span>
+                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                    <span v-if="p.role"> ({{p.role}})</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="workCategory=='All' || workCategory=='Scholar'">
+        <div v-for="scholar in activeCountry.scholars" :key="'scholar-'+scholar.id"
+          v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant))">
+          <div class="card" style="margin-top: 15px;">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4">{{scholar.firstName + ' ' + scholar.lastName}}</p>
+                  <p class="subtitle is-6">
+                    Scholar &nbsp; | &nbsp; <span v-if="scholar.state">{{scholar.state}},</span> {{scholar.country}} &nbsp; | &nbsp; {{scholar.startDate}} ~ {{scholar.endDate}} &nbsp; | &nbsp; {{scholar.status}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="content">
+                <p>Research Topic: {{scholar.researchTopic}}</p>
+                <p style="white-space:pre-line">{{scholar.description}}</p>
+                <p>Focus Area: {{scholar.focusArea}}</p>
+                <p>Grants: <span v-for="(g, i) in scholar.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p>People:
+                  <span v-for="(p, i) in scholar.people">
+                    <span v-if="i!=0">, </span>
+                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                    <span v-if="p.role"> ({{p.role}})</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
+
   <script>
   (function () {
-    const SERVER = 'http://localhost:4000'
+    const SERVER = 'https://glodet.nebraska.edu:4000'
     const GREEN = '#23b39c'
     const GRAY = '#a7a9ac'
     var theMap = null
@@ -268,14 +300,23 @@
         allPeople: [],
         countries: {},
         countryNames: [],
-        activeCountryName: null,
+        activeCountryName: 'All',
         loadings: {program: false, project: false, event: false, scholar: false},
         categories: [
           {name: 'program', label: 'Program', url: 'programs'},
           {name: 'project', label: 'Project', url: 'projects'},
           {name: 'event', label: 'Event', url: 'events'},
           {name: 'scholar', label: 'Scholar', url: 'visiting_scholars'},
-        ]
+        ],
+        overview: {
+          countries: [],
+          programs: null,
+          projects: null,
+          events: null,
+          scholars: null,
+          grantors: null
+        },
+        countryOptions: ['All']
       },
       computed: {
         countryCounts () {
@@ -346,9 +387,6 @@
             var counts = val[countryName]
             if(counts[0] + counts[1] + counts[2] + counts[3] > 0){
               colors[country.id] = GREEN
-              if(vm.activeCountryName == null){
-                vm.activeCountryName = countryName
-              }
             }else{
               colors[country.id] = GRAY
             }
@@ -401,11 +439,25 @@
               })
               vm.countryNames = Object.keys(countries).sort()
               vm.countries = countries
+              vm.requestOverview()
               vm.requestCountryCounts()
               datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
                 vm.activeCountryName = geography.properties.name
               })
             }
+          })
+        },
+        requestOverview () {
+          this.$http.get(SERVER + '/get_overview').then(response => {
+            var resp = response.body
+            this.overview.countries = resp[0]
+            this.overview.programs = resp[1]
+            this.overview.projects = resp[2]
+            this.overview.events = resp[3]
+            this.overview.scholars = resp[4]
+            this.overview.grantors = resp[5]
+            this.countryOptions = resp[0].slice().sort()
+            this.countryOptions.unshift('All')
           })
         },
         requestCountryCounts () {
@@ -423,6 +475,8 @@
           })
         },
         showCountry () {
+          if(this.activeCountryName == 'All')
+            return
           vm = this
           vm.categories.forEach(function(category){
             var country = vm.countries[vm.activeCountryName]

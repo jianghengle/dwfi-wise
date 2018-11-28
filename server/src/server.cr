@@ -30,6 +30,10 @@ module MyServer
         env.redirect "/index.html"
       end
 
+      get "/get_overview" do |env|
+        HttpAPI::OverviewController.get_overview(env)
+      end
+
       post "/get_auth_token" do |env|
         HttpAPI::UserController.get_auth_token(env)
       end

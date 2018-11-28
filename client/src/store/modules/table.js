@@ -16,7 +16,7 @@ var tables = {
       columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
-        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
@@ -42,7 +42,7 @@ var tables = {
       columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
-        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>programId</strong> is the program id from the programs table',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
@@ -68,7 +68,7 @@ var tables = {
       columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
-        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',
@@ -94,7 +94,7 @@ var tables = {
       columns: ['firstName', 'lastName', 'researchTopic', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
-        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or <strong>null</strong>.',
+        'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or <strong>null</strong>',

@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Import data from a csv file</p>
+        <p class="modal-card-title">Import data from a Tab delimited file</p>
         <button class="delete" @click="close"></button>
       </header>
       <section class="modal-card-body">
@@ -13,9 +13,9 @@
         </div>
 
         <div class="my-section">
-          <p>The first line of the csv file is the header, which is the column names seperated by commas.</p>
-          <p>The columns to be retreived are <span v-for="(c,i) in allColumns"><span v-if="i!=0">, </span><strong >{{c}}</strong></span>. The order does not matter.</p>
-          <p>The integer data cell is like <strong>1</strong>; the text data cell is like <strong>"Say \"Hi\""</strong>(Please note string is surrounded by <strong>"</strong> and the <strong>"</strong> inside is using <strong>\"</strong>); the empty cells need to be filled by <strong>null</strong></p>
+          <p>The first line of the file is the header: <span v-for="(c,i) in allColumns"><span v-if="i!=0">, </span><strong >{{c}}</strong></span>.</p>
+          <p>Your file could have more or less columns than the columns above.</p>
+          <p>You could simply leave any data cell empty if it is not appliable.</p>
           <p v-for="n in notes"><span v-html="n"></span></p>
         </div>
 
@@ -36,8 +36,8 @@
         </div>
 
         <div class="my-section" v-if="file">
-          <p v-if="!deletedHeaders.length">No data column found.</p>
-          <p v-else>Found columns: <span v-for="(h,i) in deletedHeaders"><span v-if="i!=0">, </span><strong>{{h}}</strong></span></p>
+          <p v-if="!detectedHeaders.length">No data column found.</p>
+          <p v-else>Found columns: <span v-for="(h,i) in detectedHeaders"><span v-if="i!=0">, </span><strong>{{h}}</strong></span></p>
           <p v-if="!rows.length">No data rows found</p>
           <p v-else>Found data rows: {{rows.length}}</p>
         </div>
@@ -96,11 +96,11 @@ export default {
     notes () {
       return this.importOption.notes
     },
-    deletedHeaders () {
+    detectedHeaders () {
       return Object.keys(this.header)
     },
     canImport () {
-      return this.file && this.deletedHeaders.length && this.rows.length && this.results.length < this.rows.length
+      return this.file && this.detectedHeaders.length && this.rows.length && this.results.length < this.rows.length
     },
     url () {
       return this.importOption.url
@@ -147,7 +147,7 @@ export default {
       var reader = new FileReader()
       reader.onload = function(e) {
         var text = reader.result
-        var lines = text.split('\n')
+        var lines = text.split('\r\n')
         if(lines.length == 0) {
           vm.header = {}
           vm.rows = []
@@ -162,7 +162,7 @@ export default {
     },
     getHeader (line) {
       var header = {}
-      var cols = line.split(',')
+      var cols = line.split('\t')
       for(var i=0;i<cols.length;i++){
         var col = cols[i].trim()
         if(this.allColumns.includes(col)){
@@ -179,14 +179,7 @@ export default {
       var vm = this
       var promises = []
       this.rows.forEach(function(row){
-        var data = null
-        try {
-          data = JSON.parse('[' + row + ']')
-        }
-        catch(err) {
-          vm.results.push(false)
-          return
-        }
+        var data = vm.parseDateRow(row)
         var message = vm.buildMessage(data)
         var promise = vm.$http.post(xHTTPx + vm.url, message).then(response => {
           vm.results.push(true)
@@ -202,6 +195,20 @@ export default {
       }, (response) => {
         vm.importDone()
       })
+    },
+    parseDateRow (row) {
+      var data = []
+      row.split('\t').forEach(function(cell){
+        var c = cell.trim()
+        if(c.startsWith('"') && c.endsWith('"')){
+          c = c.slice(1,-1)
+        }
+        if(!c || c == 'null' || c == 'na' || c == 'N/A'){
+          c = null
+        }
+        data.push(c)
+      })
+      return data
     },
     buildMessage(data) {
       var vm = this
