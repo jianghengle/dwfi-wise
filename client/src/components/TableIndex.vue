@@ -25,6 +25,16 @@
                 <icon name="upload"></icon>&nbsp;Import
               </a>
             </p>
+            <p class="control" v-if="selected.length">
+              <a class="button" @click="exportSelected">
+                <icon name="download"></icon>&nbsp;Export ({{selected.length}})
+              </a>
+            </p>
+            <p class="control" v-if="(privileges == 'Edit' || privileges == 'Approve') && selected.length">
+              <a class="button is-danger" @click="deleteSelected">
+                <icon name="remove"></icon>&nbsp;Delete ({{selected.length}})
+              </a>
+            </p>
           </div>
         </div>
         <div class="column">
@@ -43,6 +53,11 @@
         <table class="table is-fullwidth is-hoverable is-striped">
           <thead>
             <tr>
+              <th>
+                <label class="checkbox" @click="toggleSelectAll">
+                  <input type="checkbox" v-model="selectAll">
+                </label>
+              </th>
               <th v-for="(col, i) in columns" @click="sortItems(i)" class="clickable">
                 {{col.label}}
                 <span v-if="sortOption.index==i">
@@ -54,6 +69,11 @@
           </thead>
           <tbody>
             <tr v-for="(item, i) in processedItems" @click="showItem(item)" class="clickable">
+              <td @click.stop="">
+                <label class="checkbox">
+                  <input type="checkbox" v-model="selection[item.id]">
+                </label>
+              </td>
               <td v-for="col in columns">
                 {{item[col.name]}}
               </td>
@@ -76,6 +96,8 @@ export default {
       waiting: false,
       error: '',
       searchInput: '',
+      selection: {},
+      selectAll: false
     }
   },
   computed: {
@@ -103,6 +125,9 @@ export default {
     searchText () {
       return this.tableOption.search
     },
+    deleteOption () {
+      return this.tableOption.deleteOption
+    },
     processedItems () {
       var vm = this
       this.items.sort(this.compareItems)
@@ -127,10 +152,18 @@ export default {
           }
         }
       })
+    },
+    selected () {
+      var vm = this
+      return Object.keys(vm.selection).filter(function(k){
+        return vm.selection[k]
+      })
     }
   },
   watch: {
     tableName: function (val) {
+      this.selection = {}
+      this.selectAll = false
       this.getItems()
       this.searchInput = this.searchText
     },
@@ -145,6 +178,11 @@ export default {
       this.waiting = true
       this.$http.get(xHTTPx + '/get_' + this.tableName).then(response => {
         this.items = response.body
+        var selection = {}
+        this.items.forEach(function(i){
+          selection[i.id] = false
+        })
+        this.selection = selection
         this.waiting = false
         this.error = ''
       }, response => {
@@ -180,6 +218,55 @@ export default {
       }
       this.$store.commit('modals/openImportModal', callback)
     },
+    toggleSelectAll () {
+      this.$nextTick(function(){
+        var selection = {}
+        var selectAll = this.selectAll
+        this.items.forEach(function(i){
+          selection[i.id] = false
+        })
+        this.processedItems.forEach(function(i){
+          selection[i.id] = selectAll
+        })
+        this.selection = selection
+      })
+    },
+    deleteSelected () {
+      var confirm = {
+        title: 'Delete Selected',
+        message: 'Are you sure to delete the selected ' + this.selected.length + ' item(s)?',
+        button: 'Yes, I am sure.',
+        callback: {
+          context: this,
+          method: this.deleteSelectedConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
+    },
+    deleteSelectedConfirmed () {
+      var url = this.deleteOption.url
+      var vm = this
+      var promises = []
+      this.selected.forEach(function(id){
+        var message = {}
+        message[vm.deleteOption.id] = id
+        var promise = vm.$http.post(xHTTPx + url, message).then(response => {
+        }, response => {
+          vm.error = 'Some delete failed'
+        })
+        promises.push(promise)
+      })
+      vm.waiting = true
+      Promise.all(promises).then((response) => {
+        vm.getItems()
+      }, (response) => {
+        vm.getItems()
+      })
+    },
+    exportSelected () {
+      
+    }
   },
   mounted () {
     this.getItems()

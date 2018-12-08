@@ -22,6 +22,10 @@ var tables = {
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_program'
+    },
+    deleteOption: {
+      id: 'programId',
+      url: '/delete_program'
     }
   },
   projects: {
@@ -49,6 +53,10 @@ var tables = {
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_project'
+    },
+    deleteOption: {
+      id: 'projectId',
+      url: '/delete_project'
     }
   },
   events: {
@@ -74,6 +82,10 @@ var tables = {
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_event'
+    },
+    deleteOption: {
+      id: 'eventId',
+      url: '/delete_event'
     }
   },
   visiting_scholars: {
@@ -100,6 +112,10 @@ var tables = {
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_visiting_scholar'
+    },
+    deleteOption: {
+      id: 'visitingScholarId',
+      url: '/delete_visiting_scholar'
     }
   },
   people: {
@@ -120,6 +136,10 @@ var tables = {
         'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
       ],
       url: '/create_people'
+    },
+    deleteOption: {
+      id: 'peopleId',
+      url: '/delete_people'
     }
   },
   publications: {
@@ -140,6 +160,10 @@ var tables = {
         'The <strong>pointOfContact</strong> is the people id from the people table',
       ],
       url: '/create_publication'
+    },
+    deleteOption: {
+      id: 'publicationId',
+      url: '/delete_publication'
     }
   },
   files: {
@@ -156,6 +180,10 @@ var tables = {
       relations: {},
       notes: ['You only only import without uploading files'],
       url: '/create_file'
+    },
+    deleteOption: {
+      id: 'fileId',
+      url: '/delete_file'
     }
   },
   grants: {
@@ -171,6 +199,10 @@ var tables = {
       relations: {},
       notes: [],
       url: '/create_grant'
+    },
+    deleteOption: {
+      id: 'grantId',
+      url: '/delete_grant'
     }
   }
 }
