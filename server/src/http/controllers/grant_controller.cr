@@ -38,6 +38,7 @@ module MyServer
 
           grant = Grant.new
           grant.organization = get_param!(ctx, "organization")
+          grant.comment = get_param!(ctx, "comment")
           Grant.create_grant(grant)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
@@ -55,6 +56,7 @@ module MyServer
           grant = Grant.new
           grant.id = get_param!(ctx, "id").to_i
           grant.organization = get_param!(ctx, "organization")
+          grant.comment = get_param!(ctx, "comment")
 
           Grant.update_grant(grant)
           {ok: true}.to_json

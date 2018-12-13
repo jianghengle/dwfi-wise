@@ -98,7 +98,7 @@
           <div class="control">
             <div class="select">
               <select v-model="pointOfContact" :disabled="privileges == 'Read Only'">
-                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+                <option v-for="opt in contactOptions" v-bind:value="opt.id">{{opt.label}}</option>
               </select>
             </div>
           </div>
@@ -238,6 +238,11 @@ export default {
         }
       }
       return changed
+    },
+    contactOptions () {
+      var opts = this.allPeople.slice()
+      opts.unshift({id: null, label: 'None'})
+      return opts
     }
   },
   methods: {

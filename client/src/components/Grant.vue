@@ -29,6 +29,19 @@
       </div>
     </div>
 
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Comment</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="comment" :disabled="privileges == 'Read Only'">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
         <!-- Left empty for spacing -->
@@ -61,6 +74,7 @@ export default {
       success: '',
       oldGrant: null,
       organization: '',
+      comment: ''
     }
   },
   computed: {
@@ -81,6 +95,7 @@ export default {
     collectGrant () {
       return {
         organization: this.organization,
+        comment: this.comment
       }
     },
     getGrant () {
@@ -88,6 +103,7 @@ export default {
       this.$http.get(xHTTPx + '/get_grant/' + this.grantId).then(response => {
         var resp = response.body
         this.organization = resp.organization
+        this.comment = resp.comment
         this.oldGrant = this.collectGrant()
         this.waiting = false
         this.error = ''
@@ -99,6 +115,7 @@ export default {
     update () {
       var message = {
         organization: this.organization,
+        comment: this.comment
       }
       this.$http.post(xHTTPx + '/update_grant/' + this.grantId, message).then(response => {
         var resp = response.body

@@ -18,6 +18,19 @@
     </div>
 
     <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Comment</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="comment">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
       <div class="field-label">
         <!-- Left empty for spacing -->
       </div>
@@ -44,13 +57,15 @@ export default {
     return {
       waiting: false,
       error: '',
-      organization: ''
+      organization: '',
+      comment: ''
     }
   },
   methods: {
     create () {
       var message = {
-        organization: this.organization
+        organization: this.organization,
+        comment: this.comment
       }
       this.$http.post(xHTTPx + '/create_grant', message).then(response => {
         var resp = response.body

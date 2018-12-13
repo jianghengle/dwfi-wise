@@ -223,6 +223,10 @@ export default {
                 val = Date.parse(val + ' 00:00:00 CST')
                 val = Math.floor(val / 1000)
               }
+            }else if(col == 'programId' || col == 'pointOfContact'){
+              if(val){
+                val = parseInt(val)
+              }
             }
           }
           message[col] = val
@@ -233,12 +237,7 @@ export default {
           if(vm.header[col] !== undefined){
             var str = data[vm.header[col]]
             if(str){
-              val = str.split(',').map(function(s){
-                var obj = {}
-                obj[rel[0]] = parseInt(s)
-                obj[rel[1]] = ''
-                return obj
-              })
+              val = vm.parseRelations(str, col, rel)
             }
           }
           message[col] = JSON.stringify(val)
@@ -256,6 +255,28 @@ export default {
         message = formData
       }
       return message
+    },
+    parseRelations (str, col, rel) {
+      var val = []
+      str.split('\n').forEach(function(s){
+        s = s.trim()
+        if(s){
+          var obj = {}
+          obj[rel[0]] = parseInt(s)
+
+          var first = s.indexOf(',')
+          var last = s.lastIndexOf(',')
+          if(first == -1){
+            obj[rel[1]] = ''
+          }else if(first == last){
+            obj[rel[1]] = s.slice(first + 1).trim()
+          }else{
+            obj[rel[1]] = s.slice(first + 1, last).trim()
+          }
+          val.push(obj)
+        }
+      })
+      return val
     },
     importDone () {
       this.waiting = false

@@ -3,13 +3,15 @@ module MyServer
     class Grant < Crecto::Model
       schema "grants" do
         field :organization, String
+        field :comment, String
       end
 
       def to_json
         result = String.build do |str|
           str << "{"
           str << "\"id\":" << @id << ","
-          str << "\"organization\":" << @organization.to_json
+          str << "\"organization\":" << @organization.to_json << ","
+          str << "\"comment\":" << @comment.to_json
           str << "}"
         end
         result

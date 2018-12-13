@@ -149,7 +149,7 @@
               {{focusAreaInput.join(', ')}}
             </div>
             <div class="select is-multiple is-fullwidth">
-              <select multiple v-model="focusAreaInput" size="7" :disabled="privileges == 'Read Only'">
+              <select multiple v-model="focusAreaInput" size="7">
                 <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
                 <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
                 <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
@@ -328,7 +328,7 @@
           <div class="control">
             <div class="select">
               <select v-model="pointOfContact">
-                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+                <option v-for="opt in contactOptions" v-bind:value="opt.id">{{opt.label}}</option>
               </select>
             </div>
           </div>
@@ -469,6 +469,11 @@ export default {
     states () {
       return this.$store.state.table.states
     },
+    contactOptions () {
+      var opts = this.allPeople.slice()
+      opts.unshift({id: null, label: 'None'})
+      return opts
+    }
   },
   methods: {
     requestResources () {

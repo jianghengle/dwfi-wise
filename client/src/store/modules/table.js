@@ -19,7 +19,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
       ],
       url: '/create_program'
     },
@@ -50,7 +50,7 @@ var tables = {
         'The <strong>programId</strong> is the program id from the programs table',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
       ],
       url: '/create_project'
     },
@@ -79,7 +79,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
       ],
       url: '/create_event'
     },
@@ -109,7 +109,7 @@ var tables = {
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
-        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are the corresponding table ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
+        'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
       ],
       url: '/create_visiting_scholar'
     },
@@ -133,7 +133,7 @@ var tables = {
       columns: ['firstName', 'lastName', 'credentials', 'title', 'employer', 'dwfiAffiliation', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
-        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
+        'The <strong>files</strong> are files from the files table. Leave it empty if nothing. Otherwise, each file takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, photo</pre>',
       ],
       url: '/create_people'
     },
@@ -156,8 +156,8 @@ var tables = {
       columns: ['title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
-        'The <strong>files</strong> is the corresponding file ids seperated by commas, like <strong>"1, 2, 3"</strong> or empty',
         'The <strong>pointOfContact</strong> is the people id from the people table',
+        'The <strong>files</strong> are files from the files table. Leave it empty if nothing. Otherwise, each file takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, abstract</pre>',
       ],
       url: '/create_publication'
     },
@@ -190,12 +190,13 @@ var tables = {
     label: 'Grants',
     columns: [
       {name: 'id', type: 'int', label: 'Id'},
-      {name: 'organization', type: 'str', label: 'Organization'}
+      {name: 'organization', type: 'str', label: 'Organization'},
+      {name: 'comment', type: 'str', label: 'Comment'}
     ],
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['organization'],
+      columns: ['organization', 'comment'],
       relations: {},
       notes: [],
       url: '/create_grant'

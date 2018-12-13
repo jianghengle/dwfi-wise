@@ -66,6 +66,7 @@ end
 class Grant < Crecto::Model
   schema "grants" do
     field :organization, String
+    field :comment, String
   end
 
   def self.can_create(user)

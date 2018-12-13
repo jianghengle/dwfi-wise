@@ -36,12 +36,6 @@
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Events</p>
-            <p class="title">{{overview.events}}</p>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <div>
             <p class="heading">Scholars</p>
             <p class="title">{{overview.scholars}}</p>
           </div>
@@ -514,6 +508,15 @@
         var promises = []
         promises.push(vm.$http.get(SERVER + '/get_grants').then(response => {
           vm.allGrants = response.body
+          vm.allGrants.sort(function(a, b){
+            if(a.comment && b.comment)
+              return a.comment.localeCompare(b.comment)
+            if(a.comment && !b.comment)
+              return -1
+            if(!a.comment && b.comment)
+              return 1
+            return a.organization.localeCompare(b.organization)
+          })
         }))
         promises.push(vm.$http.get(SERVER + '/get_people').then(response => {
           vm.allPeople = response.body

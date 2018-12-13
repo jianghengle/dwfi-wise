@@ -86,7 +86,7 @@
           <div class="control">
             <div class="select">
               <select v-model="pointOfContact">
-                <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+                <option v-for="opt in contactOptions" v-bind:value="opt.id">{{opt.label}}</option>
               </select>
             </div>
           </div>
@@ -170,6 +170,13 @@ export default {
       status: '',
       pointOfContact: null,
       files: [],
+    }
+  },
+  computed: {
+    contactOptions () {
+      var opts = this.allPeople.slice()
+      opts.unshift({id: null, label: 'None'})
+      return opts
     }
   },
   methods: {
