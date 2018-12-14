@@ -70,6 +70,7 @@ export default {
         {name: 'visiting_scholars', label: 'Scholars', path: '/table/visiting_scholars'},
       ],
       otherTables: [
+        {name: 'faculty', label: 'Faculty', path: '/table/faculty'},
         {name: 'people', label: 'People', path: '/table/people'},
         {name: 'grants', label: 'Grants', path: '/table/grants'},
         {name: 'publications', label: 'Publications', path: '/table/publications'},

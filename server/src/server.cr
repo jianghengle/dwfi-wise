@@ -230,6 +230,26 @@ module MyServer
         HttpAPI::GrantController.delete_grant(env)
       end
 
+      get "/get_faculty" do |env|
+        HttpAPI::FacultyController.get_faculty(env)
+      end
+
+      get "/get_one_faculty/:id" do |env|
+        HttpAPI::FacultyController.get_one_faculty(env)
+      end
+
+      post "/create_faculty" do |env|
+        HttpAPI::FacultyController.create_faculty(env)
+      end
+
+      post "/update_faculty/:id" do |env|
+        HttpAPI::FacultyController.update_faculty(env)
+      end
+
+      post "/delete_faculty" do |env|
+        HttpAPI::FacultyController.delete_faculty(env)
+      end
+
       serve_static({"gzip" => true, "dir_listing" => true})
 
       Kemal.run 4000

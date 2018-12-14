@@ -280,6 +280,52 @@ class VisitingScholar < Crecto::Model
   end
 end
 
+class Faculty < Crecto::Model
+  schema "faculty" do
+    field :people_id, Int64
+    field :year_joined, Int64
+    field :status, String
+    field :campus, String
+    field :department, String
+    field :area_of_expertise, String
+    field :expertise_title, String
+  end
+
+  def self.form_attributes
+    [:people_id,
+     :year_joined,
+     {:status, "enum", ["New", "Returning"]},
+     {:campus, "enum", ["UNL", "UNO", "UNK", "UNMC", "Other"]},
+     {:department, "string"},
+     {:area_of_expertise, "text"},
+     {:expertise_title, "string"}]
+  end
+
+  def self.can_create(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+
+  def can_edit(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+end
+
+class WorkPlan < Crecto::Model
+  schema "work_plans" do
+    field :faculty_id, Int64
+    field :year, Int64
+    field :plan, String
+  end
+
+  def self.can_create(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+
+  def can_edit(user)
+    user.is_a? User && user.privileges.to_s != "Read Only"
+  end
+end
+
 CrectoAdmin.config do |config|
   config.auth_enabled = true
   config.auth = CrectoAdmin::DatabaseAuth
@@ -305,6 +351,8 @@ admin_resource(Program, Repo)
 admin_resource(Project, Repo)
 admin_resource(MyEvent, Repo)
 admin_resource(VisitingScholar, Repo)
+admin_resource(Faculty, Repo)
+admin_resource(WorkPlan, Repo)
 
 Kemal::Session.config do |config|
   config.secret = "sTHxjX3R"

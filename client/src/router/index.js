@@ -12,6 +12,8 @@ import VisitingScholar from '@/components/VisitingScholar'
 import NewVisitingScholar from '@/components/NewVisitingScholar'
 import People from '@/components/People'
 import NewPeople from '@/components/NewPeople'
+import Faculty from '@/components/Faculty'
+import NewFaculty from '@/components/NewFaculty'
 import Publication from '@/components/Publication'
 import NewPublication from '@/components/NewPublication'
 import MyFile from '@/components/MyFile'
@@ -86,6 +88,16 @@ export default new Router({
       path: '/people/:id',
       name: 'People',
       component: People
+    },
+    {
+      path: '/new/faculty',
+      name: 'NewFaculty',
+      component: NewFaculty
+    },
+    {
+      path: '/faculty/:id',
+      name: 'Faculty',
+      component: Faculty
     },
     {
       path: '/new/publications',

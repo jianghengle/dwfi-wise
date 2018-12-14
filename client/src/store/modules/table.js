@@ -118,6 +118,31 @@ var tables = {
       url: '/delete_visiting_scholar'
     }
   },
+  faculty: {
+    label: 'Faculty',
+    columns: [
+      {name: 'id', type: 'int', label: 'Id'},
+      {name: 'firstName', type: 'str', label: 'First Name'},
+      {name: 'lastName', type: 'str', label: 'Last Name'},
+      {name: 'yearJoined', type: 'int', label: 'Year Joined'},
+      {name: 'status', type: 'str', label: 'Status'},
+      {name: 'campus', type: 'str', label: 'Campus'}
+    ],
+    sort: {index: 0, asc: false},
+    search: '',
+    importOption: {
+      columns: ['peopleId', 'yearJoined', 'status', 'campus', 'department', 'areaOfExpertise', 'expertiseTitle'],
+      relations: {workPlans: ['year', 'plan']},
+      notes: [
+        'The <strong>workPlans</strong> example:<pre>1\n2, photo</pre>',
+      ],
+      url: '/create_faculty'
+    },
+    deleteOption: {
+      id: 'facultyId',
+      url: '/delete_faculty'
+    }
+  },
   people: {
     label: 'People',
     columns: [

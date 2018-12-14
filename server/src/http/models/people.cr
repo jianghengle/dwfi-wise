@@ -69,6 +69,17 @@ module MyServer
         changeset = Repo.delete(people)
         raise changeset.errors.to_s unless changeset.valid?
       end
+
+      def self.get_people_map(people_ids)
+        result = {} of String => People
+        query = Query.where(:id, people_ids)
+        people = Repo.all(People, query)
+        return result if people.nil?
+        people.as(Array).each do |p|
+          result[p.id.to_s] = p
+        end
+        return result
+      end
     end
 
     class PeopleRelation < Crecto::Model
