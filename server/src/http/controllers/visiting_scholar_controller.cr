@@ -138,10 +138,13 @@ module MyServer
           items = VisitingScholar.get_published_visiting_scholars
           ids = items.map { |i| i.id }
           relation_map = GrantRelation.get_relation_map("visiting_scholars", ids)
+          people_map = PeopleRelation.get_relation_map("visiting_scholars", ids)
           str = items.join(", ") do |i|
+            people = [] of PeopleRelation
+            people = people_map[i.id.to_s] if people_map.has_key?(i.id.to_s)
             grants = [] of GrantRelation
             grants = relation_map[i.id.to_s] if relation_map.has_key?(i.id.to_s)
-            i.to_json_for_count(grants)
+            i.to_json_for_count(grants, people)
           end
           "[#{str}]"
         rescue ex : InsufficientParameters

@@ -36,6 +36,12 @@
         </div>
         <div class="level-item has-text-centered">
           <div>
+            <p class="heading">Faculty</p>
+            <p class="title">{{overview.faculty}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
             <p class="heading">Scholars</p>
             <p class="title">{{overview.scholars}}</p>
           </div>
@@ -103,6 +109,20 @@
 
       <div class="column">
         <div class="field">
+          <label class="label" style="color:#17475C">Faculty</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="faculty">
+                <option>All</option>
+                <option v-for="f in allFaculty" v-bind:value="f.peopleId">{{f.firstName + ' ' + f.lastName}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="field">
           <label class="label" style="color:#17475C">Grant</label>
           <div class="control">
             <div class="select is-fullwidth">
@@ -141,7 +161,7 @@
 
       <div v-if="workCategory=='All' || workCategory=='Program'">
         <div v-for="program in activeCountry.programs" :key="'program-'+program.id"
-          v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant))">
+          v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant)) && (faculty=='All' || program.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
@@ -174,7 +194,7 @@
 
       <div v-if="workCategory=='All' || workCategory=='Project'">
         <div v-for="project in activeCountry.projects" :key="'project-'+project.id"
-          v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant))">
+          v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant)) && (faculty=='All' || project.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
@@ -208,7 +228,7 @@
 
       <div v-if="workCategory=='All' || workCategory=='Event'">
         <div v-for="myEvent in activeCountry.events" :key="'my-event-'+myEvent.id"
-          v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant))">
+          v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant)) && (faculty=='All' || myEvent.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
@@ -241,7 +261,7 @@
 
       <div v-if="workCategory=='All' || workCategory=='Scholar'">
         <div v-for="scholar in activeCountry.scholars" :key="'scholar-'+scholar.id"
-          v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant))">
+          v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant)) && (faculty=='All' || scholar.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
@@ -290,8 +310,10 @@
         workCategory: 'All',
         focusArea: 'All',
         grant: 'All',
+        faculty: 'All',
         allGrants: [],
         allPeople: [],
+        allFaculty: [],
         countries: {},
         countryNames: [],
         activeCountryName: 'All',
@@ -308,7 +330,8 @@
           projects: null,
           events: null,
           scholars: null,
-          grantors: null
+          grantors: null,
+          faculty: null
         },
         countryOptions: ['All']
       },
@@ -326,6 +349,9 @@
                       return false
                   if(vm.grant != 'All')
                     if(!item.grants.includes(vm.grant))
+                      return false
+                  if(vm.faculty != 'All')
+                    if(!item.people.includes(vm.faculty))
                       return false
                   return true
                 }).length
@@ -450,6 +476,7 @@
             this.overview.events = resp[3]
             this.overview.scholars = resp[4]
             this.overview.grantors = resp[5]
+            this.overview.faculty = resp[6]
             this.countryOptions = resp[0].slice().sort()
             this.countryOptions.unshift('All')
           })
@@ -492,6 +519,9 @@
                       grantIds.push(g.grantId)
                     })
                     item.grantIds = grantIds
+                    item.peopleIds = item.people.map(function(p){
+                      return p.id
+                    })
                   })
                 }
                 country[category.name + 's'] = items
@@ -520,6 +550,14 @@
         }))
         promises.push(vm.$http.get(SERVER + '/get_people').then(response => {
           vm.allPeople = response.body
+        }))
+        promises.push(vm.$http.get(SERVER + '/get_faculty').then(response => {
+          vm.allFaculty = response.body
+          vm.allFaculty.sort(function(a, b){
+            var aFullName = a.firstName + ' ' + a.lastName
+            var bFullName = b.firstName + ' ' + b.lastName
+            return aFullName.localeCompare(bFullName)
+          })
         }))
         Promise.all(promises).then((response) => {
           vm.initMap()

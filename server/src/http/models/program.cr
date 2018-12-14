@@ -40,12 +40,13 @@ module MyServer
         end
       end
 
-      def to_json_for_count(grants)
+      def to_json_for_count(grants, people)
         String.build do |str|
           str << "{"
           str << "\"id\":" << @id << ","
           str << "\"country\":" << @country.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"people\":" << "[" << (people.join(", ") { |p| p.people_id.to_s }) << "]" << ","
           str << "\"grants\":" << "[" << (grants.join(", ") { |g| g.grant_id.to_s }) << "]"
           str << "}"
         end
