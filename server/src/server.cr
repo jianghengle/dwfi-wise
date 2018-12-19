@@ -170,6 +170,14 @@ module MyServer
         HttpAPI::PeopleController.delete_people(env)
       end
 
+      post "/export_people_only" do |env|
+        HttpAPI::PeopleController.export_people_only(env)
+      end
+
+      post "/export_people" do |env|
+        HttpAPI::PeopleController.export_people(env)
+      end
+
       get "/get_publications" do |env|
         HttpAPI::PublicationController.get_publications(env)
       end
@@ -228,6 +236,10 @@ module MyServer
 
       post "/delete_grant" do |env|
         HttpAPI::GrantController.delete_grant(env)
+      end
+
+      post "/export_grants" do |env|
+        HttpAPI::GrantController.export_grants(env)
       end
 
       get "/get_faculty" do |env|

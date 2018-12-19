@@ -64,6 +64,7 @@ module MyServer
       def self.delete_people(people_id)
         FileRelation.delete_relations("people", people_id)
         PeopleRelation.delete_people_relations(people_id)
+        Faculty.delete_faculty_by_people_id(people_id)
 
         people = Repo.get!(People, people_id)
         changeset = Repo.delete(people)
@@ -79,6 +80,33 @@ module MyServer
           result[p.id.to_s] = p
         end
         return result
+      end
+
+      def self.export_people_only(ids)
+        query = Query.where(:id, ids)
+        people = Repo.all(People, query)
+        return "[]" if people.nil?
+        result = people.as(Array).join(",") do |p|
+          info = p.id.to_s + ", " + p.first_name.to_s + " " + p.last_name.to_s
+          "[" + p.id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
+      end
+
+      def self.export_people(table_name, ids)
+        query = Query.where(for_table: table_name).where(:for_id, ids)
+        relations = Repo.all(PeopleRelation, query)
+        return "[]" if relations.nil?
+        relations = relations.as(Array)
+        people_ids = relations.map { |r| r.people_id }
+        people_map = People.get_people_map(people_ids)
+        result = relations.join(",") do |r|
+          people_id = r.people_id.to_s
+          people = people_map[people_id]
+          info = people_id + ", " + r.role.to_s + ", " + people.first_name.to_s + " " + people.last_name.to_s
+          "[" + r.for_id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
       end
     end
 

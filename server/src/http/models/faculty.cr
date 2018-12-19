@@ -66,6 +66,15 @@ module MyServer
         changeset = Repo.delete(faculty)
         raise changeset.errors.to_s unless changeset.valid?
       end
+
+      def self.delete_faculty_by_people_id(people_id)
+        query = Query.where(people_id: people_id)
+        faculty = Repo.all(Faculty, query)
+        return if faculty.nil?
+        faculty.as(Array).each do |f|
+          Faculty.delete_faculty(f.id)
+        end
+      end
     end
 
     class WorkPlan < Crecto::Model

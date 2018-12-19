@@ -223,7 +223,7 @@ export default {
                 val = Date.parse(val + ' 00:00:00 CST')
                 val = Math.floor(val / 1000)
               }
-            }else if(col == 'programId' || col == 'pointOfContact'){
+            }else if(col == 'programId' || col == 'pointOfContact' || col == 'peopleId'){
               if(val){
                 val = parseInt(val)
               }
@@ -258,24 +258,48 @@ export default {
     },
     parseRelations (str, col, rel) {
       var val = []
-      str.split('\n').forEach(function(s){
-        s = s.trim()
-        if(s){
-          var obj = {}
-          obj[rel[0]] = parseInt(s)
-
-          var first = s.indexOf(',')
-          var last = s.lastIndexOf(',')
-          if(first == -1){
-            obj[rel[1]] = ''
-          }else if(first == last){
-            obj[rel[1]] = s.slice(first + 1).trim()
+      if(col == 'workPlans'){
+        var workPlan = {}
+        str.split('\n').forEach(function(s){
+          s = s.trim()
+          var year = parseInt(s)
+          if(workPlan.year){
+            if(year >= 2015){
+              val.push(workPlan)
+              workPlan = {year: year}
+            }else{
+              if(workPlan.plan){
+                workPlan.plan = workPlan.plan + '\n' + s
+              }else{
+                workPlan.plan = s
+              }
+            }
           }else{
-            obj[rel[1]] = s.slice(first + 1, last).trim()
+            if(year >= 2015){
+              workPlan.year = year
+            }
           }
-          val.push(obj)
-        }
-      })
+        })
+      }else{
+        str.split('\n').forEach(function(s){
+          s = s.trim()
+          if(s){
+            var obj = {}
+            obj[rel[0]] = parseInt(s)
+
+            var first = s.indexOf(',')
+            var last = s.lastIndexOf(',')
+            if(first == -1){
+              obj[rel[1]] = ''
+            }else if(first == last){
+              obj[rel[1]] = s.slice(first + 1).trim()
+            }else{
+              obj[rel[1]] = s.slice(first + 1, last).trim()
+            }
+            val.push(obj)
+          }
+        })
+      }
       return val
     },
     importDone () {

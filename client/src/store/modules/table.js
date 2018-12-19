@@ -23,6 +23,10 @@ var tables = {
       ],
       url: '/create_program'
     },
+    exportOption: {
+      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'isPublished'],
+      relations: {grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
+    },
     deleteOption: {
       id: 'programId',
       url: '/delete_program'
@@ -134,7 +138,8 @@ var tables = {
       columns: ['peopleId', 'yearJoined', 'status', 'campus', 'department', 'areaOfExpertise', 'expertiseTitle'],
       relations: {workPlans: ['year', 'plan']},
       notes: [
-        'The <strong>workPlans</strong> example:<pre>1\n2, photo</pre>',
+        'The <strong>peopleId</strong> is the people id from the people table',
+        'The <strong>workPlans</strong> is the work plans of the faculty. Leave it empty if there is none. The work plan example is: <pre>2018\nPlan of 2018 paragraph one...\nPlan of 2018 Plan of 2018 paragraph two...\n2019\nPlan of 2019...</pre>',
       ],
       url: '/create_faculty'
     },

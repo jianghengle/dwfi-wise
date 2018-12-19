@@ -158,6 +158,22 @@ export default {
       return Object.keys(vm.selection).filter(function(k){
         return vm.selection[k]
       })
+    },
+    itemMap () {
+      var map = {}
+      for(var i=0;i<this.items.length;i++){
+        map[this.items[i].id] = this.items[i]
+      }
+      return map
+    },
+    selectedItems () {
+      var vm = this
+      return vm.selected.map(function(id){
+        return vm.itemMap[id]
+      })
+    },
+    exportOption () {
+      return this.tableOption.exportOption
     }
   },
   watch: {
@@ -265,7 +281,39 @@ export default {
       })
     },
     exportSelected () {
-      
+      console.log(this.exportOption)
+      var vm = this
+      var promises = []
+      Object.keys(vm.exportOption.relations).forEach(function(k){
+        var rel = vm.exportOption.relations[k]
+        var ids = []
+        vm.selectedItems.forEach(function(item){
+          if(item[rel[0]]){
+            ids.push(item[rel[0]])
+          }
+        })
+        if(ids.length){
+          let message = {'table': vm.tableName, 'ids': JSON.stringify(ids)}
+          var promise = vm.$http.post(xHTTPx + rel[1], message).then(response => {
+            console.log(response.body)
+          }, response => {
+            vm.error = 'Some export failed'
+          })
+          promises.push(promise)
+        }
+      })
+      if(promises.length){
+        Promise.all(promises).then((response) => {
+          vm.exportNow()
+        }, (response) => {
+          vm.exportNow()
+        })
+      }else{
+        vm.exportNow
+      }
+    },
+    exportNow () {
+      console.log('export now')
     }
   },
   mounted () {

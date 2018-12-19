@@ -363,8 +363,8 @@ export default {
     deleteSelf () {
       var confirm = {
         title: 'Delete People',
-        message: 'Are you sure to delete the people?',
-        button: 'Yes, delete it.',
+        message: 'Are you sure to delete the people and its corresponding faculty?',
+        button: 'Yes, I am sure.',
         callback: {
           context: this,
           method: this.deleteConfirmed,

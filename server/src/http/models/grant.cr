@@ -44,6 +44,32 @@ module MyServer
         changeset = Repo.delete(grant)
         raise changeset.errors.to_s unless changeset.valid?
       end
+
+      def self.get_grant_map(ids)
+        grant_map = Hash(String, Grant).new
+        query = Query.where(:id, ids)
+        items = Repo.all(Grant, query)
+        return grant_map if items.nil?
+        items.as(Array).each do |i|
+          grant_map[i.id.to_s] = i
+        end
+        grant_map
+      end
+
+      def self.export_grants(table_name, ids)
+        query = Query.where(for_table: table_name).where(:for_id, ids)
+        relations = Repo.all(GrantRelation, query)
+        return "[]" if relations.nil?
+        relations = relations.as(Array)
+        grant_ids = relations.map { |r| r.grant_id }
+        grant_map = Grant.get_grant_map(grant_ids)
+        result = relations.join(",") do |r|
+          grant_id = r.grant_id.to_s
+          info = grant_id + ", " + grant_map[grant_id].organization.to_s
+          "[" + r.for_id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
+      end
     end
 
     class GrantRelation < Crecto::Model
