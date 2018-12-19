@@ -97,7 +97,8 @@ export default {
       error: '',
       searchInput: '',
       selection: {},
-      selectAll: false
+      selectAll: false,
+      relations: {}
     }
   },
   computed: {
@@ -281,10 +282,10 @@ export default {
       })
     },
     exportSelected () {
-      console.log(this.exportOption)
       var vm = this
       var promises = []
       Object.keys(vm.exportOption.relations).forEach(function(k){
+        vm.relations[k] = []
         var rel = vm.exportOption.relations[k]
         var ids = []
         vm.selectedItems.forEach(function(item){
@@ -295,13 +296,14 @@ export default {
         if(ids.length){
           let message = {'table': vm.tableName, 'ids': JSON.stringify(ids)}
           var promise = vm.$http.post(xHTTPx + rel[1], message).then(response => {
-            console.log(response.body)
+            vm.relations[k] = response.body
           }, response => {
             vm.error = 'Some export failed'
           })
           promises.push(promise)
         }
       })
+
       if(promises.length){
         Promise.all(promises).then((response) => {
           vm.exportNow()
@@ -309,11 +311,59 @@ export default {
           vm.exportNow()
         })
       }else{
-        vm.exportNow
+        vm.exportNow()
       }
     },
     exportNow () {
-      console.log('export now')
+      var columns = this.exportOption.columns
+      var relations = this.exportOption.relations
+      var rows = [columns.join('\t')]
+      var vm = this
+      vm.selectedItems.forEach(function(item){
+        var row = []
+        columns.forEach(function(col){
+          var cell = item[col]
+          if(relations[col]){
+            var rs = vm.getItemRelations(item, col)
+            if(rs.length){
+              cell = rs.join('\n')
+            }
+          }
+          if(cell){
+            if(col == 'startDate' || col == 'endDate'){
+              cell = DateForm(cell*1000, 'mmm dd yyyy')
+            }else{
+              cell = cell.toString()
+            }
+          }else{
+            cell = ''
+          }
+          row.push(cell)
+        })
+        rows.push(row.join('\t'))
+      })
+      var str = rows.join('\r\n')
+      var blob = new Blob([str], {type: 'file'})
+      var uri = URL.createObjectURL(blob)
+
+      var link = document.createElement("a");
+      link.download = 'data.txt';
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    getItemRelations (item, col) {
+      var rel = this.exportOption.relations[col]
+      var id = item[rel[0]]
+      var arr = this.relations[col]
+      var ret = []
+      arr.forEach(function(i){
+        if(i[0] == id){
+          ret.push(i[1])
+        }
+      })
+      return ret
     }
   },
   mounted () {

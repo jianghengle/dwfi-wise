@@ -91,6 +91,7 @@
                 <option>In progress</option>
                 <option>On-going</option>
                 <option>On hold</option>
+                <option>Completed</option>
                 <option>Other</option>
                 <option>Unknown - refer to point of contact</option>
               </select>

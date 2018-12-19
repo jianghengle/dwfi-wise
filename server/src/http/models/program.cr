@@ -153,6 +153,17 @@ module MyServer
         changeset = Repo.delete(program)
         raise changeset.errors.to_s unless changeset.valid?
       end
+
+      def self.export_programs(ids)
+        query = Query.where(:id, ids)
+        programs = Repo.all(Program, query)
+        return "[]" if programs.nil?
+        result = programs.as(Array).join(",") do |p|
+          info = p.id.to_s + ", " + p.title.to_s
+          "[" + p.id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
+      end
     end
   end
 end

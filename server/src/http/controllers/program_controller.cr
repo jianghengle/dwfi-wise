@@ -131,6 +131,18 @@ module MyServer
         end
       end
 
+      def export_programs(ctx)
+        begin
+          user = verify_token(ctx)
+          ids = Array(Int64).from_json(get_param!(ctx, "ids"))
+          Program.export_programs(ids)
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
       def count_programs_for_map(ctx)
         begin
           items = Program.get_published_programs

@@ -87,10 +87,10 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select v-model="status" :disabled="privileges == 'Read Only'">
-                <option>Pending</option>
+                <option>Scheduled - Upcoming</option>
                 <option>In progress</option>
-                <option>On-going</option>
-                <option>On hold</option>
+                <option>Completed</option>
+                <option>Annual/Bi-annual</option>
                 <option>Other</option>
                 <option>Unknown - refer to point of contact</option>
               </select>

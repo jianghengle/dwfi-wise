@@ -29,6 +29,17 @@ module MyServer
         Repo.get(MyFile, id)
       end
 
+      def self.get_file_map(ids)
+        map = Hash(String, MyFile).new
+        query = Query.where(:id, ids)
+        items = Repo.all(MyFile, query)
+        return map if items.nil?
+        items.as(Array).each do |i|
+          map[i.id.to_s] = i
+        end
+        map
+      end
+
       def self.create_file(env)
         upload_file = "Yes"
         file = MyFile.new
@@ -96,6 +107,21 @@ module MyServer
             File.delete(full_path)
           end
         end
+      end
+
+      def self.export_files(table_name, ids)
+        query = Query.where(for_table: table_name).where(:for_id, ids)
+        relations = Repo.all(FileRelation, query)
+        return "[]" if relations.nil?
+        relations = relations.as(Array)
+        file_ids = relations.map { |r| r.file_id }
+        file_map = MyFile.get_file_map(file_ids)
+        result = relations.join(",") do |r|
+          file_id = r.file_id.to_s
+          info = file_id + ", " + r.comment.to_s + ", " + file_map[file_id].name.to_s
+          "[" + r.for_id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
       end
     end
 

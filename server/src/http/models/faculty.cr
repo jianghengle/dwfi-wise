@@ -131,6 +131,17 @@ module MyServer
         query = Query.where(faculty_id: faculty_id)
         Repo.delete_all(WorkPlan, query)
       end
+
+      def self.export_work_plans(faculty_ids)
+        query = Query.where(:faculty_id, faculty_ids)
+        work_plans = Repo.all(WorkPlan, query)
+        return "[]" if work_plans.nil?
+        result = work_plans.as(Array).join(",") do |w|
+          info = w.year.to_s + "\n" + w.plan.to_s
+          "[" + w.faculty_id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
+      end
     end
   end
 end

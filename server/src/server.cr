@@ -58,6 +58,10 @@ module MyServer
         HttpAPI::ProgramController.delete_program(env)
       end
 
+      post "/export_programs" do |env|
+        HttpAPI::ProgramController.export_programs(env)
+      end
+
       get "/count_programs_for_map" do |env|
         HttpAPI::ProgramController.count_programs_for_map(env)
       end
@@ -198,6 +202,10 @@ module MyServer
         HttpAPI::PublicationController.delete_publication(env)
       end
 
+      post "/export_publications" do |env|
+        HttpAPI::PublicationController.export_publications(env)
+      end
+
       get "/get_files" do |env|
         HttpAPI::FileController.get_files(env)
       end
@@ -216,6 +224,10 @@ module MyServer
 
       post "/delete_file" do |env|
         HttpAPI::FileController.delete_file(env)
+      end
+
+      post "/export_files" do |env|
+        HttpAPI::FileController.export_files(env)
       end
 
       get "/get_grants" do |env|
@@ -260,6 +272,10 @@ module MyServer
 
       post "/delete_faculty" do |env|
         HttpAPI::FacultyController.delete_faculty(env)
+      end
+
+      post "/export_work_plans" do |env|
+        HttpAPI::FacultyController.export_work_plans(env)
       end
 
       serve_static({"gzip" => true, "dir_listing" => true})

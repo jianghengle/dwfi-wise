@@ -35,6 +35,17 @@ module MyServer
         Repo.get(Publication, id)
       end
 
+      def self.get_publication_map(publication_ids)
+        result = {} of String => Publication
+        query = Query.where(:id, publication_ids)
+        publications = Repo.all(Publication, query)
+        return result if publications.nil?
+        publications.as(Array).each do |p|
+          result[p.id.to_s] = p
+        end
+        result
+      end
+
       def self.create_publication(publication, files)
         changeset = Repo.insert(publication)
         raise changeset.errors.to_s unless changeset.valid?
@@ -63,6 +74,22 @@ module MyServer
         publication = Repo.get!(Publication, publication_id)
         changeset = Repo.delete(publication)
         raise changeset.errors.to_s unless changeset.valid?
+      end
+
+      def self.export_publications(table_name, ids)
+        query = Query.where(for_table: table_name).where(:for_id, ids)
+        relations = Repo.all(PublicationRelation, query)
+        return "[]" if relations.nil?
+        relations = relations.as(Array)
+        publication_ids = relations.map { |r| r.publication_id }
+        publication_map = Publication.get_publication_map(publication_ids)
+        result = relations.join(",") do |r|
+          publication_id = r.publication_id.to_s
+          publication = publication_map[publication_id]
+          info = publication_id + ", " + r.comment.to_s + ", " + publication.title.to_s
+          "[" + r.for_id.to_s + "," + info.to_json + "]"
+        end
+        "[" + result + "]"
       end
     end
 

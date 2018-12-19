@@ -91,7 +91,7 @@ export default {
     },
     activeTable () {
       var routePath = this.routePath
-      var table = {}
+      var table = this.basicTables[0]
       this.basicTables.forEach(function(t){
         if(routePath.indexOf(t.name) != -1){
           table = t

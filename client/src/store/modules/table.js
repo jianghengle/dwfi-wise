@@ -58,6 +58,10 @@ var tables = {
       ],
       url: '/create_project'
     },
+    exportOption: {
+      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'isPublished'],
+      relations: {programId: ['programId', '/export_programs'], grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
+    },
     deleteOption: {
       id: 'projectId',
       url: '/delete_project'
@@ -86,6 +90,10 @@ var tables = {
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
       ],
       url: '/create_event'
+    },
+    exportOption: {
+      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'isPublished'],
+      relations: {grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
     },
     deleteOption: {
       id: 'eventId',
@@ -117,6 +125,10 @@ var tables = {
       ],
       url: '/create_visiting_scholar'
     },
+    exportOption: {
+      columns: ['id', 'firstName', 'lastName', 'researchTopic', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'isPublished'],
+      relations: {grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
+    },
     deleteOption: {
       id: 'visitingScholarId',
       url: '/delete_visiting_scholar'
@@ -143,6 +155,10 @@ var tables = {
       ],
       url: '/create_faculty'
     },
+    exportOption: {
+      columns: ['id', 'peopleId', 'yearJoined', 'status', 'campus', 'department', 'areaOfExpertise', 'expertiseTitle', 'workPlans'],
+      relations: {peopleId: ['peopleId', '/export_people_only'], workPlans: ['id', '/export_work_plans']},
+    },
     deleteOption: {
       id: 'facultyId',
       url: '/delete_faculty'
@@ -166,6 +182,10 @@ var tables = {
         'The <strong>files</strong> are files from the files table. Leave it empty if nothing. Otherwise, each file takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, photo</pre>',
       ],
       url: '/create_people'
+    },
+    exportOption: {
+      columns: ['id', 'firstName', 'lastName', 'credentials', 'title', 'employer', 'dwfiAffiliation', 'email', 'phone', 'website', 'files'],
+      relations: {files: ['id', '/export_files']},
     },
     deleteOption: {
       id: 'peopleId',
@@ -191,6 +211,10 @@ var tables = {
       ],
       url: '/create_publication'
     },
+    exportOption: {
+      columns: ['id', 'title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
+      relations: {pointOfContact: ['pointOfContact', '/export_people_only'], files: ['id', '/export_files']},
+    },
     deleteOption: {
       id: 'publicationId',
       url: '/delete_publication'
@@ -211,6 +235,10 @@ var tables = {
       notes: ['You only only import without uploading files'],
       url: '/create_file'
     },
+    exportOption: {
+      columns: ['id', 'name', 'fileType', 'url'],
+      relations: {},
+    },
     deleteOption: {
       id: 'fileId',
       url: '/delete_file'
@@ -230,6 +258,10 @@ var tables = {
       relations: {},
       notes: [],
       url: '/create_grant'
+    },
+    exportOption: {
+      columns: ['id', 'organization', 'comment'],
+      relations: {},
     },
     deleteOption: {
       id: 'grantId',

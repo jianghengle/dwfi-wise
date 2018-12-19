@@ -280,6 +280,9 @@ export default {
             }
           }
         })
+        if(workPlan.year >= 2015){
+          val.push(workPlan)
+        }
       }else{
         str.split('\n').forEach(function(s){
           s = s.trim()
