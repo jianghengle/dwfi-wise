@@ -16,38 +16,22 @@
         </div>
         <div class="navbar-menu" :class="{'is-active': menuActive && token}">
           <div class="navbar-start" v-if="token">
-            <div class="navbar-item has-dropdown is-hoverable">
-              <router-link class="navbar-link" :to="activeTable.path">
-                {{activeTable.label}}
-              </router-link>
-              <div class="navbar-dropdown is-boxed">
-                <router-link v-for="t in basicTables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
-                  {{t.label}}
-                </router-link>
-                <hr class="dropdown-divider">
-                <router-link v-for="t in otherTables" :key="'tl-'+t.name" class="navbar-item" :class="{'is-active': t == activeTable}" :to="t.path">
-                  {{t.label}}
-                </router-link>
-                <hr class="dropdown-divider">
-                <a class="navbar-item" :href="staticUrl" target="_blank">List Static Files</a>
-            </div>
-            </div>
+            <router-link v-for="t in basicTables" :key="'tl-'+t.name" class="navbar-item" :class="{'active-table': t == activeTable}" :to="t.path">
+              {{t.label}}
+            </router-link>
+
+            <router-link v-for="t in otherTables" :key="'tl-'+t.name" class="navbar-item" :class="{'active-table': t == activeTable}" :to="t.path">
+              {{t.label}}
+            </router-link>
+
           </div>
           <div class="navbar-end" v-if="token">
-            <a class="navbar-item">
-              Signed in as {{email}}
+            <a class="navbar-item" :href="staticUrl" target="_blank">
+              <icon name="folder"></icon>
             </a>
-              
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <a class="button" @click="logout">
-                    <icon name="sign-out"></icon>
-                    Sign Out
-                  </a>
-                </p>
-              </div>
-            </div>
+            <a class="navbar-item" @click="logout">
+              <icon name="sign-out"></icon>
+            </a>
           </div>
         </div>
       </div>
@@ -125,5 +109,9 @@ export default {
 <style lang="scss" scoped>
 .my-header {
   margin-bottom: 10px;
+}
+
+.active-table {
+  color: hsl(217, 71%, 53%);
 }
 </style>

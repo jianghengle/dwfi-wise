@@ -24,6 +24,7 @@ import 'vue-awesome/icons/remove'
 import 'vue-awesome/icons/search'
 import 'vue-awesome/icons/chevron-left'
 import 'vue-awesome/icons/reply'
+import 'vue-awesome/icons/folder'
 import Icon from 'vue-awesome/components/Icon'
 Vue.component('icon', Icon)
 
