@@ -18,7 +18,7 @@ module MyServer
           str << "\"peopleId\":" << @people_id << ","
           str << "\"firstName\":" << people.first_name.to_json << ","
           str << "\"lastName\":" << people.last_name.to_json << ","
-          str << "\"yearJoined\":" << @year_joined << ","
+          str << "\"yearJoined\":" << @year_joined.to_json << ","
           str << "\"status\":" << @status.to_json << ","
           str << "\"campus\":" << @campus.to_json << ","
           str << "\"department\":" << @department.to_json << ","
