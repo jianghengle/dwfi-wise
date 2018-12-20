@@ -46,7 +46,8 @@ module MyServer
 
           faculty = Faculty.new
           faculty.people_id = get_param!(ctx, "peopleId")
-          faculty.year_joined = get_param!(ctx, "yearJoined")
+          year_joined = get_param!(ctx, "yearJoined")
+          faculty.year_joined = year_joined.to_i unless year_joined == ""
           faculty.status = get_param!(ctx, "status")
           faculty.campus = get_param!(ctx, "campus")
           faculty.department = get_param!(ctx, "department")
@@ -72,7 +73,8 @@ module MyServer
           faculty = Faculty.new
           faculty.id = get_param!(ctx, "id").to_i
           faculty.people_id = get_param!(ctx, "peopleId")
-          faculty.year_joined = get_param!(ctx, "yearJoined")
+          year_joined = get_param!(ctx, "yearJoined")
+          faculty.year_joined = year_joined.to_i unless year_joined == ""
           faculty.status = get_param!(ctx, "status")
           faculty.campus = get_param!(ctx, "campus")
           faculty.department = get_param!(ctx, "department")

@@ -61,6 +61,8 @@
               <select v-model="status" :disabled="privileges == 'Read Only'">
                 <option>New</option>
                 <option>Returning</option>
+                <option>Not returning</option>
+                <option>Retired</option>
               </select>
             </div>
           </div>
