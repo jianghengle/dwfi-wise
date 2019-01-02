@@ -19,7 +19,7 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Comment</label>
+        <label class="label">Order</label>
       </div>
       <div class="field-body">
         <div class="field">

@@ -5,6 +5,7 @@ module MyServer
         field :title, String
         field :authors, String
         field :abstract, String
+        field :focus_area, String
         field :url, String
         field :status, String
         field :point_of_contact, Int64
@@ -17,6 +18,7 @@ module MyServer
           str << "\"title\":" << @title.to_json << ","
           str << "\"authors\":" << @authors.to_json << ","
           str << "\"abstract\":" << @abstract.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
           str << "\"url\":" << @url.to_json << ","
           str << "\"status\":" << @status.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json

@@ -203,7 +203,7 @@ var tables = {
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
+      columns: ['title', 'authors', 'abstract', 'focusArea', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
         'The <strong>pointOfContact</strong> is the people id from the people table',
@@ -212,7 +212,7 @@ var tables = {
       url: '/create_publication'
     },
     exportOption: {
-      columns: ['id', 'title', 'authors', 'abstract', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
+      columns: ['id', 'title', 'authors', 'abstract', 'focusArea', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
       relations: {pointOfContact: ['pointOfContact', '/export_people_only'], files: ['id', '/export_files']},
     },
     deleteOption: {
@@ -249,7 +249,7 @@ var tables = {
     columns: [
       {name: 'id', type: 'int', label: 'Id'},
       {name: 'organization', type: 'str', label: 'Organization'},
-      {name: 'comment', type: 'str', label: 'Comment'}
+      {name: 'comment', type: 'str', label: 'Order'}
     ],
     sort: {index: 0, asc: false},
     search: '',

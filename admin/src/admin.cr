@@ -139,6 +139,7 @@ class Publication < Crecto::Model
     field :title, String
     field :authors, String
     field :abstract, String
+    field :focus_area, String
     field :url, String
     field :status, String
     field :point_of_contact, Int64

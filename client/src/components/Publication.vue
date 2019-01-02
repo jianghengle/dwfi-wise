@@ -57,6 +57,35 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
+        <label class="label">Focus Area</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="selected-multiple-options">
+              {{focusAreaInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="focusAreaInput.join(', ') != focusArea" @click="focusAreaInput = focusArea.split(', ')">
+                <icon name="reply"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple is-fullwidth">
+              <select multiple v-model="focusAreaInput" size="7" :disabled="privileges == 'Read Only'">
+                <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
+                <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
+                <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
+                <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
+                <option>[FA5] Management of Agricultural Drought</option>
+                <option>Education & Engagement Projects & Programs</option>
+                <option>Communications</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
         <label class="label">Status</label>
       </div>
       <div class="field-body">
@@ -195,6 +224,8 @@ export default {
       title: '',
       authors: '',
       abstract: '',
+      focusArea: '',
+      focusAreaInput: [],
       status: '',
       url: '',
       pointOfContact: '',
@@ -251,6 +282,7 @@ export default {
         title: this.title,
         authors: this.authors,
         abstract: this.abstract,
+        focusArea: this.focusAreaInput.join(', '),
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,
@@ -262,7 +294,9 @@ export default {
         var resp = response.body
         this.title = resp[0].title
         this.authors = resp[0].authors
-        this.description = resp[0].description
+        this.abstract = resp[0].abstract
+        this.focusArea = resp[0].focusArea ? resp[0].focusArea : ''
+        this.focusAreaInput = this.focusArea.split(', ')
         this.status = resp[0].status
         this.url = resp[0].url
         this.pointOfContact = resp[0].pointOfContact
@@ -310,6 +344,7 @@ export default {
         title: this.title,
         authors: this.authors,
         abstract: this.abstract,
+        focusArea: this.focusAreaInput.join(', '),
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,
@@ -364,5 +399,17 @@ export default {
 <style lang="scss" scoped>
 .item-row {
   margin-bottom: 8px;
+}
+
+.selected-multiple-options {
+  margin-top: 0.375em;
+  margin-bottom: 0.375em;
+}
+
+.restore-icon {
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  left: 5px;
 }
 </style>
