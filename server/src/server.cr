@@ -146,13 +146,13 @@ module MyServer
         HttpAPI::VisitingScholarController.delete_visiting_scholar(env)
       end
 
-      get "/count_visiting_scholars_for_map" do |env|
-        HttpAPI::VisitingScholarController.count_visiting_scholars_for_map(env)
-      end
+      # get "/count_visiting_scholars_for_map" do |env|
+      #   HttpAPI::VisitingScholarController.count_visiting_scholars_for_map(env)
+      # end
 
-      get "/get_visiting_scholars_for_map/:country" do |env|
-        HttpAPI::VisitingScholarController.get_visiting_scholars_for_map(env)
-      end
+      # get "/get_visiting_scholars_for_map/:country" do |env|
+      #   HttpAPI::VisitingScholarController.get_visiting_scholars_for_map(env)
+      # end
 
       get "/get_people" do |env|
         HttpAPI::PeopleController.get_people(env)

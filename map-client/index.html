@@ -67,7 +67,6 @@
                 <option>Program</option>
                 <option>Project</option>
                 <option>Event</option>
-                <option>Scholar</option>
               </select>
             </div>
           </div>
@@ -140,7 +139,6 @@
       <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program<span v-if="activeCountryCount[0]>1">s</span> </span>
       <span v-if="activeCountryCount[1]"><span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project<span v-if="activeCountryCount[1]>1">s</span> </span>
       <span v-if="activeCountryCount[2]"><span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event<span v-if="activeCountryCount[2]>1">s</span> </span>
-      <span v-if="activeCountryCount[3]"><span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> scholar<span v-if="activeCountryCount[3]>1">s</span> </span>
       <span> related to <span class="has-text-weight-bold">{{activeCountryName}}</span></span>
     </div>
     <div v-else>
@@ -259,40 +257,6 @@
         </div>
       </div>
 
-      <div v-if="workCategory=='All' || workCategory=='Scholar'">
-        <div v-for="scholar in activeCountry.scholars" :key="'scholar-'+scholar.id"
-          v-if="(focusArea=='All' || focusArea==scholar.focusArea) && (grant=='All' || scholar.grantIds.includes(grant)) && (faculty=='All' || scholar.peopleIds.includes(faculty))">
-          <div class="card" style="margin-top: 15px;">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-4">{{scholar.firstName + ' ' + scholar.lastName}}</p>
-                  <p class="subtitle is-6">
-                    Scholar &nbsp; | &nbsp; <span v-if="scholar.state">{{scholar.state}},</span> {{scholar.country}} &nbsp; | &nbsp; {{scholar.startDate}} ~ {{scholar.endDate}} &nbsp; | &nbsp; {{scholar.status}}
-                  </p>
-                </div>
-              </div>
-
-              <div class="content">
-                <p>Research Topic: {{scholar.researchTopic}}</p>
-                <p style="white-space:pre-line">{{scholar.description}}</p>
-                <p>Focus Area: {{scholar.focusArea}}</p>
-                <p>Grants: <span v-for="(g, i) in scholar.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p>People:
-                  <span v-for="(p, i) in scholar.people">
-                    <span v-if="i!=0">, </span>
-                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                    <span v-if="p.role"> ({{p.role}})</span>
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -317,12 +281,11 @@
         countries: {},
         countryNames: [],
         activeCountryName: 'All',
-        loadings: {program: false, project: false, event: false, scholar: false},
+        loadings: {program: false, project: false, event: false},
         categories: [
           {name: 'program', label: 'Program', url: 'programs'},
           {name: 'project', label: 'Project', url: 'projects'},
           {name: 'event', label: 'Event', url: 'events'},
-          {name: 'scholar', label: 'Scholar', url: 'visiting_scholars'},
         ],
         overview: {
           countries: [],
@@ -405,7 +368,7 @@
           this.countryNames.forEach(function(countryName){
             var country = vm.countries[countryName]
             var counts = val[countryName]
-            if(counts[0] + counts[1] + counts[2] + counts[3] > 0){
+            if(counts[0] + counts[1] + counts[2] > 0){
               colors[country.id] = GREEN
             }else{
               colors[country.id] = GRAY
@@ -432,9 +395,10 @@
                 var countryName = geography.properties.name
                 var counts = vm.countryCounts[countryName]
                 var html = '<div class="hoverinfo">' + countryName
-                for(var i=0;i<vm.categories.length;i++)
-                  if(counts[i] > 0)
-                    html += '<br/>' + vm.categories[i].label + 's: ' + counts[i]
+                if(counts)
+                  for(var i=0;i<vm.categories.length;i++)
+                    if(counts[i] > 0)
+                      html += '<br/>' + vm.categories[i].label + 's: ' + counts[i]
                 return html
               },
             },
@@ -449,11 +413,9 @@
                     countPrograms: [],
                     countProjects: [],
                     countEvents: [],
-                    countScholars: [],
                     programs: null,
                     projects: null,
                     events: null,
-                    scholars: null
                   }
                 }
               })

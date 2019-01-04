@@ -30,17 +30,17 @@ module MyServer
           end
 
           scholars = VisitingScholar.get_published_visiting_scholars
-          scholarCountries = [] of String
-          scholars.each do |s|
-            next if s.country.nil?
-            scholarCountries << s.country.to_s unless s.country.to_s.empty?
-          end
+          # scholarCountries = [] of String
+          # scholars.each do |s|
+          #   next if s.country.nil?
+          #   scholarCountries << s.country.to_s unless s.country.to_s.empty?
+          # end
 
           grantors = Grant.get_grants
 
           faculty = Faculty.get_all_faculty
 
-          countries = programCountries | projectCountries | eventCountries | scholarCountries
+          countries = programCountries | projectCountries | eventCountries # | scholarCountries
 
           json_str = ["[" + (countries.join(", ") { |c| c.to_json }) + "]", programs.size.to_s, projects.size.to_s, events.size.to_s, scholars.size.to_s, grantors.size.to_s, faculty.size.to_s]
           "[" + json_str.join(", ") + "]"
