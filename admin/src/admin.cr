@@ -17,16 +17,20 @@ class User < Crecto::Model
     field :privileges, String
   end
 
+  def self.collection_attributes
+    return [:email, :privileges, :created_at, :updated_at]
+  end
+
   def self.form_attributes
     [{:email, "string"},
      {:encrypted_password, "password"},
      {:auth_token, "string"},
-     {:privileges, "enum", ["Read Only", "Edit", "Approve"]}]
+     {:privileges, "enum", ["Read Only", "Edit", "Approve", "Admin"]}]
   end
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Approve"
+    user.privileges.to_s == "Approve" || user.privileges.to_s == "Admin"
   end
 end
 
@@ -37,12 +41,9 @@ class MyFile < Crecto::Model
     field :url, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -54,12 +55,9 @@ class FileRelation < Crecto::Model
     field :comment, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -69,12 +67,9 @@ class Grant < Crecto::Model
     field :comment, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -86,12 +81,9 @@ class GrantRelation < Crecto::Model
     field :comment, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -108,12 +100,9 @@ class People < Crecto::Model
     field :website, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -125,12 +114,9 @@ class PeopleRelation < Crecto::Model
     field :role, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -145,12 +131,9 @@ class Publication < Crecto::Model
     field :point_of_contact, Int64
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -162,12 +145,9 @@ class PublicationRelation < Crecto::Model
     field :comment, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -189,12 +169,9 @@ class Program < Crecto::Model
     field :is_published, Bool
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -217,12 +194,9 @@ class Project < Crecto::Model
     field :is_published, Bool
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -244,12 +218,9 @@ class MyEvent < Crecto::Model
     field :is_published, Bool
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -272,12 +243,9 @@ class VisitingScholar < Crecto::Model
     field :is_published, Bool
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -302,12 +270,9 @@ class Faculty < Crecto::Model
      {:expertise_title, "string"}]
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -318,12 +283,9 @@ class WorkPlan < Crecto::Model
     field :plan, String
   end
 
-  def self.can_create(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
-  end
-
-  def can_edit(user)
-    user.is_a? User && user.privileges.to_s != "Read Only"
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.privileges.to_s == "Admin"
   end
 end
 
@@ -334,7 +296,7 @@ CrectoAdmin.config do |config|
   config.auth_model = User
   config.auth_model_identifier = :email
   config.auth_model_password = :encrypted_password
-  config.app_name = "DWFI Wise"
+  config.app_name = "UNDA Admin"
 end
 
 init_admin()
