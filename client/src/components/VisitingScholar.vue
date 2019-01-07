@@ -202,6 +202,23 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
+        <label class="label">Program</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="programId" :disabled="privileges == 'Read Only'">
+                <option v-for="opt in allPrograms" v-bind:value="opt.id">{{opt.label}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
         <label class="label">Start Date</label>
       </div>
       <div class="field-body">
@@ -490,6 +507,7 @@ export default {
       allPublications: [],
       allFiles: [],
       allGrants: [],
+      allPrograms: null,
       firstName: '',
       lastName: '',
       researchTopic: '',
@@ -499,6 +517,7 @@ export default {
       country: '',
       state: '',
       focusArea: '',
+      programId: null,
       focusAreaInput: [],
       startDate: null,
       endDate: null,
@@ -655,6 +674,7 @@ export default {
         state: this.state,
         focusArea: this.focusArea,
         focusArea: this.focusAreaInput.join(', '),
+        programId: this.programId,
         startDate: this.startDate,
         endDate: this.endDate,
         funding: this.funding,
@@ -677,6 +697,7 @@ export default {
         this.state = resp[0].state
         this.focusArea = resp[0].focusArea
         this.focusAreaInput = resp[0].focusArea.split(', ')
+        this.programId = resp[0].programId
         this.startDate = resp[0].startDate? (new Date(resp[0].startDate*1000)) : null
         this.endDate = resp[0].endDate? (new Date(resp[0].endDate*1000)) : null
         this.funding = resp[0].funding
@@ -731,6 +752,12 @@ export default {
         this.allGrants = response.body.map(function(g){
           return {id: g.id, label: g.organization + ' [' + g.id + ']'}
         })
+      })
+      this.$http.get(xHTTPx + '/get_programs').then(response => {
+        this.allPrograms = response.body.map(function(p){
+          return {id: p.id, label: p.title + ' [' + p.id + ']'}
+        })
+        this.allPrograms.unshift({id: null, label: 'None'})
       })
     },
     startDateSelected (newDate) {
@@ -797,6 +824,7 @@ export default {
         country: this.country,
         state: this.state,
         focusArea: this.focusAreaInput.join(', '),
+        programId: this.programId,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,

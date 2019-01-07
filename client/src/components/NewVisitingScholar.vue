@@ -187,6 +187,23 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
+        <label class="label">Program</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="programId">
+                <option v-for="opt in allPrograms" v-bind:value="opt.id">{{opt.label}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
         <label class="label">Start Date</label>
       </div>
       <div class="field-body">
@@ -448,6 +465,7 @@ export default {
       allPublications: [],
       allFiles: [],
       allGrants: [],
+      allPrograms: [],
       firstName: '',
       lastName: '',
       researchTopic: '',
@@ -458,6 +476,7 @@ export default {
       state: '',
       focusArea: '',
       focusAreaInput: [],
+      programId: null,
       startDate: null,
       endDate: null,
       funding: '',
@@ -505,6 +524,12 @@ export default {
           return {id: g.id, label: g.organization + ' [' + g.id + ']'}
         })
       })
+      this.$http.get(xHTTPx + '/get_programs').then(response => {
+        this.allPrograms = response.body.map(function(p){
+          return {id: p.id, label: p.title + ' [' + p.id + ']'}
+        })
+        this.allPrograms.unshift({id: null, label: 'None'})
+      })
     },
     startDateSelected (newDate) {
       this.startDate = newDate
@@ -546,6 +571,7 @@ export default {
         country: this.country,
         state: this.state,
         focusArea: this.focusAreaInput.join(', '),
+        programId: this.programId,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,

@@ -52,6 +52,8 @@ module MyServer
           visiting_scholar.country = get_param!(ctx, "country")
           visiting_scholar.state = get_param!(ctx, "state")
           visiting_scholar.focus_area = get_param!(ctx, "focusArea")
+          program_id = get_param!(ctx, "programId")
+          visiting_scholar.program_id = program_id.to_i unless program_id == ""
           visiting_scholar.research_topic = get_param!(ctx, "researchTopic")
           start_date = get_param!(ctx, "startDate")
           visiting_scholar.start_date = Time.epoch(start_date.to_i) unless start_date == ""
@@ -92,6 +94,8 @@ module MyServer
           visiting_scholar.country = get_param!(ctx, "country")
           visiting_scholar.state = get_param!(ctx, "state")
           visiting_scholar.focus_area = get_param!(ctx, "focusArea")
+          program_id = get_param!(ctx, "programId")
+          visiting_scholar.program_id = program_id.to_i unless program_id == ""
           visiting_scholar.research_topic = get_param!(ctx, "researchTopic")
           start_date = get_param!(ctx, "startDate")
           visiting_scholar.start_date = Time.epoch(start_date.to_i) unless start_date == ""

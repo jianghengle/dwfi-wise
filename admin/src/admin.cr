@@ -25,12 +25,12 @@ class User < Crecto::Model
     [{:email, "string"},
      {:encrypted_password, "password"},
      {:auth_token, "string"},
-     {:privileges, "enum", ["Read Only", "Edit", "Approve", "Admin"]}]
+     {:privileges, "enum", ["Read Only", "Edit", "Approve"]}]
   end
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Approve" || user.privileges.to_s == "Admin"
+    user.privileges.to_s == "Approve"
   end
 end
 
@@ -43,7 +43,7 @@ class MyFile < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -57,7 +57,7 @@ class FileRelation < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -69,7 +69,7 @@ class Grant < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -83,7 +83,7 @@ class GrantRelation < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -102,7 +102,7 @@ class People < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -116,7 +116,7 @@ class PeopleRelation < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -133,7 +133,7 @@ class Publication < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -147,7 +147,7 @@ class PublicationRelation < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -171,7 +171,7 @@ class Program < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -196,7 +196,7 @@ class Project < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -220,7 +220,7 @@ class MyEvent < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -234,6 +234,7 @@ class VisitingScholar < Crecto::Model
     field :description, String
     field :status, String
     field :focus_area, String
+    field :program_id, Int64
     field :start_date, Time
     field :end_date, Time
     field :funding, String
@@ -245,7 +246,7 @@ class VisitingScholar < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -272,7 +273,7 @@ class Faculty < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 
@@ -285,7 +286,7 @@ class WorkPlan < Crecto::Model
 
   def self.can_access(user)
     return false unless user.is_a? User
-    user.privileges.to_s == "Admin"
+    user.email.to_s == "jianghengle@gmail.com"
   end
 end
 

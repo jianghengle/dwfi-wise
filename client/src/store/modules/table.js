@@ -109,7 +109,7 @@ var tables = {
       {name: 'status', type: 'str', label: 'Status'},
       {name: 'startDate', type: 'time', label: 'Start Date'},
       {name: 'endDate', type: 'time', label: 'End Date'},
-      {name: 'country', type: 'str', label: 'Country'},
+      {name: 'programId', type: 'int', label: 'Program Id'},
       {name: 'isPublished', type: 'str', label: 'Is Published'}
     ],
     sort: {index: 0, asc: false},

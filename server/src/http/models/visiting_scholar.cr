@@ -10,6 +10,7 @@ module MyServer
         field :description, String
         field :status, String
         field :focus_area, String
+        field :program_id, Int64
         field :start_date, Time
         field :end_date, Time
         field :funding, String
@@ -31,6 +32,7 @@ module MyServer
           str << "\"description\":" << @description.to_json << ","
           str << "\"status\":" << @status.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"programId\":" << @program_id.to_json << ","
           str << "\"startDate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
           str << "\"endDate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
           str << "\"funding\":" << @funding.to_json << ","
