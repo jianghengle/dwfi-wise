@@ -33,8 +33,8 @@ module MyServer
           str << "\"status\":" << @status.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
           str << "\"programId\":" << @program_id.to_json << ","
-          str << "\"startDate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
-          str << "\"endDate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
+          str << "\"startDate\":" << @start_date.as(Time).to_unix << "," unless @start_date.nil?
+          str << "\"endDate\":" << @end_date.as(Time).to_unix << "," unless @end_date.nil?
           str << "\"funding\":" << @funding.to_json << ","
           str << "\"collaborators\":" << @collaborators.to_json << ","
           str << "\"moreInformation\":" << @more_information.to_json << ","
@@ -68,8 +68,8 @@ module MyServer
           str << "\"description\":" << @description.to_json << ","
           str << "\"status\":" << @status.to_json << ","
           str << "\"focusArea\":" << @focus_area.to_json << ","
-          str << "\"startDate\":" << @start_date.as(Time).epoch << "," unless @start_date.nil?
-          str << "\"endDate\":" << @end_date.as(Time).epoch << "," unless @end_date.nil?
+          str << "\"startDate\":" << @start_date.as(Time).unix << "," unless @start_date.nil?
+          str << "\"endDate\":" << @end_date.as(Time).unix << "," unless @end_date.nil?
           str << "\"funding\":" << @funding.to_json << ","
           str << "\"collaborators\":" << @collaborators.to_json << ","
           str << "\"moreInformation\":" << @more_information.to_json << ","

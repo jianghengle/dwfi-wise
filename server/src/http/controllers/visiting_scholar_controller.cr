@@ -56,9 +56,9 @@ module MyServer
           visiting_scholar.program_id = program_id.to_i unless program_id == ""
           visiting_scholar.research_topic = get_param!(ctx, "researchTopic")
           start_date = get_param!(ctx, "startDate")
-          visiting_scholar.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          visiting_scholar.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          visiting_scholar.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          visiting_scholar.end_date = Time.unix(end_date.to_i) unless end_date == ""
           visiting_scholar.funding = get_param!(ctx, "funding")
           visiting_scholar.collaborators = get_param!(ctx, "collaborators")
           visiting_scholar.more_information = get_param!(ctx, "moreInformation")
@@ -98,9 +98,9 @@ module MyServer
           visiting_scholar.program_id = program_id.to_i unless program_id == ""
           visiting_scholar.research_topic = get_param!(ctx, "researchTopic")
           start_date = get_param!(ctx, "startDate")
-          visiting_scholar.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          visiting_scholar.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          visiting_scholar.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          visiting_scholar.end_date = Time.unix(end_date.to_i) unless end_date == ""
           visiting_scholar.funding = get_param!(ctx, "funding")
           visiting_scholar.collaborators = get_param!(ctx, "collaborators")
           visiting_scholar.more_information = get_param!(ctx, "moreInformation")

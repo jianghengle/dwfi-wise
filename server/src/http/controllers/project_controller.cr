@@ -54,9 +54,9 @@ module MyServer
           program_id = get_param!(ctx, "programId")
           project.program_id = program_id.to_i unless program_id == ""
           start_date = get_param!(ctx, "startDate")
-          project.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          project.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          project.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          project.end_date = Time.unix(end_date.to_i) unless end_date == ""
           project.funding = get_param!(ctx, "funding")
           project.collaborators = get_param!(ctx, "collaborators")
           project.more_information = get_param!(ctx, "moreInformation")
@@ -95,9 +95,9 @@ module MyServer
           program_id = get_param!(ctx, "programId")
           project.program_id = program_id.to_i unless program_id == ""
           start_date = get_param!(ctx, "startDate")
-          project.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          project.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          project.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          project.end_date = Time.unix(end_date.to_i) unless end_date == ""
           project.funding = get_param!(ctx, "funding")
           project.collaborators = get_param!(ctx, "collaborators")
           project.more_information = get_param!(ctx, "moreInformation")

@@ -52,9 +52,9 @@ module MyServer
           program.state = get_param!(ctx, "state")
           program.focus_area = get_param!(ctx, "focusArea")
           start_date = get_param!(ctx, "startDate")
-          program.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          program.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          program.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          program.end_date = Time.unix(end_date.to_i) unless end_date == ""
           program.funding = get_param!(ctx, "funding")
           program.collaborators = get_param!(ctx, "collaborators")
           program.more_information = get_param!(ctx, "moreInformation")
@@ -91,9 +91,9 @@ module MyServer
           program.state = get_param!(ctx, "state")
           program.focus_area = get_param!(ctx, "focusArea")
           start_date = get_param!(ctx, "startDate")
-          program.start_date = Time.epoch(start_date.to_i) unless start_date == ""
+          program.start_date = Time.unix(start_date.to_i) unless start_date == ""
           end_date = get_param!(ctx, "endDate")
-          program.end_date = Time.epoch(end_date.to_i) unless end_date == ""
+          program.end_date = Time.unix(end_date.to_i) unless end_date == ""
           program.funding = get_param!(ctx, "funding")
           program.collaborators = get_param!(ctx, "collaborators")
           program.more_information = get_param!(ctx, "moreInformation")
