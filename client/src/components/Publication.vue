@@ -86,6 +86,32 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
+        <label class="label">Countries</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="selected-multiple-options">
+              {{countryInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') != country" @click="countryInput = country ? country.split(', ') : []">
+                <icon name="reply"></icon>
+              </span>
+              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') == country && countryInput.length" @click="countryInput = []">
+                <icon name="remove"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple" v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <select multiple v-model="countryInput" size="3">
+                <option v-for="c in countries">{{c}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
         <label class="label">Status</label>
       </div>
       <div class="field-body">
@@ -226,6 +252,8 @@ export default {
       abstract: '',
       focusArea: '',
       focusAreaInput: [],
+      country: '',
+      countryInput: [],
       status: '',
       url: '',
       pointOfContact: '',
@@ -238,6 +266,9 @@ export default {
     },
     publicationId () {
       return this.$route.params.id
+    },
+    countries () {
+      return this.$store.state.table.countries
     },
     firstFile () {
       var i = 0
@@ -283,6 +314,7 @@ export default {
         authors: this.authors,
         abstract: this.abstract,
         focusArea: this.focusAreaInput.join(', '),
+        country: this.countryInput.join(', '),
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,
@@ -297,6 +329,8 @@ export default {
         this.abstract = resp[0].abstract
         this.focusArea = resp[0].focusArea ? resp[0].focusArea : ''
         this.focusAreaInput = this.focusArea.split(', ')
+        this.country = resp[0].country ? resp[0].country : ''
+        this.countryInput = this.country ? this.country.split(', ') : []
         this.status = resp[0].status
         this.url = resp[0].url
         this.pointOfContact = resp[0].pointOfContact
@@ -345,6 +379,7 @@ export default {
         authors: this.authors,
         abstract: this.abstract,
         focusArea: this.focusAreaInput.join(', '),
+        country: this.countryInput.join(', '),
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,

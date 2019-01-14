@@ -47,6 +47,7 @@ module MyServer
           publication.url = get_param!(ctx, "url")
           point_of_contact = get_param!(ctx, "pointOfContact")
           publication.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
+          publication.country = get_param!(ctx, "country")
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
 
@@ -74,6 +75,7 @@ module MyServer
           publication.url = get_param!(ctx, "url")
           point_of_contact = get_param!(ctx, "pointOfContact")
           publication.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
+          publication.country = get_param!(ctx, "country")
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
 

@@ -198,12 +198,13 @@ var tables = {
       {name: 'id', type: 'int', label: 'Id'},
       {name: 'title', type: 'str', label: 'Title'},
       {name: 'authors', type: 'str', label: 'Authors'},
-      {name: 'status', type: 'str', label: 'Status'}
+      {name: 'status', type: 'str', label: 'Status'},
+      {name: 'country', type: 'str', label: 'Country'}
     ],
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['title', 'authors', 'abstract', 'focusArea', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
+      columns: ['title', 'authors', 'abstract', 'focusArea', 'country', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
       relations: {files: ['file_id', 'comment']},
       notes: [
         'The <strong>pointOfContact</strong> is the people id from the people table',
@@ -212,7 +213,7 @@ var tables = {
       url: '/create_publication'
     },
     exportOption: {
-      columns: ['id', 'title', 'authors', 'abstract', 'focusArea', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
+      columns: ['id', 'title', 'authors', 'abstract', 'focusArea', 'country', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
       relations: {pointOfContact: ['pointOfContact', '/export_people_only'], files: ['id', '/export_files']},
     },
     deleteOption: {

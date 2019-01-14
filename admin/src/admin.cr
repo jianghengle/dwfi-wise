@@ -129,6 +129,7 @@ class Publication < Crecto::Model
     field :url, String
     field :status, String
     field :point_of_contact, Int64
+    field :country, String
   end
 
   def self.can_access(user)

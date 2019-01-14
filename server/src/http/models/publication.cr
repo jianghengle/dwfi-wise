@@ -8,6 +8,7 @@ module MyServer
         field :focus_area, String
         field :url, String
         field :status, String
+        field :country, String
         field :point_of_contact, Int64
       end
 
@@ -21,6 +22,7 @@ module MyServer
           str << "\"focusArea\":" << @focus_area.to_json << ","
           str << "\"url\":" << @url.to_json << ","
           str << "\"status\":" << @status.to_json << ","
+          str << "\"country\":" << @country.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json
           str << "}"
         end

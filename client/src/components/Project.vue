@@ -110,8 +110,11 @@
           <div class="control">
             <div class="selected-multiple-options">
               {{countryInput.join(', ')}}
-              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') != country" @click="countryInput = country.split(', ')">
+              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') != country" @click="countryInput = country ? country.split(', ') : []">
                 <icon name="reply"></icon>
+              </span>
+              <span class="icon is-small restore-icon" v-if="countryInput.join(', ') == country && countryInput.length" @click="countryInput = []">
+                <icon name="remove"></icon>
               </span>
             </div>
             <div class="select is-multiple" v-if="privileges == 'Edit' || privileges == 'Approve'">
@@ -688,8 +691,8 @@ export default {
         this.title = resp[0].title
         this.description = resp[0].description
         this.status = resp[0].status
-        this.country = resp[0].country
-        this.countryInput = resp[0].country.split(', ')
+        this.country = resp[0].country ? resp[0].country : ''
+        this.countryInput = this.country ? this.country.split(', ') : []
         this.state = resp[0].state
         this.focusArea = resp[0].focusArea
         this.focusAreaInput = resp[0].focusArea.split(', ')

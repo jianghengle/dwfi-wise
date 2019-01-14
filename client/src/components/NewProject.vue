@@ -98,6 +98,9 @@
           <div class="control">
             <div class="selected-multiple-options">
               {{countryInput.join(', ')}}
+              <a class="button is-text clear-country-button" @click="countryInput = []" v-if="countryInput.length">
+                <icon name="remove"></icon>
+              </a>
             </div>
             <div class="select is-multiple">
               <select multiple v-model="countryInput" size="3">
@@ -606,5 +609,9 @@ export default {
 .selected-multiple-options {
   margin-top: 0.375em;
   margin-bottom: 0.375em;
+}
+
+.clear-country-button {
+  height: 25px;
 }
 </style>

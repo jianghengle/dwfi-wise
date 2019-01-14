@@ -71,6 +71,29 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
+        <label class="label">Countries</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="selected-multiple-options">
+              {{countryInput.join(', ')}}
+              <a class="button is-text clear-country-button" @click="countryInput = []" v-if="countryInput.length">
+                <icon name="remove"></icon>
+              </a>
+            </div>
+            <div class="select is-multiple">
+              <select multiple v-model="countryInput" size="3">
+                <option v-for="c in countries">{{c}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
         <label class="label">Status</label>
       </div>
       <div class="field-body">
@@ -194,6 +217,8 @@ export default {
       abstract: '',
       focusArea: '',
       focusAreaInput: [],
+      country: '',
+      countryInput: [],
       url: '',
       status: '',
       pointOfContact: null,
@@ -201,6 +226,9 @@ export default {
     }
   },
   computed: {
+    countries () {
+      return this.$store.state.table.countries
+    },
     contactOptions () {
       var opts = this.allPeople.slice()
       opts.unshift({id: null, label: 'None'})
@@ -232,6 +260,7 @@ export default {
         authors: this.authors,
         abstract: this.abstract,
         focusArea: this.focusAreaInput.join(', '),
+        country: this.countryInput.join(', '),
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,
@@ -267,5 +296,9 @@ export default {
 .selected-multiple-options {
   margin-top: 0.375em;
   margin-bottom: 0.375em;
+}
+
+.clear-country-button {
+  height: 25px;
 }
 </style>
