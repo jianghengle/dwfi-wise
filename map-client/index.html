@@ -42,7 +42,7 @@
               <i class="fas fa-question-circle"></i>
               <span class="tooltiptext">Countries where DWFI Faculty Fellows and researchers are advancing education and fostering future leaders in water management and food production. Includes research and policy, data development and educational exchange programs.</span>
             </p>
-            <p class="title">{{overview.countries.length}}</p>
+            <p class="title" v-if="overview.countries.length">{{overview.countries.length}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
