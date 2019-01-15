@@ -132,6 +132,29 @@ module MyServer
         end
       end
 
+      def get_publications_for_map(ctx)
+        begin
+          country = URI.unescape(get_param!(ctx, "country"))
+          items = Publication.get_published_publications(country)
+          ids = items.map { |i| i.id }
+          people_relation_map = PeopleRelation.get_relation_map("publications", ids)
+          grant_relation_map = GrantRelation.get_relation_map("publications", ids)
+          str = items.join(", ") do |i|
+            id = i.id.to_s
+            people = [] of PeopleRelation
+            people = people_relation_map[id] if people_relation_map.has_key?(id)
+            grants = [] of GrantRelation
+            grants = grant_relation_map[id] if grant_relation_map.has_key?(id)
+            i.to_json_for_map(people, grants)
+          end
+          "[#{str}]"
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
       def export_publications(ctx)
         begin
           user = verify_token(ctx)

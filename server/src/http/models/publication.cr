@@ -41,6 +41,24 @@ module MyServer
         end
       end
 
+      def to_json_for_map(people, grants)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"title\":" << @title.to_json << ","
+          str << "\"authors\":" << @authors.to_json << ","
+          str << "\"abstract\":" << @abstract.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"url\":" << @url.to_json << ","
+          str << "\"status\":" << @status.to_json << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"people\": [" << (people.join(", ") { |p| p.to_json }) << "],"
+          str << "\"grants\": [" << (grants.join(", ") { |g| g.to_json }) << "],"
+          str << "\"pointOfContact\":" << @point_of_contact.to_json
+          str << "}"
+        end
+      end
+
       def self.get_publications
         items = Repo.all(Publication)
         return items.as(Array) unless items.nil?

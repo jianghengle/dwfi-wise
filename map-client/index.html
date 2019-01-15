@@ -6,6 +6,26 @@
   <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+  <style>
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      background-color: #363636;
+      color: white;
+      font-size: 12px;
+      text-align: center;
+      text-transform: none;
+      border-radius: 3px;
+      padding: 5px 5px;
+      position: absolute;
+      left: 0px;
+      width: 100%;
+      z-index: 10;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
   <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -18,37 +38,64 @@
       <nav class="level is-mobile" style="max-width:800px; margin:auto">
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Countries</p>
+            <p class="heading tooltip">Countries
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Countries where DWFI Faculty Fellows and researchers are advancing education and fostering future leaders in water management and food production. Includes research and policy, data development and educational exchange programs.</span>
+            </p>
             <p class="title">{{overview.countries.length}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Programs</p>
+            <p class="heading tooltip">Programs
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Programs that DWFI is funding, managing and/or coordinating.</span>
+            </p>
             <p class="title">{{overview.programs}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Projects</p>
+            <p class="heading tooltip">Projects
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Research, policy, or education projects that are impacting our mission. Includes work by DWFI directors, Faculty Fellows, the Nebraska Water Center, the Nebraska Water Sciences Laboratory, as well as associated staff and scholars. Projects managed by Faculty Fellows may not have direct funding or involvement from DWFI, but all support our shared mission and demonstrate the University of Nebraska’s capacity to improve water and food security.</span>
+            </p>
             <p class="title">{{overview.projects}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Faculty</p>
+            <p class="heading tooltip">Publications
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Resources that increase knowledge and improve practices for water management and food production. Includes journal articles, books/chapters, reports, theses and dissertations authored by DWFI directors, Faculty Fellows and Scholars.</span>
+            </p>
+            <p class="title">{{overview.publications}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading tooltip">Faculty
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">University of Nebraska Faculty Fellows affiliated with DWFI. Faculty Fellows support DWFI’s mission and vision. Their research, education, and outreach create global impacts in water and food security. </span>
+            </p>
             <p class="title">{{overview.faculty}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Scholars</p>
+            <p class="heading tooltip">Scholars
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Students and professionals who had significant educational and research experiences supported by DWFI. Includes undergraduate internships, graduate assistantships, postdoctoral fellowships, learning communities, study abroad programs for University of Nebraska students, and visiting scholars from around the world. Our network of skilled water and agricultural leaders.</span>
+            </p>
             <p class="title">{{overview.scholars}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <p class="heading">Grantors</p>
+            <p class="heading tooltip">Grantors
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltiptext">Organizations that have funded research and educational opportunities through DWFI directors, Faculty Fellows or researchers. Includes governments, international development organizations, industry partners, educational institutions, philanthropic foundations, and others. Primary financial support for DWFI and its programs comes from the Robert B. Daugherty Foundation.</span>
+            </p>
             <p class="title">{{overview.grantors}}</p>
           </div>
         </div>
@@ -67,6 +114,7 @@
                 <option>Program</option>
                 <option>Project</option>
                 <option>Event</option>
+                <option>Publication</option>
               </select>
             </div>
           </div>
@@ -139,6 +187,7 @@
       <span v-if="activeCountryCount[0]"><span class="has-text-weight-bold">{{activeCountryCount[0]}}</span> program<span v-if="activeCountryCount[0]>1">s</span> </span>
       <span v-if="activeCountryCount[1]"><span class="has-text-weight-bold">{{activeCountryCount[1]}}</span> project<span v-if="activeCountryCount[1]>1">s</span> </span>
       <span v-if="activeCountryCount[2]"><span class="has-text-weight-bold">{{activeCountryCount[2]}}</span> event<span v-if="activeCountryCount[2]>1">s</span> </span>
+      <span v-if="activeCountryCount[3]"><span class="has-text-weight-bold">{{activeCountryCount[3]}}</span> publication<span v-if="activeCountryCount[3]>1">s</span> </span>
       <span> related to <span class="has-text-weight-bold">{{activeCountryName}}</span></span>
     </div>
     <div v-else>
@@ -174,8 +223,8 @@
               <div class="content">
                 <p style="white-space:pre-line">{{program.description}}</p>
                 <p>Focus Area: {{program.focusArea}}</p>
-                <p>Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p>People:
+                <p v-if="program.grants.length">Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p v-if="program.people.length">People:
                   <span v-for="(p, i) in program.people">
                     <span v-if="i!=0">, </span>
                     <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
@@ -208,8 +257,8 @@
                 <p style="white-space:pre-line">{{project.description}}</p>
                 <p>Focus Area: {{project.focusArea}}</p>
                 <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
-                <p>Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p>People:
+                <p v-if="project.grants.length">Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p v-if="project.people.length">People:
                   <span v-for="(p, i) in project.people">
                     <span v-if="i!=0">, </span>
                     <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
@@ -241,8 +290,8 @@
               <div class="content">
                 <p style="white-space:pre-line">{{myEvent.description}}</p>
                 <p>Focus Area: {{myEvent.focusArea}}</p>
-                <p>Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p>People:
+                <p v-if="myEvent.grants.length">Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p v-if="myEvent.people.length">People:
                   <span v-for="(p, i) in myEvent.people">
                     <span v-if="i!=0">, </span>
                     <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
@@ -251,6 +300,38 @@
                     <span v-if="p.role"> ({{p.role}})</span>
                   </span>
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="workCategory=='All' || workCategory=='Publication'">
+        <div v-for="publication in activeCountry.publications" :key="'publication-'+publication.id"
+          v-if="(focusArea=='All' || focusArea==publication.focusArea) && (grant=='All' || publication.grantIds.includes(grant)) && (faculty=='All' || publication.peopleIds.includes(faculty))">
+          <div class="card" style="margin-top: 15px;">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4"><a v-if="publication.url" :href="publication.url">{{publication.title}}</a><span v-if="!publication.url">{{publication.title}}</span></p>
+                  <p class="subtitle is-6">
+                    Publication &nbsp; | &nbsp; {{publication.country}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="content">
+                <p v-if="publication.people.length">Authors:
+                  <span v-for="(p, i) in publication.people">
+                    <span v-if="i!=0">, </span>
+                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                  </span>
+                </p>
+                <p style="white-space:pre-line">Abstract: {{publication.abstract}}</p>
+                <p>Focus Area: {{publication.focusArea}}</p>
+                <p v-if="publication.grants.length">Grants: <span v-for="(g, i) in publication.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
               </div>
             </div>
           </div>
@@ -281,11 +362,12 @@
         countries: {},
         countryNames: [],
         activeCountryName: 'All',
-        loadings: {program: false, project: false, event: false},
+        loadings: {program: false, project: false, event: false, publication: false},
         categories: [
           {name: 'program', label: 'Program', url: 'programs'},
           {name: 'project', label: 'Project', url: 'projects'},
           {name: 'event', label: 'Event', url: 'events'},
+          {name: 'publication', label: 'Publication', url: 'publications'},
         ],
         overview: {
           countries: [],
@@ -294,7 +376,8 @@
           events: null,
           scholars: null,
           grantors: null,
-          faculty: null
+          faculty: null,
+          publications: null
         },
         countryOptions: ['All']
       },
@@ -368,7 +451,7 @@
           this.countryNames.forEach(function(countryName){
             var country = vm.countries[countryName]
             var counts = val[countryName]
-            if(counts[0] + counts[1] + counts[2] > 0){
+            if(counts[0] + counts[1] + counts[2] + counts[3] > 0){
               colors[country.id] = GREEN
             }else{
               colors[country.id] = GRAY
@@ -413,9 +496,11 @@
                     countPrograms: [],
                     countProjects: [],
                     countEvents: [],
+                    countPublications: [],
                     programs: null,
                     projects: null,
                     events: null,
+                    publications: null
                   }
                 }
               })
@@ -439,6 +524,7 @@
             this.overview.scholars = resp[4]
             this.overview.grantors = resp[5]
             this.overview.faculty = resp[6]
+            this.overview.publications = resp[7]
             this.countryOptions = resp[0].slice().sort()
             this.countryOptions.unshift('All')
           })

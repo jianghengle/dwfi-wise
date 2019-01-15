@@ -206,6 +206,14 @@ module MyServer
         HttpAPI::PublicationController.export_publications(env)
       end
 
+      get "/count_publications_for_map" do |env|
+        HttpAPI::PublicationController.count_publications_for_map(env)
+      end
+
+      get "/get_publications_for_map/:country" do |env|
+        HttpAPI::PublicationController.get_publications_for_map(env)
+      end
+
       get "/get_files" do |env|
         HttpAPI::FileController.get_files(env)
       end
