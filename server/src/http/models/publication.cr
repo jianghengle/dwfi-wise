@@ -29,6 +29,18 @@ module MyServer
         result
       end
 
+      def to_json_for_count(grands, people)
+        String.build do |str|
+          str << "{"
+          str << "\"id\":" << @id << ","
+          str << "\"country\":" << @country.to_json << ","
+          str << "\"focusArea\":" << @focus_area.to_json << ","
+          str << "\"people\":" << "[" << (people.join(", ") { |p| p.people_id.to_s }) << "]" << ","
+          str << "\"grants\":" << "[" << (grands.join(", ") { |g| g.grant_id.to_s }) << "]"
+          str << "}"
+        end
+      end
+
       def self.get_publications
         items = Repo.all(Publication)
         return items.as(Array) unless items.nil?
@@ -37,6 +49,14 @@ module MyServer
 
       def self.get_publication(id)
         Repo.get(Publication, id)
+      end
+
+      def self.get_published_publications(country = "")
+        query = Query.where(status: "Published")
+        query.where("country LIKE ?", "%#{country}%") unless country.empty?
+        items = Repo.all(Publication, query)
+        return items.as(Array) unless items.nil?
+        [] of Publication
       end
 
       def self.get_publication_map(publication_ids)
@@ -50,7 +70,7 @@ module MyServer
         result
       end
 
-      def self.create_publication(publication, files)
+      def self.create_publication(publication, files, people, grants)
         changeset = Repo.insert(publication)
         raise changeset.errors.to_s unless changeset.valid?
         publication_id = nil.as(Int64?)
@@ -62,16 +82,22 @@ module MyServer
         raise "cannot get new id!" if publication_id.nil?
 
         FileRelation.create_relations(files, "publications", publication_id)
+        PeopleRelation.create_relations(people, "publications", publication_id)
+        GrantRelation.create_relations(grants, "publications", publication_id)
       end
 
-      def self.update_publication(publication, files)
+      def self.update_publication(publication, files, people, grants)
         changeset = Repo.update(publication)
         raise changeset.errors.to_s unless changeset.valid?
 
         FileRelation.update_relations(files, "publications", publication.id)
+        PeopleRelation.update_relations(people, "publications", publication.id)
+        GrantRelation.update_relations(grants, "publications", publication.id)
       end
 
       def self.delete_publication(publication_id)
+        PeopleRelation.delete_relations("publications", publication_id)
+        GrantRelation.delete_relations("publications", publication_id)
         FileRelation.delete_relations("publications", publication_id)
         PublicationRelation.delete_publication_relations(publication_id)
 

@@ -197,7 +197,6 @@ var tables = {
     columns: [
       {name: 'id', type: 'int', label: 'Id'},
       {name: 'title', type: 'str', label: 'Title'},
-      {name: 'authors', type: 'str', label: 'Authors'},
       {name: 'status', type: 'str', label: 'Status'},
       {name: 'country', type: 'str', label: 'Country'}
     ],
@@ -205,16 +204,16 @@ var tables = {
     search: '',
     importOption: {
       columns: ['title', 'authors', 'abstract', 'focusArea', 'country', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website'],
-      relations: {files: ['file_id', 'comment']},
+      relations: {people: ['people_id', 'role'], grants: ['grant_id', 'comment'], files: ['file_id', 'comment']},
       notes: [
         'The <strong>pointOfContact</strong> is the people id from the people table',
-        'The <strong>files</strong> are files from the files table. Leave it empty if nothing. Otherwise, each file takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, abstract</pre>',
+        'The <strong>people</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, first author</pre>',
       ],
       url: '/create_publication'
     },
     exportOption: {
-      columns: ['id', 'title', 'authors', 'abstract', 'focusArea', 'country', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
-      relations: {pointOfContact: ['pointOfContact', '/export_people_only'], files: ['id', '/export_files']},
+      columns: ['id', 'title', 'people', 'abstract', 'focusArea', 'grants', 'country', 'status', 'url', 'pointOfContact', 'email', 'phone', 'website', 'files'],
+      relations: {people: ['id', '/export_people'], grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], files: ['id', '/export_files']},
     },
     deleteOption: {
       id: 'publicationId',

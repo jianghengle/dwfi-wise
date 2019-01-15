@@ -30,19 +30,21 @@ module MyServer
           end
 
           scholars = VisitingScholar.get_published_visiting_scholars
-          # scholarCountries = [] of String
-          # scholars.each do |s|
-          #   next if s.country.nil?
-          #   scholarCountries << s.country.to_s unless s.country.to_s.empty?
-          # end
+
+          publications = Publication.get_published_publications
+          publicationCountries = [] of String
+          publications.each do |p|
+            next if p.country.nil?
+            p.country.to_s.split(",") { |s| publicationCountries << s.strip unless s.strip.empty? }
+          end
 
           grantors = Grant.get_grants
 
           faculty = Faculty.get_all_faculty
 
-          countries = programCountries | projectCountries | eventCountries # | scholarCountries
+          countries = programCountries | projectCountries | eventCountries | publicationCountries
 
-          json_str = ["[" + (countries.join(", ") { |c| c.to_json }) + "]", programs.size.to_s, projects.size.to_s, events.size.to_s, scholars.size.to_s, grantors.size.to_s, faculty.size.to_s]
+          json_str = ["[" + (countries.join(", ") { |c| c.to_json }) + "]", programs.size.to_s, projects.size.to_s, events.size.to_s, scholars.size.to_s, grantors.size.to_s, faculty.size.to_s, publications.size.to_s]
           "[" + json_str.join(", ") + "]"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")

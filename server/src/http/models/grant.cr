@@ -65,7 +65,7 @@ module MyServer
         grant_map = Grant.get_grant_map(grant_ids)
         result = relations.join(",") do |r|
           grant_id = r.grant_id.to_s
-          info = grant_id + ", " + grant_map[grant_id].organization.to_s
+          info = grant_id + ", " + r.comment.to_s + ", " + grant_map[grant_id].organization.to_s
           "[" + r.for_id.to_s + "," + info.to_json + "]"
         end
         "[" + result + "]"

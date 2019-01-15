@@ -25,7 +25,11 @@ module MyServer
           publication = Publication.get_publication(id)
           file_relations = FileRelation.get_relations("publications", id)
           file_relations_json = "[" + file_relations.join(", ") { |r| r.to_json } + "]"
-          "[ #{publication.to_json}, #{file_relations_json}]"
+          people_relations = PeopleRelation.get_relations("publications", id)
+          people_relations_json = "[" + people_relations.join(", ") { |r| r.to_json } + "]"
+          grant_relations = GrantRelation.get_relations("publications", id)
+          grant_relations_json = "[" + grant_relations.join(", ") { |r| r.to_json } + "]"
+          "[ #{publication.to_json}, #{file_relations_json}, #{people_relations_json}, #{grant_relations_json}]"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception
@@ -50,8 +54,10 @@ module MyServer
           publication.country = get_param!(ctx, "country")
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
 
-          Publication.create_publication(publication, files)
+          Publication.create_publication(publication, files, people, grants)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
@@ -78,8 +84,10 @@ module MyServer
           publication.country = get_param!(ctx, "country")
 
           files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
 
-          Publication.update_publication(publication, files)
+          Publication.update_publication(publication, files, people, grants)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
@@ -96,6 +104,27 @@ module MyServer
           publication_id = get_param!(ctx, "publicationId").to_i
           Publication.delete_publication(publication_id)
           {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
+      def count_publications_for_map(ctx)
+        begin
+          items = Publication.get_published_publications
+          ids = items.map { |i| i.id }
+          relation_map = GrantRelation.get_relation_map("publications", ids)
+          people_map = PeopleRelation.get_relation_map("publications", ids)
+          str = items.join(", ") do |i|
+            people = [] of PeopleRelation
+            people = people_map[i.id.to_s] if people_map.has_key?(i.id.to_s)
+            grants = [] of GrantRelation
+            grants = relation_map[i.id.to_s] if relation_map.has_key?(i.id.to_s)
+            i.to_json_for_count(grants, people)
+          end
+          "[#{str}]"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception

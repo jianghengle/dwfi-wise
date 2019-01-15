@@ -29,14 +29,37 @@
       </div>
     </div>
 
-    <div class="field is-horizontal">
+    <div class="field is-horizontal item-row" v-for="(p, i) in people" v-if="p.people_id">
       <div class="field-label is-normal">
-        <label class="label">Authors</label>
+        <label class="label" v-if="i==firstPeople">Authors</label>
       </div>
       <div class="field-body">
-        <div class="field">
+        <div class="field is-grouped">
+          <p class="select">
+            <select v-model="p.people_id" :disabled="privileges == 'Read Only'">
+              <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
+            </select>
+          </p>&nbsp;&nbsp;&nbsp;
+          <p class="control is-expanded">
+            <input class="input" type="text" placeholder="Role" v-model="p.role" :disabled="privileges == 'Read Only'">
+          </p>
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
+            <a class="button is-text" @click="removePeople(i)">
+              <icon name="remove"></icon>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
+      <div class="field-label">
+        <label class="label" v-if="firstPeople >= people.length">Authors</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
           <div class="control">
-            <input class="input" type="text" v-model="authors" :disabled="privileges == 'Read Only'">
+            <button class="button" @click="addPeople"><icon name="plus"></icon>&nbsp;Author</button>
           </div>
         </div>
       </div>
@@ -79,6 +102,42 @@
                 <option>Communications</option>
               </select>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal item-row" v-for="(g, i) in grants" v-if="g.grant_id">
+      <div class="field-label is-normal">
+        <label class="label" v-if="i==firstGrant">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <p class="select">
+            <select v-model="g.grant_id" :disabled="privileges == 'Read Only'">
+              <option v-for="opt in allGrants" v-bind:value="opt.id">{{opt.label}}</option>
+            </select>
+          </p>&nbsp;&nbsp;&nbsp;
+          <p class="control is-expanded">
+            <input class="input" type="text" placeholder="Comment" v-model="g.comment" :disabled="privileges == 'Read Only'">
+          </p>
+          <p class="control" v-if="privileges == 'Edit' || privileges == 'Approve'">
+            <a class="button is-text" @click="removeGrant(i)">
+              <icon name="remove"></icon>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
+      <div class="field-label">
+        <label class="label" v-if="firstGrant >= grants.length">Grants</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button" @click="addGrant"><icon name="plus"></icon>&nbsp;Grant</button>
           </div>
         </div>
       </div>
@@ -245,12 +304,17 @@ export default {
       success: '',
       oldPublication: null,
       oldFiles: null,
+      oldPeople: null,
+      oldGrants: null,
       allFiles: [],
       allPeople: [],
+      allGrants: [],
       title: '',
       authors: '',
+      people: [],
       abstract: '',
       focusArea: '',
+      grants: [],
       focusAreaInput: [],
       country: '',
       countryInput: [],
@@ -270,9 +334,21 @@ export default {
     countries () {
       return this.$store.state.table.countries
     },
+    firstPeople () {
+      var i = 0
+      while(i < this.people.length && (!this.people[i].people_id))
+        i++
+      return i
+    },
     firstFile () {
       var i = 0
       while(i < this.files.length && (!this.files[i].file_id))
+        i++
+      return i
+    },
+    firstGrant () {
+      var i = 0
+      while(i < this.grants.length && (!this.grants[i].grant_id))
         i++
       return i
     },
@@ -282,7 +358,28 @@ export default {
         return true
       if(JSON.stringify(this.files) != JSON.stringify(this.oldFiles))
         return true
+      if(JSON.stringify(this.people) != JSON.stringify(this.oldPeople))
+        return true
+      if(JSON.stringify(this.grants) != JSON.stringify(this.oldGrants))
+        return true
       return false
+    },
+    changedPeople () {
+      var changed = []
+      for(var i=0;i<this.people.length;i++){
+        var p = this.people[i]
+        if(!p.people_id){
+          changed.push(p)
+        }else if(p.id){
+          var old = this.oldPeople[i]
+          if(p.people_id != old.people_id || p.role != old.role){
+            changed.push(p)
+          }
+        }else{
+          changed.push(p)
+        }
+      }
+      return changed
     },
     changedFiles () {
       var changed = []
@@ -297,6 +394,23 @@ export default {
           }
         }else{
           changed.push(f)
+        }
+      }
+      return changed
+    },
+    changedGrants () {
+      var changed = []
+      for(var i=0;i<this.grants.length;i++){
+        var g = this.grants[i]
+        if(!g.grant_id){
+          changed.push(g)
+        }else if(g.id){
+          var old = this.oldGrants[i]
+          if(g.grant_id != old.grant_id || g.comment != old.comment){
+            changed.push(g)
+          }
+        }else{
+          changed.push(g)
         }
       }
       return changed
@@ -339,6 +453,14 @@ export default {
           return {id: f.id, file_id: f.fileId, comment: f.comment}
         })
         this.oldFiles = JSON.parse(JSON.stringify(this.files))
+        this.people = resp[2].map(function(p){
+          return {id: p.id, people_id: p.peopleId, role: p.role}
+        })
+        this.oldPeople = JSON.parse(JSON.stringify(this.people))
+        this.grants = resp[3].map(function(g){
+          return {id: g.id, grant_id: g.grantId, comment: g.comment}
+        })
+        this.oldGrants = JSON.parse(JSON.stringify(this.grants))
         this.waiting = false
         this.error = ''
         this.$nextTick(() => {
@@ -360,6 +482,23 @@ export default {
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
         })
       })
+      this.$http.get(xHTTPx + '/get_grants').then(response => {
+        this.allGrants = response.body.map(function(g){
+          return {id: g.id, label: g.organization + ' [' + g.id + ']'}
+        })
+      })
+    },
+    addPeople () {
+      if(this.allPeople.length){
+        this.people.push({people_id: this.allPeople[0].id, role: ''})
+      }
+    },
+    removePeople (idx) {
+      if(this.people[idx].id){
+        this.people[idx].people_id = null
+      }else{
+        this.people.splice(idx, 1)
+      }
     },
     addFile () {
       if(this.allFiles.length){
@@ -373,6 +512,18 @@ export default {
         this.files.splice(idx, 1)
       }
     },
+    addGrant () {
+      if(this.allGrants.length){
+        this.grants.push({grant_id: this.allGrants[0].id, comment: ''})
+      }
+    },
+    removeGrant (idx) {
+      if(this.grants[idx].id){
+        this.grants[idx].grant_id = null
+      }else{
+        this.grants.splice(idx, 1)
+      }
+    },
     update () {
       var message = {
         title: this.title,
@@ -383,7 +534,9 @@ export default {
         status: this.status,
         url: this.url,
         pointOfContact: this.pointOfContact,
-        files: JSON.stringify(this.changedFiles)
+        people: JSON.stringify(this.changedPeople),
+        files: JSON.stringify(this.changedFiles),
+        grants: JSON.stringify(this.changedGrants)
       }
       this.$http.post(xHTTPx + '/update_publication/' + this.publicationId, message).then(response => {
         var resp = response.body

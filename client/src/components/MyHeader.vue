@@ -51,13 +51,13 @@ export default {
         {name: 'programs', label: 'Programs', path: '/table/programs'},
         {name: 'projects', label: 'Projects', path: '/table/projects'},
         {name: 'events', label: 'Events', path: '/table/events'},
+        {name: 'publications', label: 'Publications', path: '/table/publications'},
+        {name: 'faculty', label: 'Faculty', path: '/table/faculty'},
         {name: 'visiting_scholars', label: 'Scholars', path: '/table/visiting_scholars'},
       ],
       otherTables: [
-        {name: 'faculty', label: 'Faculty', path: '/table/faculty'},
         {name: 'people', label: 'People', path: '/table/people'},
         {name: 'grants', label: 'Grants', path: '/table/grants'},
-        {name: 'publications', label: 'Publications', path: '/table/publications'},
         {name: 'files', label: 'Files', path: '/table/files'},
       ],
       staticUrl: xHTTPx + '/dwfi_wise_files'
