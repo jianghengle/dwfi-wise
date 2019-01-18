@@ -29,9 +29,22 @@
       </div>
     </div>
 
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Authors</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="authors" :disabled="privileges == 'Read Only'">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="field is-horizontal item-row" v-for="(p, i) in people" v-if="p.people_id">
       <div class="field-label is-normal">
-        <label class="label" v-if="i==firstPeople">Authors</label>
+        <label class="label" v-if="i==firstPeople">People</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
@@ -54,12 +67,12 @@
 
     <div class="field is-horizontal" v-if="privileges == 'Edit' || privileges == 'Approve'">
       <div class="field-label">
-        <label class="label" v-if="firstPeople >= people.length">Authors</label>
+        <label class="label" v-if="firstPeople >= people.length">People</label>
       </div>
       <div class="field-body">
         <div class="field is-grouped">
           <div class="control">
-            <button class="button" @click="addPeople"><icon name="plus"></icon>&nbsp;Author</button>
+            <button class="button" @click="addPeople"><icon name="plus"></icon>&nbsp;People</button>
           </div>
         </div>
       </div>

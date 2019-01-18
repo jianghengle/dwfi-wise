@@ -321,7 +321,11 @@
               </div>
 
               <div class="content">
-                <p v-if="publication.people.length">Authors:
+                <p>Authors: {{publication.authors}}</p>
+                <p style="white-space:pre-line">Abstract: {{publication.abstract}}</p>
+                <p>Focus Area: {{publication.focusArea}}</p>
+                <p v-if="publication.grants.length">Grants: <span v-for="(g, i) in publication.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                <p v-if="publication.people.length">People:
                   <span v-for="(p, i) in publication.people">
                     <span v-if="i!=0">, </span>
                     <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
@@ -329,9 +333,6 @@
                     <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
                   </span>
                 </p>
-                <p style="white-space:pre-line">Abstract: {{publication.abstract}}</p>
-                <p>Focus Area: {{publication.focusArea}}</p>
-                <p v-if="publication.grants.length">Grants: <span v-for="(g, i) in publication.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
               </div>
             </div>
           </div>
