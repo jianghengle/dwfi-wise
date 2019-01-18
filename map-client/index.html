@@ -535,11 +535,13 @@
           vm.categories.forEach(function(category){
             vm.$http.get(SERVER + '/count_' + category.url + '_for_map').then(response => {
               response.body.forEach(function(i){
-                i.country.split(', ').forEach(function(c){
-                  if(vm.countries[c]){
-                    vm.countries[c]['count' + category.label + 's'].push(i)
-                  }
-                })
+                if(i.country){
+                  i.country.split(', ').forEach(function(c){
+                    if(vm.countries[c]){
+                      vm.countries[c]['count' + category.label + 's'].push(i)
+                    }
+                  })
+                }
               })
             })
           })
