@@ -25,7 +25,7 @@ class User < Crecto::Model
     [{:email, "string"},
      {:encrypted_password, "password"},
      {:auth_token, "string"},
-     {:privileges, "enum", ["Read Only", "Edit", "Approve"]}]
+     {:privileges, "enum", ["Read Only", "Edit", "Approve", "None"]}]
   end
 
   def self.can_access(user)

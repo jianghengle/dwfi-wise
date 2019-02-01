@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import SignIn from '@/components/SignIn'
+import SignUp from '@/components/SignUp'
+import ChangePassword from '@/components/ChangePassword'
+import Users from '@/components/Users'
 import TableIndex from '@/components/TableIndex'
 import Program from '@/components/Program'
 import NewProgram from '@/components/NewProgram'
@@ -33,6 +36,21 @@ export default new Router({
       path: '/sign_in',
       name: 'SignIn',
       component: SignIn
+    },
+    {
+      path: '/sign_up',
+      name: 'SignUp',
+      component: SignUp
+    },
+    {
+      path: '/change_password',
+      name: 'ChangePassword',
+      component: ChangePassword
+    },
+    {
+      path: '/users',
+      name: 'Users',
+      component: Users
     },
     {
       path: '/table/:tableName',

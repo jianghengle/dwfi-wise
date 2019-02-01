@@ -29,6 +29,12 @@
             <a class="navbar-item" :href="staticUrl" target="_blank">
               <icon name="folder"></icon>
             </a>
+            <router-link class="navbar-item" :class="{'active-table': routePath=='/users'}" :to="'/users'" v-if="privileges == 'Approve'">
+              <icon name="users"></icon>
+            </router-link>
+            <router-link class="navbar-item" :class="{'active-table': routePath=='/change_password'}" :to="'/change_password'">
+              <icon name="user"></icon>
+            </router-link>
             <a class="navbar-item" @click="logout">
               <icon name="sign-out"></icon>
             </a>
@@ -70,12 +76,15 @@ export default {
     email () {
       return this.$store.state.user.email
     },
+    privileges () {
+      return this.$store.state.user.privileges
+    },
     routePath () {
       return this.$route.path
     },
     activeTable () {
       var routePath = this.routePath
-      var table = this.basicTables[0]
+      var table = null
       this.basicTables.forEach(function(t){
         if(routePath.indexOf(t.name) != -1){
           table = t

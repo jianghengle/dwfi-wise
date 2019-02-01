@@ -6,7 +6,7 @@
 
     <div class="field">
       <p class="control has-icons-left">
-        <input class="input login-text" type="text" placeholder="Email" v-model="email" @keyup.enter="login">
+        <input class="input" type="text" placeholder="Email" v-model="email" @keyup.enter="login">
         <span class="icon is-small is-left">
           <icon name="envelope"></icon>
         </span>
@@ -15,7 +15,7 @@
 
     <div class="field">
       <p class="control has-icons-left">
-        <input class="input login-text" type="password" placeholder="Password" v-model="password" @keyup.enter="login">
+        <input class="input" type="password" placeholder="Password" v-model="password" @keyup.enter="login">
         <span class="icon is-small is-left">
           <icon name="key"></icon>
         </span>
@@ -31,7 +31,7 @@
       </p>
     </div>
 
-    <div v-if="error" class="notification is-danger login-text">
+    <div v-if="error" class="notification is-danger">
       <button class="delete" @click="error=''"></button>
       {{error}}
     </div>
@@ -40,6 +40,10 @@
       <p class="control">
         <button class="button is-link" :class="{'is-loading': waiting}" @click="login">Sign In</button>
       </p>
+    </div>
+
+    <div class="field">
+      <router-link :to="'/sign_up'">Sign up a new account</router-link>
     </div>
   </div>
 </template>

@@ -38,6 +38,26 @@ module MyServer
         HttpAPI::UserController.get_auth_token(env)
       end
 
+      post "/register" do |env|
+        HttpAPI::UserController.register(env)
+      end
+
+      post "/change_password" do |env|
+        HttpAPI::UserController.change_password(env)
+      end
+
+      get "/get_users" do |env|
+        HttpAPI::UserController.get_users(env)
+      end
+
+      post "/update_user" do |env|
+        HttpAPI::UserController.update_user(env)
+      end
+
+      post "/delete_user" do |env|
+        HttpAPI::UserController.delete_user(env)
+      end
+
       get "/get_programs" do |env|
         HttpAPI::ProgramController.get_programs(env)
       end
