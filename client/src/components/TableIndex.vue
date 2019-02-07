@@ -112,7 +112,8 @@ export default {
       return this.$route.params.tableName
     },
     tableOption () {
-      return this.$store.state.table.tables[this.tableName]
+      var tableOption = this.$store.state.table.tables[this.tableName]
+      return tableOption ? tableOption : {}
     },
     tableLabel () {
       return this.tableOption.label
@@ -217,8 +218,11 @@ export default {
         return this.sortOption.asc ? -1 : 1
       if(v1 != null && v2 == null)
         return this.sortOption.asc ? 1 : -1
-      if(sortColumn.type == 'str')
+      if(sortColumn.type == 'str'){
+        v1 = v1.toString()
+        v2 = v2.toString()
         return this.sortOption.asc ? v1.localeCompare(v2) : v2.localeCompare(v1)
+      }
       return this.sortOption.asc ? (v1 - v2) : (v2 - v1)
     },
     sortItems (index) {
