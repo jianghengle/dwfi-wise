@@ -25,6 +25,26 @@
       visibility: visible;
       opacity: 0.9;
     }
+    .focusarea .focusareatext {
+      visibility: hidden;
+      background-color: #363636;
+      color: white;
+      font-size: 12px;
+      text-align: left;
+      text-transform: none;
+      border-radius: 3px;
+      padding: 5px 5px;
+      position: absolute;
+      left: 50px;
+      top: 0px;
+      width: 260px;
+      z-index: 10;
+    }
+    .focusarea:hover .focusareatext {
+      visibility: visible;
+      opacity: 0.9;
+    }
+
   </style>
 </head>
 <body>
@@ -141,13 +161,7 @@
             <div class="select is-fullwidth">
               <select v-model="focusArea">
                 <option>All</option>
-                <option>[FA1] Closing Water & Agricultural Productivity Gaps</option>
-                <option>[FA2] Improving Groundwater Management for Agricultural Production</option>
-                <option>[FA3] Enhancing High-productivity Irrigated Agriculture</option>
-                <option>[FA4] Freshwater & Agriculture Ecosystems & Public Health</option>
-                <option>[FA5] Management of Agricultural Drought</option>
-                <option>Education & Engagement Projects & Programs</option>
-                <option>Communications</option>
+                <option v-for="a in focusAreas">{{a}}</option>
               </select>
             </div>
           </div>
@@ -208,31 +222,38 @@
 
       <div v-if="workCategory=='All' || workCategory=='Program'">
         <div v-for="program in activeCountry.programs" :key="'program-'+program.id"
-          v-if="(focusArea=='All' || focusArea==program.focusArea) && (grant=='All' || program.grantIds.includes(grant)) && (faculty=='All' || program.peopleIds.includes(faculty))">
+          v-if="(focusArea=='All' || program.focusArea.includes(focusArea)) && (grant=='All' || program.grantIds.includes(grant)) && (faculty=='All' || program.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
+                <div class="media-left">
+                  <figure v-for="a in program.focusAreas" class="image is-48x48 focusarea" style="margin-bottom: 3px;">
+                    <img :src="a.icon">
+                    <span class="focusareatext">{{a.text}}</span>
+                  </figure>
+                  <figure v-if="!program.focusAreas.length" class="image is-48x48" style="margin-bottom: 3px;">
+                  </figure>
+                </div>
                 <div class="media-content">
                   <p class="title is-4"><a v-if="program.website" :href="program.website">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
                   <p class="subtitle is-6">
                     Program &nbsp; | &nbsp; {{program.country}} &nbsp; | &nbsp; {{program.startDate}} ~ {{program.endDate}} &nbsp; | &nbsp; {{program.status}}
                   </p>
+                  <div class="content">
+                    <p style="white-space:pre-line">{{program.description}}</p>
+                    <p>Focus Area: {{program.focusArea}}</p>
+                    <p v-if="program.grants.length">Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                    <p v-if="program.people.length">People:
+                      <span v-for="(p, i) in program.people">
+                        <span v-if="i!=0">, </span>
+                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                        <span v-if="p.role"> ({{p.role}})</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="content">
-                <p style="white-space:pre-line">{{program.description}}</p>
-                <p>Focus Area: {{program.focusArea}}</p>
-                <p v-if="program.grants.length">Grants: <span v-for="(g, i) in program.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p v-if="program.people.length">People:
-                  <span v-for="(p, i) in program.people">
-                    <span v-if="i!=0">, </span>
-                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                    <span v-if="p.role"> ({{p.role}})</span>
-                  </span>
-                </p>
               </div>
             </div>
           </div>
@@ -241,32 +262,39 @@
 
       <div v-if="workCategory=='All' || workCategory=='Project'">
         <div v-for="project in activeCountry.projects" :key="'project-'+project.id"
-          v-if="(focusArea=='All' || focusArea==project.focusArea) && (grant=='All' || project.grantIds.includes(grant)) && (faculty=='All' || project.peopleIds.includes(faculty))">
+          v-if="(focusArea=='All' || project.focusArea.includes(focusArea)) && (grant=='All' || project.grantIds.includes(grant)) && (faculty=='All' || project.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
+                <div class="media-left">
+                  <figure v-for="a in project.focusAreas" class="image is-48x48 focusarea" style="margin-bottom: 3px;">
+                    <img :src="a.icon">
+                    <span class="focusareatext">{{a.text}}</span>
+                  </figure>
+                  <figure v-if="!project.focusAreas.length" class="image is-48x48" style="margin-bottom: 3px;">
+                  </figure>
+                </div>
                 <div class="media-content">
                   <p class="title is-4"><a v-if="project.website" :href="project.website">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
                   <p class="subtitle is-6">
                     Project &nbsp; | &nbsp; {{project.country}} &nbsp; | &nbsp; {{project.startDate}} ~ {{project.endDate}} &nbsp; | &nbsp; {{project.status}}
                   </p>
+                  <div class="content">
+                    <p style="white-space:pre-line">{{project.description}}</p>
+                    <p>Focus Area: {{project.focusArea}}</p>
+                    <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
+                    <p v-if="project.grants.length">Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                    <p v-if="project.people.length">People:
+                      <span v-for="(p, i) in project.people">
+                        <span v-if="i!=0">, </span>
+                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                        <span v-if="p.role"> ({{p.role}})</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="content">
-                <p style="white-space:pre-line">{{project.description}}</p>
-                <p>Focus Area: {{project.focusArea}}</p>
-                <p v-if="project.programTitle">Program: {{project.programTitle}}</p>
-                <p v-if="project.grants.length">Grants: <span v-for="(g, i) in project.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p v-if="project.people.length">People:
-                  <span v-for="(p, i) in project.people">
-                    <span v-if="i!=0">, </span>
-                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                    <span v-if="p.role"> ({{p.role}})</span>
-                  </span>
-                </p>
               </div>
             </div>
           </div>
@@ -275,31 +303,38 @@
 
       <div v-if="workCategory=='All' || workCategory=='Event'">
         <div v-for="myEvent in activeCountry.events" :key="'my-event-'+myEvent.id"
-          v-if="(focusArea=='All' || focusArea==myEvent.focusArea) && (grant=='All' || myEvent.grantIds.includes(grant)) && (faculty=='All' || myEvent.peopleIds.includes(faculty))">
+          v-if="(focusArea=='All' || myEvent.focusArea.includes(focusArea)) && (grant=='All' || myEvent.grantIds.includes(grant)) && (faculty=='All' || myEvent.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
+                <div class="media-left">
+                  <figure v-for="a in myEvent.focusAreas" class="image is-48x48 focusarea" style="margin-bottom: 3px;">
+                    <img :src="a.icon">
+                    <span class="focusareatext">{{a.text}}</span>
+                  </figure>
+                  <figure v-if="!myEvent.focusAreas.length" class="image is-48x48" style="margin-bottom: 3px;">
+                  </figure>
+                </div>
                 <div class="media-content">
                   <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
                   <p class="subtitle is-6">
                     Event &nbsp; | &nbsp; <span v-if="myEvent.state">{{myEvent.state}},</span> {{myEvent.country}} &nbsp; | &nbsp; {{myEvent.startDate}} ~ {{myEvent.endDate}} &nbsp; | &nbsp; {{myEvent.status}}
                   </p>
+                  <div class="content">
+                    <p style="white-space:pre-line">{{myEvent.description}}</p>
+                    <p>Focus Area: {{myEvent.focusArea}}</p>
+                    <p v-if="myEvent.grants.length">Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                    <p v-if="myEvent.people.length">People:
+                      <span v-for="(p, i) in myEvent.people">
+                        <span v-if="i!=0">, </span>
+                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                        <span v-if="p.role"> ({{p.role}})</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="content">
-                <p style="white-space:pre-line">{{myEvent.description}}</p>
-                <p>Focus Area: {{myEvent.focusArea}}</p>
-                <p v-if="myEvent.grants.length">Grants: <span v-for="(g, i) in myEvent.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p v-if="myEvent.people.length">People:
-                  <span v-for="(p, i) in myEvent.people">
-                    <span v-if="i!=0">, </span>
-                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                    <span v-if="p.role"> ({{p.role}})</span>
-                  </span>
-                </p>
               </div>
             </div>
           </div>
@@ -308,31 +343,38 @@
 
       <div v-if="workCategory=='All' || workCategory=='Publication'">
         <div v-for="publication in activeCountry.publications" :key="'publication-'+publication.id"
-          v-if="(focusArea=='All' || focusArea==publication.focusArea) && (grant=='All' || publication.grantIds.includes(grant)) && (faculty=='All' || publication.peopleIds.includes(faculty))">
+          v-if="(focusArea=='All' || publication.focusArea.includes(focusArea)) && (grant=='All' || publication.grantIds.includes(grant)) && (faculty=='All' || publication.peopleIds.includes(faculty))">
           <div class="card" style="margin-top: 15px;">
             <div class="card-content">
               <div class="media">
+                <div class="media-left">
+                  <figure v-for="a in publication.focusAreas" class="image is-48x48 focusarea" style="margin-bottom: 3px;">
+                    <img :src="a.icon">
+                    <span class="focusareatext">{{a.text}}</span>
+                  </figure>
+                  <figure v-if="!publication.focusAreas.length" class="image is-48x48" style="margin-bottom: 3px;">
+                  </figure>
+                </div>
                 <div class="media-content">
                   <p class="title is-4"><a v-if="publication.url" :href="publication.url">{{publication.title}}</a><span v-if="!publication.url">{{publication.title}}</span></p>
                   <p class="subtitle is-6">
                     Publication &nbsp; | &nbsp; {{publication.country}}
                   </p>
+                  <div class="content">
+                    <p>Authors: {{publication.authors}}</p>
+                    <p style="white-space:pre-line">Abstract: {{publication.abstract}}</p>
+                    <p>Focus Area: {{publication.focusArea}}</p>
+                    <p v-if="publication.grants.length">Grants: <span v-for="(g, i) in publication.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
+                    <p v-if="publication.people.length">People:
+                      <span v-for="(p, i) in publication.people">
+                        <span v-if="i!=0">, </span>
+                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="content">
-                <p>Authors: {{publication.authors}}</p>
-                <p style="white-space:pre-line">Abstract: {{publication.abstract}}</p>
-                <p>Focus Area: {{publication.focusArea}}</p>
-                <p v-if="publication.grants.length">Grants: <span v-for="(g, i) in publication.grants"><span v-if="i!=0">, </span>{{g.organization}}</span></p>
-                <p v-if="publication.people.length">People:
-                  <span v-for="(p, i) in publication.people">
-                    <span v-if="i!=0">, </span>
-                    <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
-                    <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
-                  </span>
-                </p>
               </div>
             </div>
           </div>
@@ -350,6 +392,16 @@
     const GRAY = '#a7a9ac'
     var theMap = null
 
+    var focusAreas = [
+      '[FA1] Closing Water & Agricultural Productivity Gaps',
+      '[FA2] Improving Groundwater Management for Agricultural Production',
+      '[FA3] Enhancing High-productivity Irrigated Agriculture',
+      '[FA4] Freshwater & Agriculture Ecosystems & Public Health',
+      '[FA5] Management of Agricultural Drought',
+      'Education & Engagement Projects & Programs',
+      'Communications'
+    ]
+
     new Vue({
       el: '#vue-root',
       data: {
@@ -360,6 +412,7 @@
         allGrants: [],
         allPeople: [],
         allFaculty: [],
+        focusAreas: focusAreas,
         countries: {},
         countryNames: [],
         activeCountryName: 'All',
@@ -392,7 +445,7 @@
               if(vm.workCategory == 'All' || vm.workCategory == category.label){
                 count = vm.countries[c]['count' + category.label + 's'].filter(function(item){
                   if(vm.focusArea != 'All')
-                    if(item.focusArea != vm.focusArea)
+                    if(!item.focusArea.includes(vm.focusArea))
                       return false
                   if(vm.grant != 'All')
                     if(!item.grants.includes(vm.grant))
@@ -572,6 +625,14 @@
                     item.grantIds = grantIds
                     item.peopleIds = item.people.map(function(p){
                       return p.id
+                    })
+                    var areas = item.focusArea.split(', ')
+                    item.focusAreas = areas.map(function(a){
+                      var index = focusAreas.indexOf(a)
+                      return {
+                        text: a,
+                        icon: index > -1 ? 'images/focus' + index +'.png' : null
+                      }
                     })
                   })
                 }
