@@ -235,7 +235,7 @@
                   </figure>
                 </div>
                 <div class="media-content">
-                  <p class="title is-4"><a v-if="program.website" :href="program.website">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
+                  <p class="title is-4"><a v-if="program.website" :href="program.website" target="_blank">{{program.title}}</a><span v-if="!program.website">{{program.title}}</span></p>
                   <p class="subtitle is-6">
                     Program &nbsp; | &nbsp; {{program.country}} &nbsp; | &nbsp; {{program.startDate}} ~ {{program.endDate}} &nbsp; | &nbsp; {{program.status}}
                   </p>
@@ -246,8 +246,8 @@
                     <p v-if="program.people.length">People:
                       <span v-for="(p, i) in program.people">
                         <span v-if="i!=0">, </span>
-                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-if="p.website"><a :href="p.website" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
                         <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
                         <span v-if="p.role"> ({{p.role}})</span>
                       </span>
@@ -275,7 +275,7 @@
                   </figure>
                 </div>
                 <div class="media-content">
-                  <p class="title is-4"><a v-if="project.website" :href="project.website">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
+                  <p class="title is-4"><a v-if="project.website" :href="project.website" target="_blank">{{project.title}}</a><span v-if="!project.website">{{project.title}}</span></p>
                   <p class="subtitle is-6">
                     Project &nbsp; | &nbsp; {{project.country}} &nbsp; | &nbsp; {{project.startDate}} ~ {{project.endDate}} &nbsp; | &nbsp; {{project.status}}
                   </p>
@@ -287,8 +287,8 @@
                     <p v-if="project.people.length">People:
                       <span v-for="(p, i) in project.people">
                         <span v-if="i!=0">, </span>
-                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-if="p.website"><a :href="p.website" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
                         <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
                         <span v-if="p.role"> ({{p.role}})</span>
                       </span>
@@ -316,7 +316,7 @@
                   </figure>
                 </div>
                 <div class="media-content">
-                  <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
+                  <p class="title is-4"><a v-if="myEvent.website" :href="myEvent.website" target="_blank">{{myEvent.title}}</a><span v-if="!myEvent.website">{{myEvent.title}}</span></p>
                   <p class="subtitle is-6">
                     Event &nbsp; | &nbsp; <span v-if="myEvent.state">{{myEvent.state}},</span> {{myEvent.country}} &nbsp; | &nbsp; {{myEvent.startDate}} ~ {{myEvent.endDate}} &nbsp; | &nbsp; {{myEvent.status}}
                   </p>
@@ -327,8 +327,8 @@
                     <p v-if="myEvent.people.length">People:
                       <span v-for="(p, i) in myEvent.people">
                         <span v-if="i!=0">, </span>
-                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-if="p.website"><a :href="p.website" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
                         <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
                         <span v-if="p.role"> ({{p.role}})</span>
                       </span>
@@ -356,7 +356,7 @@
                   </figure>
                 </div>
                 <div class="media-content">
-                  <p class="title is-4"><a v-if="publication.url" :href="publication.url">{{publication.title}}</a><span v-if="!publication.url">{{publication.title}}</span></p>
+                  <p class="title is-4"><a v-if="publication.url" :href="publication.url" target="_blank">{{publication.title}}</a><span v-if="!publication.url">{{publication.title}}</span></p>
                   <p class="subtitle is-6">
                     Publication &nbsp; | &nbsp; {{publication.country}}
                   </p>
@@ -368,8 +368,8 @@
                     <p v-if="publication.people.length">People:
                       <span v-for="(p, i) in publication.people">
                         <span v-if="i!=0">, </span>
-                        <span v-if="p.website"><a :href="p.website">{{p.firstName + ' ' + p.lastName}}</a></span>
-                        <span v-else-if="p.email"><a :href="'mailto:' + p.email">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-if="p.website"><a :href="p.website" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
+                        <span v-else-if="p.email"><a :href="'mailto:' + p.email" target="_blank">{{p.firstName + ' ' + p.lastName}}</a></span>
                         <span v-else>{{p.firstName + ' ' + p.lastName}}</span>
                       </span>
                     </p>
