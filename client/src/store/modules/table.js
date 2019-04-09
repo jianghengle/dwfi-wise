@@ -115,10 +115,11 @@ var tables = {
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['firstName', 'lastName', 'researchTopic', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'isPublished'],
+      columns: ['firstName', 'lastName', 'researchTopic', 'description', 'status', 'country', 'state', 'programId', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
+        'The <strong>programId</strong> is the program id from the programs table',
         'The <strong>pointOfContact</strong> is the people id from the people table',
         'The <strong>isPublished</strong> is <strong>true</strong> or <strong>false</strong>',
         'The <strong>people</strong>, <strong>publications</strong>, <strong>files</strong> and <strong>grants</strong> are items from the corresponding tables. Leave it empty if nothing. Otherwise, each item takes one line, while each line contains id and/or other information seperated by commas. For example:<pre>1\n2, director</pre>',
