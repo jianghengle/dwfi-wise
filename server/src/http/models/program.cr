@@ -16,6 +16,9 @@ module MyServer
         field :point_of_contact, Int64
         field :website, String
         field :is_published, Bool
+        field :request, String
+        field :progress, String
+        field :progress_time, Time
       end
 
       def to_json
@@ -35,6 +38,9 @@ module MyServer
           str << "\"moreInformation\":" << @more_information.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
           str << "\"website\":" << @website.to_json << ","
+          str << "\"request\":" << @request.to_json << ","
+          str << "\"progress\":" << @progress.to_json << ","
+          str << "\"progress_time\":" << @progress_time.to_json << ","
           str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
@@ -163,6 +169,25 @@ module MyServer
           "[" + p.id.to_s + "," + info.to_json + "]"
         end
         "[" + result + "]"
+      end
+
+      def self.request_program_update(id, request)
+        program = Repo.get(Program, id)
+        program = program.as(Program)
+        if request
+          if program.request.to_s.empty?
+            program.request = Random::Secure.hex(16).to_s
+            changeset = Repo.update(program)
+            raise changeset.errors.to_s unless changeset.valid?
+          end
+          # send email
+        else
+          unless program.request.to_s.empty?
+            program.request = ""
+            changeset = Repo.update(program)
+            raise changeset.errors.to_s unless changeset.valid?
+          end
+        end
       end
     end
   end

@@ -82,6 +82,10 @@ module MyServer
         HttpAPI::ProgramController.export_programs(env)
       end
 
+      post "/request_program_update" do |env|
+        HttpAPI::ProgramController.request_program_update(env)
+      end
+
       get "/count_programs_for_map" do |env|
         HttpAPI::ProgramController.count_programs_for_map(env)
       end

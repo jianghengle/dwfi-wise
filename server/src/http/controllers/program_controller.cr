@@ -186,6 +186,21 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def request_program_update(ctx)
+        begin
+          user = verify_token(ctx)
+          raise "Permission denied" unless user.privileges.to_s == "Approve"
+          id = get_param!(ctx, "id").to_i
+          request = get_param!(ctx, "request") == "true"
+          Program.request_program_update(id, request)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end

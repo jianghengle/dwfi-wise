@@ -168,6 +168,9 @@ class Program < Crecto::Model
     field :point_of_contact, Int64
     field :website, String
     field :is_published, Bool
+    field :request, String
+    field :progress, String
+    field :progress_time, Time
   end
 
   def self.can_access(user)
@@ -193,6 +196,9 @@ class Project < Crecto::Model
     field :point_of_contact, Int64
     field :website, String
     field :is_published, Bool
+    field :request, String
+    field :progress, String
+    field :progress_time, Time
   end
 
   def self.can_access(user)
