@@ -205,6 +205,59 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def get_requested_project(ctx)
+        begin
+          key = get_param!(ctx, "key")
+          project = Project.get_project_by_key(key)
+          id = project.id
+          publication_relations = PublicationRelation.get_relations("projects", id)
+          publication_relations_json = "[" + publication_relations.join(", ") { |r| r.to_json } + "]"
+          file_relations = FileRelation.get_relations("projects", id)
+          file_relations_json = "[" + file_relations.join(", ") { |r| r.to_json } + "]"
+          grant_relations = GrantRelation.get_relations("projects", id)
+          grant_relations_json = "[" + grant_relations.join(", ") { |r| r.to_json } + "]"
+          "[ #{project.to_json}, #{publication_relations_json}, #{file_relations_json}, #{grant_relations_json}]"
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
+      def update_requested_project(ctx)
+        begin
+          key = get_param!(ctx, "key")
+          project = Project.get_project_by_key(key)
+
+          project.description = get_param!(ctx, "description")
+          project.status = get_param!(ctx, "status")
+          project.country = get_param!(ctx, "country")
+          project.state = get_param!(ctx, "state")
+          start_date = get_param!(ctx, "startDate")
+          project.start_date = Time.unix(start_date.to_i) unless start_date == ""
+          end_date = get_param!(ctx, "endDate")
+          project.end_date = Time.unix(end_date.to_i) unless end_date == ""
+          project.funding = get_param!(ctx, "funding")
+          project.collaborators = get_param!(ctx, "collaborators")
+
+          progress = get_param!(ctx, "progress")
+          progress = nil if progress == ""
+          project.progress_time = Time.now if project.progress != progress
+          project.progress = progress
+
+          publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
+          files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
+
+          Project.update_requested_project(project, publications, files, grants)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end

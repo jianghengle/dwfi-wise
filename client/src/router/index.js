@@ -23,6 +23,7 @@ import MyFile from '@/components/MyFile'
 import NewFile from '@/components/NewFile'
 import Grant from '@/components/Grant'
 import NewGrant from '@/components/NewGrant'
+import Requested from '@/components/Requested'
 
 Vue.use(Router)
 
@@ -146,6 +147,11 @@ export default new Router({
       path: '/new/grants',
       name: 'NewGrant',
       component: NewGrant
+    },
+    {
+      path: '/requested/:thing/:key',
+      name: 'Requested',
+      component: Requested
     },
   ]
 })

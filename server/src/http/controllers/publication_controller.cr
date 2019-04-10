@@ -8,7 +8,7 @@ module MyServer
 
       def get_publications(ctx)
         begin
-          user = verify_token(ctx)
+          # user = verify_token(ctx)
           items = Publication.get_publications
           "[" + (items.join(", ") { |i| i.to_json }) + "]"
         rescue ex : InsufficientParameters

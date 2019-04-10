@@ -86,6 +86,14 @@ module MyServer
         HttpAPI::ProgramController.request_program_update(env)
       end
 
+      get "/get_requested_program/:key" do |env|
+        HttpAPI::ProgramController.get_requested_program(env)
+      end
+
+      post "/update_requested_program/:key" do |env|
+        HttpAPI::ProgramController.update_requested_program(env)
+      end
+
       get "/count_programs_for_map" do |env|
         HttpAPI::ProgramController.count_programs_for_map(env)
       end
@@ -116,6 +124,14 @@ module MyServer
 
       post "/request_project_update" do |env|
         HttpAPI::ProjectController.request_project_update(env)
+      end
+
+      get "/get_requested_project/:key" do |env|
+        HttpAPI::ProjectController.get_requested_project(env)
+      end
+
+      post "/update_requested_project/:key" do |env|
+        HttpAPI::ProjectController.update_requested_project(env)
       end
 
       get "/count_projects_for_map" do |env|

@@ -147,6 +147,15 @@ module MyServer
         GrantRelation.update_relations(grants, "programs", program.id)
       end
 
+      def self.update_requested_program(program, publications, files, grants)
+        changeset = Repo.update(program)
+        raise changeset.errors.to_s unless changeset.valid?
+
+        PublicationRelation.update_relations(publications, "programs", program.id)
+        FileRelation.update_relations(files, "programs", program.id)
+        GrantRelation.update_relations(grants, "programs", program.id)
+      end
+
       def self.delete_program(program_id)
         PeopleRelation.delete_relations("programs", program_id)
         PublicationRelation.delete_relations("programs", program_id)
@@ -188,6 +197,15 @@ module MyServer
             raise changeset.errors.to_s unless changeset.valid?
           end
         end
+      end
+
+      def self.get_program_by_key(key)
+        query = Query.where(request: key)
+        items = Repo.all(Program, query)
+        raise "cannot find program" if items.nil?
+        items = items.as(Array)
+        raise "cannot find program" if items.empty?
+        items[0]
       end
     end
   end

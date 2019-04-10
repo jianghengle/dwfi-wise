@@ -8,7 +8,7 @@ module MyServer
 
       def get_files(ctx)
         begin
-          user = verify_token(ctx)
+          # user = verify_token(ctx)
           items = MyFile.get_files
           arr = [] of String
           "[" + (items.join(", ") { |i| i.to_json }) + "]"
