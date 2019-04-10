@@ -61,6 +61,11 @@ module MyServer
           point_of_contact = get_param!(ctx, "pointOfContact")
           program.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           program.website = get_param!(ctx, "website")
+          progress = get_param!(ctx, "progress")
+          program.progress = progress unless progress == ""
+          progress_time = get_param!(ctx, "progressTime")
+          program.progress_time = Time.unix(progress_time.to_i) unless progress_time == ""
+
           program.is_published = get_param!(ctx, "isPublished") == "true"
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
@@ -82,8 +87,9 @@ module MyServer
           user = verify_token(ctx)
           raise "Permission denied" unless (user.privileges.to_s == "Edit" || user.privileges.to_s == "Approve")
 
-          program = Program.new
-          program.id = get_param!(ctx, "id").to_i
+          id = get_param!(ctx, "id").to_i
+          program = Program.get_program(id).as(Program)
+
           program.title = get_param!(ctx, "title")
           program.description = get_param!(ctx, "description")
           program.status = get_param!(ctx, "status")
@@ -101,6 +107,10 @@ module MyServer
           program.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           program.website = get_param!(ctx, "website")
           program.is_published = get_param!(ctx, "isPublished") == "true"
+          progress = get_param!(ctx, "progress")
+          progress = nil if progress == ""
+          program.progress_time = Time.now if program.progress != progress
+          program.progress = progress
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
           publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))

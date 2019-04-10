@@ -574,6 +574,8 @@ export default {
         pointOfContact: this.pointOfContact,
         website: this.website,
         isPublished: this.isPublished == 'Yes',
+        progress: null,
+        progressTime: null,
         people: JSON.stringify(this.people),
         publications: JSON.stringify(this.publications),
         files: JSON.stringify(this.files),

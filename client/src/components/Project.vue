@@ -4,7 +4,15 @@
       <a class="button back-button" @click="$router.go(-1)">
         <icon name="chevron-left"></icon>
       </a>&nbsp;&nbsp;&nbsp;&nbsp;
-      Project {{projectId}}
+      Project {{projectId}}&nbsp;
+      <span class="tag is-info" v-if="privileges=='Approve' && request">Request Sent</span>
+      <a class="button" v-if="privileges=='Approve'" @click="sendRequest">
+        <span v-if="!request">Send Request</span>
+        <span v-if="request">Resend Request</span>
+      </a>
+      <a class="button" v-if="privileges=='Approve' && request" @click="closeUpdate">
+        Close Update
+      </a>
     </h4>
 
     <div class="has-text-centered" v-if="waiting">
@@ -435,6 +443,22 @@
     </div>
 
     <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Progress Report</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <textarea id="textarea-progress" class="textarea" v-model="progress" @change="progressChanged" :disabled="privileges == 'Read Only'"></textarea>
+          </div>
+          <p class="help is-info" v-if="progressTime">
+            Last updated: {{progressTimeLabel}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
       <div class="field-label">
         <label class="label">Is Published?</label>
       </div>
@@ -531,6 +555,9 @@ export default {
       website: '',
       files: [],
       isPublished: 'No',
+      request: null,
+      progress: '',
+      progressTime: null
     }
   },
   computed: {
@@ -658,6 +685,9 @@ export default {
     endDateLabel () {
       return this.endDate? DateForm(this.endDate, 'mmm dd yyyy') : ''
     },
+    progressTimeLabel () {
+      return this.progressTime? DateForm(this.progressTime, 'mmm dd yyyy h:MM TT') : ''
+    },
     contactOptions () {
       var opts = this.allPeople.slice()
       opts.unshift({id: null, label: 'None'})
@@ -681,7 +711,10 @@ export default {
         moreInformation: this.moreInformation,
         pointOfContact: this.pointOfContact,
         website: this.website,
-        isPublished: this.isPublished
+        isPublished: this.isPublished,
+        request: this.request,
+        progress: this.progress,
+        progressTime: this.progressTime
       }
     },
     getProject () {
@@ -705,6 +738,9 @@ export default {
         this.pointOfContact = resp[0].pointOfContact
         this.website = resp[0].website
         this.isPublished = resp[0].isPublished ? "Yes" : "No"
+        this.request = resp[0].request
+        this.progress = resp[0].progress
+        this.progressTime = resp[0].progressTime? (new Date(resp[0].progressTime*1000)) : null
         this.oldProject = this.collectProject()
         this.people = resp[1].map(function(p){
           return {id: p.id, people_id: p.peopleId, role: p.role}
@@ -726,6 +762,7 @@ export default {
         this.error = ''
         this.$nextTick(() => {
           this.descriptionChanged()
+          this.progressChanged()
         })
       }, response => {
         this.error = 'Failed to get project!'
@@ -831,6 +868,7 @@ export default {
         pointOfContact: this.pointOfContact,
         website: this.website,
         isPublished: this.isPublished == 'Yes',
+        progress: this.progress,
         people: JSON.stringify(this.changedPeople),
         publications: JSON.stringify(this.changedPublications),
         files: JSON.stringify(this.changedFiles),
@@ -873,7 +911,60 @@ export default {
       var el = document.getElementById('textarea-description');
       el.style.height = "1px";
       el.style.height = (25+el.scrollHeight)+"px";
-    }
+    },
+    progressChanged () {
+      var el = document.getElementById('textarea-progress');
+      el.style.height = "1px";
+      el.style.height = (25+el.scrollHeight)+"px";
+    },
+    sendRequest () {
+      var confirm = {
+        title: 'Send Request',
+        message: 'Are you sure to send the request for update to all the people associated?',
+        button: 'Yes, I am sure.',
+        callback: {
+          context: this,
+          method: this.sendRequestConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
+    },
+    sendRequestConfirmed () {
+      var message = {id: this.projectId, request: true}
+      this.$http.post(xHTTPx + '/request_project_update', message).then(response => {
+        if(response.body.ok){
+          this.getProject()
+        }
+      }, response => {
+        this.error = 'Failed to send request!'
+        this.waiting = false
+      })
+    },
+    closeUpdate () {
+      var confirm = {
+        title: 'Close Update',
+        message: 'Are you sure to close for update for now?',
+        button: 'Yes, I am sure.',
+        callback: {
+          context: this,
+          method: this.closeUpdateConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
+    },
+    closeUpdateConfirmed () {
+      var message = {id: this.projectId, request: false}
+      this.$http.post(xHTTPx + '/request_project_update', message).then(response => {
+        if(response.body.ok){
+          this.getProject()
+        }
+      }, response => {
+        this.error = 'Failed to close update!'
+        this.waiting = false
+      })
+    },
   },
   mounted () {
     this.getProject()

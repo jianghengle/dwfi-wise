@@ -17,6 +17,9 @@ module MyServer
         field :point_of_contact, Int64
         field :website, String
         field :is_published, Bool
+        field :request, String
+        field :progress, String
+        field :progress_time, Time
       end
 
       def to_json
@@ -37,6 +40,9 @@ module MyServer
           str << "\"moreInformation\":" << @more_information.to_json << ","
           str << "\"pointOfContact\":" << @point_of_contact.to_json << ","
           str << "\"website\":" << @website.to_json << ","
+          str << "\"request\":" << @request.to_json << ","
+          str << "\"progress\":" << @progress.to_json << ","
+          str << "\"progressTime\":" << @progress_time.as(Time).to_unix << "," unless @progress_time.nil?
           str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
@@ -138,6 +144,25 @@ module MyServer
       def self.null_project_program(program_id)
         query = Crecto::Repo::Query.where(program_id: program_id)
         Repo.update_all(Project, query, {program_id: nil})
+      end
+
+      def self.request_project_update(id, request)
+        project = Repo.get(Project, id)
+        project = project.as(Project)
+        if request
+          if project.request.to_s.empty?
+            project.request = Random::Secure.hex(24).to_s
+            changeset = Repo.update(project)
+            raise changeset.errors.to_s unless changeset.valid?
+          end
+          # send email
+        else
+          unless project.request.to_s.empty?
+            project.request = ""
+            changeset = Repo.update(project)
+            raise changeset.errors.to_s unless changeset.valid?
+          end
+        end
       end
     end
   end

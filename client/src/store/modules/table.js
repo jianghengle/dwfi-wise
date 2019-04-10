@@ -13,7 +13,7 @@ var tables = {
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
+      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'progress', 'progressTime', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
@@ -24,12 +24,15 @@ var tables = {
       url: '/create_program'
     },
     exportOption: {
-      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'isPublished'],
+      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'progress', 'progressTime', 'isPublished'],
       relations: {grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
     },
     deleteOption: {
       id: 'programId',
       url: '/delete_program'
+    },
+    requestOption: {
+      url: '/request_program_update'
     }
   },
   projects: {
@@ -47,7 +50,7 @@ var tables = {
     sort: {index: 0, asc: false},
     search: '',
     importOption: {
-      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'isPublished'],
+      columns: ['title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'progress', 'progressTime', 'isPublished'],
       relations: {people: ['people_id', 'role'], publications: ['publication_id', 'comment'], files: ['file_id', 'comment'], grants: ['grant_id', 'comment']},
       notes: [
         'The <strong>startDate</strong> and <strong>endDate</strong> are in format of <strong>"Jan 01 2018"</strong> or empty.',
@@ -59,12 +62,15 @@ var tables = {
       url: '/create_project'
     },
     exportOption: {
-      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'isPublished'],
+      columns: ['id', 'title', 'description', 'status', 'country', 'state', 'focusArea', 'programId', 'startDate', 'endDate', 'grants', 'funding', 'collaborators', 'moreInformation', 'pointOfContact', 'website', 'people', 'publications', 'files', 'progress', 'progressTime', 'isPublished'],
       relations: {programId: ['programId', '/export_programs'], grants: ['id', '/export_grants'], pointOfContact: ['pointOfContact', '/export_people_only'], people: ['id', '/export_people'], publications: ['id', '/export_publications'], files: ['id', '/export_files']},
     },
     deleteOption: {
       id: 'projectId',
       url: '/delete_project'
+    },
+    requestOption: {
+      url: '/request_project_update'
     }
   },
   events: {

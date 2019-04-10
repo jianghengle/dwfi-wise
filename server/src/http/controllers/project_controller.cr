@@ -64,6 +64,10 @@ module MyServer
           project.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           project.website = get_param!(ctx, "website")
           project.is_published = get_param!(ctx, "isPublished") == "true"
+          progress = get_param!(ctx, "progress")
+          project.progress = progress unless progress == ""
+          progress_time = get_param!(ctx, "progressTime")
+          project.progress_time = Time.unix(progress_time.to_i) unless progress_time == ""
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
           publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
@@ -84,8 +88,9 @@ module MyServer
           user = verify_token(ctx)
           raise "Permission denied" unless (user.privileges.to_s == "Edit" || user.privileges.to_s == "Approve")
 
-          project = Project.new
-          project.id = get_param!(ctx, "id").to_i
+          id = get_param!(ctx, "id").to_i
+          project = Project.get_project(id).as(Project)
+
           project.title = get_param!(ctx, "title")
           project.description = get_param!(ctx, "description")
           project.status = get_param!(ctx, "status")
@@ -105,6 +110,10 @@ module MyServer
           project.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
           project.website = get_param!(ctx, "website")
           project.is_published = get_param!(ctx, "isPublished") == "true"
+          progress = get_param!(ctx, "progress")
+          progress = nil if progress == ""
+          project.progress_time = Time.now if project.progress != progress
+          project.progress = progress
 
           people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
           publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
@@ -175,6 +184,21 @@ module MyServer
             i.to_json_for_map(people, grants, program_title)
           end
           "[#{str}]"
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
+      def request_project_update(ctx)
+        begin
+          user = verify_token(ctx)
+          raise "Permission denied" unless user.privileges.to_s == "Approve"
+          id = get_param!(ctx, "id").to_i
+          request = get_param!(ctx, "request") == "true"
+          Project.request_project_update(id, request)
+          {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception

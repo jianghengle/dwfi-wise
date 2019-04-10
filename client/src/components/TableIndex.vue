@@ -35,6 +35,16 @@
                 <icon name="remove"></icon>&nbsp;Delete ({{selected.length}})
               </a>
             </p>
+            <p class="control" v-if="(tableName=='programs' || tableName=='projects') && privileges=='Approve' && selected.length">
+              <a class="button is-info" @click="requestSelected">
+                Request ({{selected.length}})
+              </a>
+            </p>
+            <p class="control" v-if="(tableName=='programs' || tableName=='projects') && privileges=='Approve' && sentItems.length">
+              <a class="button is-info" @click="closeSelected">
+                Close ({{sentItems.length}})
+              </a>
+            </p>
           </div>
         </div>
         <div class="column">
@@ -58,6 +68,7 @@
                   <input type="checkbox" v-model="selectAll">
                 </label>
               </th>
+              <th v-if="tableName=='programs' || tableName=='projects'"></th>
               <th v-for="(col, i) in columns" @click="sortItems(i)" class="clickable">
                 {{col.label}}
                 <span v-if="sortOption.index==i">
@@ -73,6 +84,9 @@
                 <label class="checkbox">
                   <input type="checkbox" v-model="selection[item.id]">
                 </label>
+              </td>
+              <td v-if="tableName=='programs' || tableName=='projects'">
+                <span v-if="item.request" class="tag is-info">Sent</span>
               </td>
               <td v-for="col in columns">
                 {{item[col.name]}}
@@ -143,6 +157,7 @@ export default {
             obj[column.name] = item[column.name]
           }
         })
+        obj.request = item.request
         return obj
       })
       return items.filter(function(item){
@@ -174,8 +189,17 @@ export default {
         return vm.itemMap[id]
       })
     },
+    sentItems () {
+      var vm = this
+      return vm.selectedItems.filter(function(item){
+        return item.request
+      })
+    },
     exportOption () {
       return this.tableOption.exportOption
+    },
+    requestOption () {
+      return this.tableOption.requestOption
     }
   },
   watch: {
@@ -368,7 +392,71 @@ export default {
         }
       })
       return ret
-    }
+    },
+    requestSelected () {
+      var confirm = {
+        title: 'Send Requests',
+        message: 'Are you sure to send requests of the selected ' + this.selected.length + ' item(s)?',
+        button: 'Yes, I am sure.',
+        callback: {
+          context: this,
+          method: this.requestSelectedConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
+    },
+    requestSelectedConfirmed () {
+      var url = this.requestOption.url
+      var vm = this
+      var promises = []
+      this.selected.forEach(function(id){
+        var message = {id: id, request: true}
+        var promise = vm.$http.post(xHTTPx + url, message).then(response => {
+        }, response => {
+          vm.error = 'Some requests failed'
+        })
+        promises.push(promise)
+      })
+      vm.waiting = true
+      Promise.all(promises).then((response) => {
+        vm.getItems()
+      }, (response) => {
+        vm.getItems()
+      })
+    },
+    closeSelected () {
+      var confirm = {
+        title: 'Close Requests',
+        message: 'Are you sure to close requests of the selected ' + this.sentItems.length + ' item(s)?',
+        button: 'Yes, I am sure.',
+        callback: {
+          context: this,
+          method: this.closeSelectedConfirmed,
+          args: []
+        }
+      }
+      this.$store.commit('modals/openConfirmModal', confirm)
+    },
+    closeSelectedConfirmed () {
+      var url = this.requestOption.url
+      var vm = this
+      var promises = []
+      this.sentItems.forEach(function(item){
+        var message = {id: item.id, request: false}
+        var promise = vm.$http.post(xHTTPx + url, message).then(response => {
+        }, response => {
+          vm.error = 'Some closes failed'
+        })
+        promises.push(promise)
+      })
+      vm.waiting = true
+      Promise.all(promises).then((response) => {
+        vm.getItems()
+      }, (response) => {
+        vm.getItems()
+      })
+    },
   },
   mounted () {
     this.getItems()

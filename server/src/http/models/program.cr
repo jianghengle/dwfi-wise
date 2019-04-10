@@ -40,7 +40,7 @@ module MyServer
           str << "\"website\":" << @website.to_json << ","
           str << "\"request\":" << @request.to_json << ","
           str << "\"progress\":" << @progress.to_json << ","
-          str << "\"progress_time\":" << @progress_time.to_json << ","
+          str << "\"progressTime\":" << @progress_time.as(Time).to_unix << "," unless @progress_time.nil?
           str << "\"isPublished\":" << @is_published.to_json
           str << "}"
         end
@@ -176,7 +176,7 @@ module MyServer
         program = program.as(Program)
         if request
           if program.request.to_s.empty?
-            program.request = Random::Secure.hex(16).to_s
+            program.request = Random::Secure.hex(24).to_s
             changeset = Repo.update(program)
             raise changeset.errors.to_s unless changeset.valid?
           end

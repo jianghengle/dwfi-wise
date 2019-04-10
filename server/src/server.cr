@@ -114,6 +114,10 @@ module MyServer
         HttpAPI::ProjectController.delete_project(env)
       end
 
+      post "/request_project_update" do |env|
+        HttpAPI::ProjectController.request_project_update(env)
+      end
+
       get "/count_projects_for_map" do |env|
         HttpAPI::ProjectController.count_projects_for_map(env)
       end
