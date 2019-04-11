@@ -92,11 +92,13 @@
               <select v-model="dwfiAffiliation" :disabled="privileges == 'Read Only'">
                 <option>DWFI Director</option>
                 <option>DWFI Faculty Fellow</option>
+                <option>DWFI Global Fellow</option>
                 <option>DWFI Staff</option>
                 <option>DWFI Post-Doctoral Researcher</option>
                 <option>DWFI Visiting Scholar/Professor</option>
-                <option>DWFI Student</option>
+                <option>DWFI Student/Intern</option>
                 <option>University of Nebraska Faculty</option>
+                <option>International Advisory Panel</option>
                 <option>Other</option>
               </select>
             </div>
