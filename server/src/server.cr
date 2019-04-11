@@ -306,6 +306,10 @@ module MyServer
         HttpAPI::GrantController.export_grants(env)
       end
 
+      post "/new_grant_by_requested" do |env|
+        HttpAPI::GrantController.new_grant_by_requested(env)
+      end
+
       get "/get_faculty" do |env|
         HttpAPI::FacultyController.get_faculty(env)
       end

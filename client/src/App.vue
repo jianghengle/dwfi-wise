@@ -6,6 +6,7 @@
     </div>
     <confirm-modal></confirm-modal>
     <import-modal></import-modal>
+    <new-grant-modal></new-grant-modal>
   </div>
 </template>
 
@@ -14,13 +15,15 @@ import Vue from 'vue'
 import MyHeader from './components/MyHeader'
 import ConfirmModal from './components/modals/ConfirmModal'
 import ImportModal from './components/modals/ImportModal'
+import NewGrantModal from './components/modals/NewGrantModal'
 
 export default {
   name: 'app',
   components: {
     MyHeader,
     ConfirmModal,
-    ImportModal
+    ImportModal,
+    NewGrantModal
   }
 }
 </script>

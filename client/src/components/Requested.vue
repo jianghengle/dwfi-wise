@@ -186,7 +186,7 @@
             <button class="button" @click="addGrant">Add Grant</button>
           </div>
           <div class="control">
-            <button class="button" @click="addGrant">Create New Grant</button>
+            <button class="button" @click="openNewGrantModal">Create New Grant</button>
           </div>
         </div>
       </div>
@@ -638,6 +638,13 @@ export default {
       var el = document.getElementById('textarea-progress');
       el.style.height = "1px";
       el.style.height = (25+el.scrollHeight)+"px";
+    },
+    openNewGrantModal () {
+      this.$store.commit('modals/openNewGrantModal', {
+        source: this.thing,
+        key: this.key,
+        callback: { context: this, method: this.requestResources, args: []}
+      })
     },
   },
   mounted () {

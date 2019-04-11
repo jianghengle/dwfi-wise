@@ -11,6 +11,12 @@ export const state = {
     opened: false,
     callback: null
   },
+  newGrantModal: {
+    opened: false,
+    source: null,
+    key: null,
+    callback: null
+  },
 }
 
 // mutations
@@ -40,6 +46,20 @@ export const mutations = {
   closeImportModal (state) {
     state.importModal.opened = false
     state.importModal.callback = null
+  },
+
+  openNewGrantModal (state, context) {
+    state.newGrantModal.source = context.source
+    state.newGrantModal.key = context.key
+    state.newGrantModal.callback = context.callback
+    state.newGrantModal.opened = true
+  },
+
+  closeNewGrantModal (state) {
+    state.newGrantModal.opened = false
+    state.newGrantModal.source = null
+    state.newGrantModal.key = null
+    state.newGrantModal.callback = null
   },
 }
 

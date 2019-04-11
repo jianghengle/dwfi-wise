@@ -94,6 +94,30 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def new_grant_by_requested(ctx)
+        begin
+          source = get_param!(ctx, "source")
+          key = get_param!(ctx, "key")
+          if source == "program"
+            Program.get_program_by_key(key)
+          elsif source == "project"
+            Project.get_project_by_key(key)
+          else
+            raise "Not such source"
+          end
+
+          grant = Grant.new
+          grant.organization = get_param!(ctx, "organization")
+          grant.comment = get_param!(ctx, "comment")
+          Grant.create_grant(grant)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end
