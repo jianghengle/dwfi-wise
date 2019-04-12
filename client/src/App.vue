@@ -57,4 +57,8 @@ export default {
   position: relative;
   top: -5px;
 }
+
+.select select {
+  max-width: 600px;
+}
 </style>

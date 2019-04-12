@@ -27,7 +27,7 @@
             <label class="label">People</label>
             <div class="field is-grouped" v-for="(p, i) in people">
               <p class="select">
-                <select v-model="p.people_id">
+                <select class="long-select" v-model="p.people_id">
                   <option v-for="opt in allPeople" v-bind:value="opt.id">{{opt.label}}</option>
                 </select>
               </p>&nbsp;&nbsp;&nbsp;
@@ -82,7 +82,7 @@
             <label class="label">Grants</label>
             <div class="field is-grouped" v-for="(g, i) in grants">
               <p class="select">
-                <select v-model="g.grant_id">
+                <select class="long-select" v-model="g.grant_id">
                   <option v-for="opt in allGrants" v-bind:value="opt.id">{{opt.label}}</option>
                 </select>
               </p>&nbsp;&nbsp;&nbsp;
@@ -168,7 +168,7 @@
             <label class="label">Files</label>
             <div class="field is-grouped" v-for="(f, i) in files">
               <p class="select">
-                <select v-model="f.file_id">
+                <select class="long-select" v-model="f.file_id">
                   <option v-for="opt in allFiles" v-bind:value="opt.id">{{opt.label}}</option>
                 </select>
               </p>&nbsp;&nbsp;&nbsp;
@@ -371,6 +371,10 @@ export default {
 
 .selected-multiple-options {
   margin-bottom: 0.375em;
+}
+
+.long-select {
+  max-width: 400px;
 }
 
 .clear-country-button {
