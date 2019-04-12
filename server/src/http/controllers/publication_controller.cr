@@ -167,6 +167,42 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def new_publication_by_requested(ctx)
+        begin
+          source = get_param!(ctx, "source")
+          key = get_param!(ctx, "key")
+          if source == "program"
+            Program.get_program_by_key(key)
+          elsif source == "project"
+            Project.get_project_by_key(key)
+          else
+            raise "Not such source"
+          end
+
+          publication = Publication.new
+          publication.title = get_param!(ctx, "title")
+          publication.authors = get_param!(ctx, "authors")
+          publication.abstract = get_param!(ctx, "abstract")
+          publication.focus_area = get_param!(ctx, "focusArea")
+          publication.status = get_param!(ctx, "status")
+          publication.url = get_param!(ctx, "url")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          publication.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
+          publication.country = get_param!(ctx, "country")
+
+          files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
+
+          Publication.create_publication(publication, files, people, grants)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end

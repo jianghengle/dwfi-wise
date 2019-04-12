@@ -92,8 +92,9 @@ export default {
       this.$store.commit('modals/closeNewGrantModal')
     },
     create(){
+      if(!this.canCreate || this.waiting)
+        return
       this.waiting = true
-
       var message = {
         source: this.source,
         key: this.key,

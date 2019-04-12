@@ -7,6 +7,8 @@
     <confirm-modal></confirm-modal>
     <import-modal></import-modal>
     <new-grant-modal></new-grant-modal>
+    <new-publication-modal></new-publication-modal>
+    <new-file-modal></new-file-modal>
   </div>
 </template>
 
@@ -16,6 +18,8 @@ import MyHeader from './components/MyHeader'
 import ConfirmModal from './components/modals/ConfirmModal'
 import ImportModal from './components/modals/ImportModal'
 import NewGrantModal from './components/modals/NewGrantModal'
+import NewPublicationModal from './components/modals/NewPublicationModal'
+import NewFileModal from './components/modals/NewFileModal'
 
 export default {
   name: 'app',
@@ -23,7 +27,9 @@ export default {
     MyHeader,
     ConfirmModal,
     ImportModal,
-    NewGrantModal
+    NewGrantModal,
+    NewPublicationModal,
+    NewFileModal
   }
 }
 </script>

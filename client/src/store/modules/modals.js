@@ -17,6 +17,18 @@ export const state = {
     key: null,
     callback: null
   },
+  newPublicationModal: {
+    opened: false,
+    source: null,
+    key: null,
+    callback: null
+  },
+  newFileModal: {
+    opened: false,
+    source: null,
+    key: null,
+    callback: null
+  },
 }
 
 // mutations
@@ -60,6 +72,34 @@ export const mutations = {
     state.newGrantModal.source = null
     state.newGrantModal.key = null
     state.newGrantModal.callback = null
+  },
+
+  openNewPublicationModal (state, context) {
+    state.newPublicationModal.source = context.source
+    state.newPublicationModal.key = context.key
+    state.newPublicationModal.callback = context.callback
+    state.newPublicationModal.opened = true
+  },
+
+  closeNewPublicationModal (state) {
+    state.newPublicationModal.opened = false
+    state.newPublicationModal.source = null
+    state.newPublicationModal.key = null
+    state.newPublicationModal.callback = null
+  },
+
+  openNewFileModal (state, context) {
+    state.newFileModal.source = context.source
+    state.newFileModal.key = context.key
+    state.newFileModal.callback = context.callback
+    state.newFileModal.opened = true
+  },
+
+  closeNewFileModal (state) {
+    state.newFileModal.opened = false
+    state.newFileModal.source = null
+    state.newFileModal.key = null
+    state.newFileModal.callback = null
   },
 }
 

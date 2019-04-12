@@ -93,6 +93,17 @@ module MyServer
           error(ctx, e.message.to_s)
         end
       end
+
+      def new_file_by_requested(ctx)
+        begin
+          MyFile.create_file_by_requested(ctx)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
     end
   end
 end

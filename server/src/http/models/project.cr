@@ -175,6 +175,7 @@ module MyServer
       end
 
       def self.get_project_by_key(key)
+        raise "empty key" if key.empty?
         query = Query.where(request: key)
         items = Repo.all(Project, query)
         raise "cannot find project" if items.nil?

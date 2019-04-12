@@ -258,6 +258,10 @@ module MyServer
         HttpAPI::PublicationController.get_publications_for_map(env)
       end
 
+      post "/new_publication_by_requested" do |env|
+        HttpAPI::PublicationController.new_publication_by_requested(env)
+      end
+
       get "/get_files" do |env|
         HttpAPI::FileController.get_files(env)
       end
@@ -280,6 +284,10 @@ module MyServer
 
       post "/export_files" do |env|
         HttpAPI::FileController.export_files(env)
+      end
+
+      post "/new_file_by_requested" do |env|
+        HttpAPI::FileController.new_file_by_requested(env)
       end
 
       get "/get_grants" do |env|

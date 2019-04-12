@@ -76,6 +76,55 @@ module MyServer
         raise changeset.errors.to_s unless changeset.valid?
       end
 
+      def self.create_file_by_requested(env)
+        source = ""
+        key = ""
+        upload_file = "Yes"
+        file = MyFile.new
+        HTTP::FormData.parse(env.request) do |part|
+          if part.name == "source"
+            source = part.body.gets_to_end
+          elsif part.name == "key"
+            key = part.body.gets_to_end
+            if source == "program"
+              Program.get_program_by_key(key)
+            elsif source == "project"
+              Project.get_project_by_key(key)
+            else
+              raise "Not such source"
+            end
+          elsif part.name == "uploadFile"
+            upload_file = part.body.gets_to_end
+          elsif part.name == "name"
+            file.name = part.body.gets_to_end
+          elsif part.name == "fileType"
+            file.file_type = part.body.gets_to_end
+          elsif part.name == "url"
+            file.url = part.body.gets_to_end
+          elsif part.name == "file"
+            if upload_file == "Yes"
+              raise "No static dir setup" unless ENV.has_key?("DWFI_WISE_STATIC")
+              data_dir = File.join(ENV["DWFI_WISE_STATIC"], "dwfi_wise_files")
+
+              filename = part.filename
+              raise "No filename included in upload" unless filename.is_a?(String)
+
+              unique_name = MyFile.get_unique_filename(data_dir, filename)
+              target_path = File.join(data_dir, unique_name)
+              File.open(target_path, "w") do |f|
+                IO.copy(part.body, f)
+              end
+
+              file.name = unique_name
+              file.url = "/dwfi_wise_files/" + unique_name
+            end
+          end
+        end
+
+        changeset = Repo.insert(file)
+        raise changeset.errors.to_s unless changeset.valid?
+      end
+
       def self.get_unique_filename(path, filename)
         ext = File.extname(filename)
         name = filename[0, (filename.size - ext.size)]

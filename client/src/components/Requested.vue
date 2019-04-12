@@ -251,7 +251,7 @@
             <button class="button" @click="addPublication">Add Publication</button>
           </div>
           <div class="control">
-            <button class="button" @click="addPublication">Create New Publication</button>
+            <button class="button" @click="openNewPublicationModal">Create New Publication</button>
           </div>
         </div>
       </div>
@@ -290,7 +290,7 @@
             <button class="button" @click="addFile">Add File</button>
           </div>
           <div class="control">
-            <button class="button" @click="addFile">Create New File</button>
+            <button class="button" @click="openNewFileModal">Create New File</button>
           </div>
         </div>
       </div>
@@ -641,6 +641,20 @@ export default {
     },
     openNewGrantModal () {
       this.$store.commit('modals/openNewGrantModal', {
+        source: this.thing,
+        key: this.key,
+        callback: { context: this, method: this.requestResources, args: []}
+      })
+    },
+    openNewPublicationModal () {
+      this.$store.commit('modals/openNewPublicationModal', {
+        source: this.thing,
+        key: this.key,
+        callback: { context: this, method: this.requestResources, args: []}
+      })
+    },
+    openNewFileModal () {
+      this.$store.commit('modals/openNewFileModal', {
         source: this.thing,
         key: this.key,
         callback: { context: this, method: this.requestResources, args: []}

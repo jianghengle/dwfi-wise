@@ -200,6 +200,7 @@ module MyServer
       end
 
       def self.get_program_by_key(key)
+        raise "empty key" if key.empty?
         query = Query.where(request: key)
         items = Repo.all(Program, query)
         raise "cannot find program" if items.nil?
