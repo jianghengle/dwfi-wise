@@ -155,7 +155,7 @@ module MyServer
         Repo.update_all(Project, query, {program_id: nil})
       end
 
-      def self.request_project_update(id, request)
+      def self.request_project_update(id, request, user)
         project = Repo.get(Project, id)
         project = project.as(Project)
         if request
@@ -164,7 +164,7 @@ module MyServer
             changeset = Repo.update(project)
             raise changeset.errors.to_s unless changeset.valid?
           end
-          # send email
+          Project.send_request_email(project, user)
         else
           unless project.request.to_s.empty?
             project.request = ""
@@ -182,6 +182,59 @@ module MyServer
         items = items.as(Array)
         raise "cannot find project" if items.empty?
         items[0]
+      end
+
+      def self.get_project_people(project)
+        people_relations = PeopleRelation.get_relations("projects", project.id)
+        return [] of People if people_relations.empty?
+        people_ids = people_relations.map { |i| i.people_id }
+        People.get_people_map(people_ids).values
+      end
+
+      def self.send_request_email(project, sender)
+        return unless (ENV.has_key?("EMAIL_USERNAME") && ENV.has_key?("EMAIL_PASSWORD"))
+        email_username = ENV["EMAIL_USERNAME"]
+        email_password = ENV["EMAIL_PASSWORD"]
+
+        # Create email message
+        email = EMail::Message.new
+        email.from sender.email.to_s
+
+        people = Project.get_project_people(project)
+        return if people.empty?
+        people.each do |p|
+          email.to p.email.to_s unless (p.email.nil? || p.email.to_s.empty?)
+        end
+
+        email.subject "Update Project in UNDA Database"
+        email.message <<-EOM
+          Hi,
+
+          Our record indicates that you are associated with an UNDA project:
+          #{project.title.to_s}
+
+          Could you please open the link below in your browser to review or update this project?
+          https://glodet.nebraska.edu:4000/index.html#/requested/project/#{project.request.to_s}
+
+
+          Thanks,
+          UNDA Administrator (#{sender.email.to_s})
+          EOM
+
+        # Set SMTP client configuration
+        config = EMail::Client::Config.new("hcc.unl.edu", 25)
+        config.use_tls
+        config.openssl_verify_mode = OpenSSL::SSL::VerifyMode::NONE
+        config.use_auth(email_username, email_password)
+        config.logger = Logger.new(STDOUT)
+
+        # Create SMTP client object
+        client = EMail::Client.new(config)
+
+        client.start do
+          # In this block, default receiver is client
+          send(email)
+        end
       end
     end
   end

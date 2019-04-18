@@ -180,7 +180,7 @@ module MyServer
         "[" + result + "]"
       end
 
-      def self.request_program_update(id, request)
+      def self.request_program_update(id, request, user)
         program = Repo.get(Program, id)
         program = program.as(Program)
         if request
@@ -189,7 +189,7 @@ module MyServer
             changeset = Repo.update(program)
             raise changeset.errors.to_s unless changeset.valid?
           end
-          # send email
+          Program.send_request_email(program, user)
         else
           unless program.request.to_s.empty?
             program.request = ""
@@ -207,6 +207,59 @@ module MyServer
         items = items.as(Array)
         raise "cannot find program" if items.empty?
         items[0]
+      end
+
+      def self.get_program_people(program)
+        people_relations = PeopleRelation.get_relations("programs", program.id)
+        return [] of People if people_relations.empty?
+        people_ids = people_relations.map { |i| i.people_id }
+        People.get_people_map(people_ids).values
+      end
+
+      def self.send_request_email(program, sender)
+        return unless (ENV.has_key?("EMAIL_USERNAME") && ENV.has_key?("EMAIL_PASSWORD"))
+        email_username = ENV["EMAIL_USERNAME"]
+        email_password = ENV["EMAIL_PASSWORD"]
+
+        # Create email message
+        email = EMail::Message.new
+        email.from sender.email.to_s
+
+        people = Program.get_program_people(program)
+        return if people.empty?
+        people.each do |p|
+          email.to p.email.to_s unless (p.email.nil? || p.email.to_s.empty?)
+        end
+
+        email.subject "Update Program in UNDA Database"
+        email.message <<-EOM
+          Hi,
+
+          Our record indicates that you are associated with an UNDA program:
+          #{program.title.to_s}
+
+          Could you please open the link below in your browser to review or update this program?
+          https://glodet.nebraska.edu:4000/index.html#/requested/program/#{program.request.to_s}
+
+
+          Thanks,
+          UNDA Administrator (#{sender.email.to_s})
+          EOM
+
+        # Set SMTP client configuration
+        config = EMail::Client::Config.new("hcc.unl.edu", 25)
+        config.use_tls
+        config.openssl_verify_mode = OpenSSL::SSL::VerifyMode::NONE
+        config.use_auth(email_username, email_password)
+        config.logger = Logger.new(STDOUT)
+
+        # Create SMTP client object
+        client = EMail::Client.new(config)
+
+        client.start do
+          # In this block, default receiver is client
+          send(email)
+        end
       end
     end
   end

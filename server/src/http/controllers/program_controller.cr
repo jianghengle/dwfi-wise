@@ -203,7 +203,7 @@ module MyServer
           raise "Permission denied" unless user.privileges.to_s == "Approve"
           id = get_param!(ctx, "id").to_i
           request = get_param!(ctx, "request") == "true"
-          Program.request_program_update(id, request)
+          Program.request_program_update(id, request, user)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")

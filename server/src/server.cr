@@ -3,6 +3,7 @@ require "crecto"
 require "kemal"
 require "json"
 require "crypto/bcrypt/password"
+require "email"
 
 require "./http/models/*"
 require "./http/errors/*"
