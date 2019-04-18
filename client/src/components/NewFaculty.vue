@@ -202,6 +202,8 @@ export default {
       this.$http.get(xHTTPx + '/get_people').then(response => {
         this.allPeople = response.body.map(function(p){
           return {id: p.id, label: p.firstName + ' ' + p.lastName + ' [' + p.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
     },

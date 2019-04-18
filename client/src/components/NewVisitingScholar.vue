@@ -507,26 +507,36 @@ export default {
       this.$http.get(xHTTPx + '/get_people').then(response => {
         this.allPeople = response.body.map(function(p){
           return {id: p.id, label: p.firstName + ' ' + p.lastName + ' [' + p.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
       this.$http.get(xHTTPx + '/get_publications').then(response => {
         this.allPublications = response.body.map(function(p){
           return {id: p.id, label: p.title + ' [' + p.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
       this.$http.get(xHTTPx + '/get_files').then(response => {
         this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
       this.$http.get(xHTTPx + '/get_grants').then(response => {
         this.allGrants = response.body.map(function(g){
           return {id: g.id, label: g.organization + ' [' + g.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
       this.$http.get(xHTTPx + '/get_programs').then(response => {
         this.allPrograms = response.body.map(function(p){
           return {id: p.id, label: p.title + ' [' + p.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
         this.allPrograms.unshift({id: null, label: 'None'})
       })

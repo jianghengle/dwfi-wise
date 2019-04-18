@@ -325,6 +325,8 @@ export default {
       this.$http.get(xHTTPx + '/get_files').then(response => {
         this.allFiles = response.body.map(function(f){
           return {id: f.id, label: f.name + ' [' + f.id + ']'}
+        }).sort(function(a, b){
+          return a.label.localeCompare(b.label)
         })
       })
     },
