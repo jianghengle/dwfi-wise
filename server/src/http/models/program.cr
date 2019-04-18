@@ -223,7 +223,7 @@ module MyServer
 
         # Create email message
         email = EMail::Message.new
-        email.from sender.email.to_s
+        email.from "support@hcc.unl.edu"
 
         people = Program.get_program_people(program)
         return if people.empty?
@@ -245,23 +245,6 @@ module MyServer
 
           Thanks,
           UNDA Administrator (#{sender.email.to_s})
-          EOM
-
-        email.message_html <<-EOM
-          <html>
-            <body>
-              <p>Hi,</p>
-              <p>Our record indicates that you are associated with an UNDA program: </p>
-              <p><strong>#{program.title.to_s}</p>
-              <p>Could you please open the link below in your browser to review or update this program?</p>
-              <p><a href="#{link}">#{link}</a></p>
-              <br /><br />
-              <p>
-                Thanks,<br />
-                UNDA Administrator (#{sender.email.to_s})
-              </p>
-            </body>
-          </html>
           EOM
 
         # Set SMTP client configuration
