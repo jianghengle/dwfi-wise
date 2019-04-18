@@ -232,6 +232,7 @@ module MyServer
         end
 
         email.subject "Update Program in UNDA Database"
+        link = "https://glodet.nebraska.edu:4000/index.html#/requested/program/#{program.request.to_s}"
         email.message <<-EOM
           Hi,
 
@@ -239,11 +240,28 @@ module MyServer
           #{program.title.to_s}
 
           Could you please open the link below in your browser to review or update this program?
-          https://glodet.nebraska.edu:4000/index.html#/requested/program/#{program.request.to_s}
+          #{link}
 
 
           Thanks,
           UNDA Administrator (#{sender.email.to_s})
+          EOM
+
+        email.message_html <<-EOM
+          <html>
+            <body>
+              <p>Hi,</p>
+              <p>Our record indicates that you are associated with an UNDA program: </p>
+              <p><strong>#{program.title.to_s}</p>
+              <p>Could you please open the link below in your browser to review or update this program?</p>
+              <p><a href="#{link}">#{link}</a></p>
+              <br /><br />
+              <p>
+                Thanks,<br />
+                UNDA Administrator (#{sender.email.to_s})
+              </p>
+            </body>
+          </html>
           EOM
 
         # Set SMTP client configuration
