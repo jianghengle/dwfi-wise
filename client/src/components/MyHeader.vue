@@ -108,7 +108,7 @@ export default {
   mounted () {
     if(this.token){
       Vue.http.headers.common['Authorization'] = this.token
-    }else if(this.$route.name != 'Requested'){
+    }else if(this.$route.name != 'Requested' && this.$route.name != 'RequestNewProject' && this.$route.name != 'RequestNewProgram'){
       this.$router.replace('/sign_in')
     }
   }

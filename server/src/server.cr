@@ -71,6 +71,10 @@ module MyServer
         HttpAPI::ProgramController.create_program(env)
       end
 
+      post "/new_program_by_requested" do |env|
+        HttpAPI::ProgramController.new_program_by_requested(env)
+      end
+
       post "/update_program/:id" do |env|
         HttpAPI::ProgramController.update_program(env)
       end
@@ -113,6 +117,10 @@ module MyServer
 
       post "/create_project" do |env|
         HttpAPI::ProjectController.create_project(env)
+      end
+
+      post "/new_project_by_requested" do |env|
+        HttpAPI::ProjectController.new_project_by_requested(env)
       end
 
       post "/update_project/:id" do |env|

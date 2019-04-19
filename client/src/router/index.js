@@ -24,6 +24,8 @@ import NewFile from '@/components/NewFile'
 import Grant from '@/components/Grant'
 import NewGrant from '@/components/NewGrant'
 import Requested from '@/components/Requested'
+import RequestNewProgram from '@/components/RequestNewProgram'
+import RequestNewProject from '@/components/RequestNewProject'
 
 Vue.use(Router)
 
@@ -152,6 +154,16 @@ export default new Router({
       path: '/requested/:thing/:key',
       name: 'Requested',
       component: Requested
+    },
+    {
+      path: '/request_new_program/:thing/:key',
+      name: 'RequestNewProgram',
+      component: RequestNewProgram
+    },
+    {
+      path: '/request_new_project/:thing/:key',
+      name: 'RequestNewProject',
+      component: RequestNewProject
     },
   ]
 })

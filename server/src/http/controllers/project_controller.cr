@@ -83,6 +83,57 @@ module MyServer
         end
       end
 
+      def new_project_by_requested(ctx)
+        begin
+          source = get_param!(ctx, "source")
+          key = get_param!(ctx, "key")
+          if source == "program"
+            Program.get_program_by_key(key)
+          elsif source == "project"
+            Project.get_project_by_key(key)
+          else
+            raise "Not such source"
+          end
+
+          project = Project.new
+          project.title = get_param!(ctx, "title")
+          project.description = get_param!(ctx, "description")
+          project.status = get_param!(ctx, "status")
+          project.country = get_param!(ctx, "country")
+          project.state = get_param!(ctx, "state")
+          project.focus_area = get_param!(ctx, "focusArea")
+          program_id = get_param!(ctx, "programId")
+          project.program_id = program_id.to_i unless program_id == ""
+          start_date = get_param!(ctx, "startDate")
+          project.start_date = Time.unix(start_date.to_i) unless start_date == ""
+          end_date = get_param!(ctx, "endDate")
+          project.end_date = Time.unix(end_date.to_i) unless end_date == ""
+          project.funding = get_param!(ctx, "funding")
+          project.collaborators = get_param!(ctx, "collaborators")
+          project.more_information = get_param!(ctx, "moreInformation")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          project.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
+          project.website = get_param!(ctx, "website")
+          project.is_published = get_param!(ctx, "isPublished") == "true"
+          progress = get_param!(ctx, "progress")
+          project.progress = progress unless progress == ""
+          progress_time = get_param!(ctx, "progressTime")
+          project.progress_time = Time.unix(progress_time.to_i) unless progress_time == ""
+
+          people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
+          publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
+          files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
+
+          Project.create_project(project, people, publications, files, grants)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
       def update_project(ctx)
         begin
           user = verify_token(ctx)

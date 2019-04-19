@@ -8,7 +8,6 @@ module MyServer
 
       def get_programs(ctx)
         begin
-          user = verify_token(ctx)
           items = Program.get_programs
           "[" + (items.join(", ") { |i| i.to_json }) + "]"
         rescue ex : InsufficientParameters
@@ -43,6 +42,56 @@ module MyServer
         begin
           user = verify_token(ctx)
           raise "Permission denied" unless (user.privileges.to_s == "Edit" || user.privileges.to_s == "Approve")
+
+          program = Program.new
+          program.title = get_param!(ctx, "title")
+          program.description = get_param!(ctx, "description")
+          program.status = get_param!(ctx, "status")
+          program.country = get_param!(ctx, "country")
+          program.state = get_param!(ctx, "state")
+          program.focus_area = get_param!(ctx, "focusArea")
+          start_date = get_param!(ctx, "startDate")
+          program.start_date = Time.unix(start_date.to_i) unless start_date == ""
+          end_date = get_param!(ctx, "endDate")
+          program.end_date = Time.unix(end_date.to_i) unless end_date == ""
+          program.funding = get_param!(ctx, "funding")
+          program.collaborators = get_param!(ctx, "collaborators")
+          program.more_information = get_param!(ctx, "moreInformation")
+          point_of_contact = get_param!(ctx, "pointOfContact")
+          program.point_of_contact = point_of_contact.to_i unless point_of_contact == ""
+          program.website = get_param!(ctx, "website")
+          progress = get_param!(ctx, "progress")
+          program.progress = progress unless progress == ""
+          progress_time = get_param!(ctx, "progressTime")
+          program.progress_time = Time.unix(progress_time.to_i) unless progress_time == ""
+
+          program.is_published = get_param!(ctx, "isPublished") == "true"
+
+          people = Array(PeopleRelation).from_json(get_param!(ctx, "people"))
+          publications = Array(PublicationRelation).from_json(get_param!(ctx, "publications"))
+          files = Array(FileRelation).from_json(get_param!(ctx, "files"))
+          grants = Array(GrantRelation).from_json(get_param!(ctx, "grants"))
+
+          Program.create_program(program, people, publications, files, grants)
+          {ok: true}.to_json
+        rescue ex : InsufficientParameters
+          error(ctx, "Not all required parameters were present")
+        rescue e : Exception
+          error(ctx, e.message.to_s)
+        end
+      end
+
+      def new_program_by_requested(ctx)
+        begin
+          source = get_param!(ctx, "source")
+          key = get_param!(ctx, "key")
+          if source == "program"
+            Program.get_program_by_key(key)
+          elsif source == "project"
+            Project.get_project_by_key(key)
+          else
+            raise "Not such source"
+          end
 
           program = Program.new
           program.title = get_param!(ctx, "title")
