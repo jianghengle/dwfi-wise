@@ -216,36 +216,18 @@ module MyServer
         People.get_people_map(people_ids).values
       end
 
-      def self.send_request_email(program, sender)
+      def self.send_request_email(program, user)
         return unless (ENV.has_key?("EMAIL_USERNAME") && ENV.has_key?("EMAIL_PASSWORD"))
         email_username = ENV["EMAIL_USERNAME"]
         email_password = ENV["EMAIL_PASSWORD"]
 
-        # Create email message
-        email = EMail::Message.new
-        email.from "support@hcc.unl.edu"
-
         people = Program.get_program_people(program)
         return if people.empty?
-        people.each do |p|
-          email.to p.email.to_s unless (p.email.nil? || p.email.to_s.empty?)
-        end
 
-        email.subject "Update Program in UNDA Database"
+        # Create email message
         link = "https://glodet.nebraska.edu:4000/index.html#/requested/program/#{program.request.to_s}"
-        email.message <<-EOM
-          Hi,
-
-          Our record indicates that you are associated with an UNDA program:
-          #{program.title.to_s}
-
-          Could you please open the link below in your browser to review or update this program?
-          #{link}
-
-
-          Thanks,
-          UNDA Administrator (#{sender.email.to_s})
-          EOM
+        create_program_link = "https://glodet.nebraska.edu:4000/index.html#/request_new_program/program/#{program.request.to_s}"
+        create_project_link = "https://glodet.nebraska.edu:4000/index.html#/request_new_project/program/#{program.request.to_s}"
 
         # Set SMTP client configuration
         config = EMail::Client::Config.new("hcc.unl.edu", 25)
@@ -254,12 +236,49 @@ module MyServer
         config.use_auth(email_username, email_password)
         config.logger = Logger.new(STDOUT)
 
-        # Create SMTP client object
-        client = EMail::Client.new(config)
+        # Create concurrent sender object
+        sender = EMail::ConcurrentSender.new(config)
 
-        client.start do
-          # In this block, default receiver is client
-          send(email)
+        # Sending emails with concurrently 3 connections.
+        sender.number_of_connections = 3
+
+        # Sending max 10 emails by 1 connection.
+        sender.messages_per_connection = 10
+
+        # Start email sending.
+        sender.start do
+          # In this block, default receiver is sender
+          people.each do |p|
+            next if (p.email.nil? || p.email.to_s.empty?)
+
+            # Create email message
+            mail = EMail::Message.new
+            mail.from "support@hcc.unl.edu"
+            mail.subject "Update Program in UNDA Database"
+            mail.to p.email.to_s
+            mail.message <<-EOM
+              Dear #{p.first_name.to_s},
+
+              Our records indicate that you are associated with the program #{program.title.to_s} in the UNDA database.
+              Please open the link below in your browser to review, and if needed update, the information associated with your program.
+              #{link}
+
+              The UNDA database showcases the work of the University of Nebraska towards the vision of a water and food secure world, and includes work by DWFI, Faculty Fellows, the Nebraska Water Center, the Water Sciences Laboratory, and associated staff and scholars.  High-level information about each program, including description, focus area, status, start and end dates, country, and people involved is displayed on an interactive map on the DWFI website.  Each Faculty involved will have a link out to his or her department research website.  In addition, DWFI uses the UNDA database to collect quarterly program updates to share with the Robert B. Daugherty Foundation and our Board of Directors.
+
+              You can view the interactive map here: https://waterforfood.nebraska.edu/our-work.
+              To add a new program or a project to a map, please complete these forms:
+              #{create_program_link}
+              #{create_project_link}
+
+              Questions or comments may be directed to Lacey Bodnar, Research Project Manager, at lbodnar@nebraska.edu.
+
+              Thank you,
+              DWFI
+              EOM
+
+            # Enqueue the email to sender
+            enqueue mail
+          end
         end
       end
     end
