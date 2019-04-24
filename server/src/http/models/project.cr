@@ -241,9 +241,6 @@ module MyServer
               The UNDA database showcases the work of the University of Nebraska towards the vision of a water and food secure world, and includes work by DWFI, Faculty Fellows, the Nebraska Water Center, the Water Sciences Laboratory, and associated staff and scholars.  High-level information about each project, including description, focus area, status, start and end dates, country, and people involved is displayed on an interactive map on the DWFI website.  Each Faculty involved will have a link out to his or her department research website.  In addition, DWFI uses the UNDA database to collect quarterly project updates to share with the Robert B. Daugherty Foundation and our Board of Directors.
 
               You can view the interactive map here: https://waterforfood.nebraska.edu/our-work.
-              To add a new program or a project to a map, please complete these forms:
-              #{create_program_link}
-              #{create_project_link}
 
               Questions or comments may be directed to Lacey Bodnar, Research Project Manager, at lbodnar@nebraska.edu.
 
