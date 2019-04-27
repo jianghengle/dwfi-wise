@@ -142,8 +142,17 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <div class="select">
-              <select v-model="state" :disabled="privileges == 'Read Only'">
+            <div class="selected-multiple-options">
+              {{stateInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="stateInput.join(', ') != state" @click="stateInput = state ? state.split(', ') : []">
+                <icon name="reply"></icon>
+              </span>
+              <span class="icon is-small restore-icon" v-if="stateInput.join(', ') == state && stateInput.length" @click="stateInput = []">
+                <icon name="remove"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple" v-if="privileges == 'Edit' || privileges == 'Approve'">
+              <select multiple v-model="stateInput" size="3">
                 <option v-for="s in states">{{s}}</option>
               </select>
             </div>
@@ -523,6 +532,7 @@ export default {
       country: '',
       countryInput: [],
       state: '',
+      stateInput: [],
       focusArea: '',
       focusAreaInput: [],
       startDate: null,
@@ -682,7 +692,7 @@ export default {
         description: this.description,
         status: this.status,
         country: this.countryInput.join(', '),
-        state: this.state,
+        state: (this.countryInput.length == 1 && this.countryInput[0] == 'United States of America') ? this.stateInput.join(', ') : this.state,
         focusArea: this.focusAreaInput.join(', '),
         startDate: this.startDate,
         endDate: this.endDate,
@@ -707,6 +717,7 @@ export default {
         this.country = resp[0].country ? resp[0].country : ''
         this.countryInput = this.country ? this.country.split(', ') : []
         this.state = resp[0].state
+        this.stateInput = this.state ? this.state.split(', ') : []
         this.focusArea = resp[0].focusArea
         this.focusAreaInput = resp[0].focusArea.split(', ')
         this.startDate = resp[0].startDate? (new Date(resp[0].startDate*1000)) : null
@@ -838,7 +849,7 @@ export default {
         description: this.description,
         status: this.status,
         country: this.countryInput.join(', '),
-        state: this.state,
+        state: (this.countryInput.length == 1 && this.countryInput[0] == 'United States of America') ? this.stateInput.join(', ') : this.state,
         focusArea: this.focusAreaInput.join(', '),
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),

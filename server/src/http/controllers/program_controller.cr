@@ -295,6 +295,7 @@ module MyServer
           program.end_date = Time.unix(end_date.to_i) unless end_date == ""
           program.funding = get_param!(ctx, "funding")
           program.collaborators = get_param!(ctx, "collaborators")
+          program.website = get_param!(ctx, "website")
 
           progress = get_param!(ctx, "progress")
           progress = nil if progress == ""

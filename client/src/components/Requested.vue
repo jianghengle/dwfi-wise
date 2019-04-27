@@ -82,8 +82,17 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <div class="select">
-              <select v-model="state">
+            <div class="selected-multiple-options">
+              {{stateInput.join(', ')}}
+              <span class="icon is-small restore-icon" v-if="stateInput.join(', ') != state" @click="stateInput = state ? state.split(', ') : []">
+                <icon name="reply"></icon>
+              </span>
+              <span class="icon is-small restore-icon" v-if="stateInput.join(', ') == state && stateInput.length" @click="stateInput = []">
+                <icon name="remove"></icon>
+              </span>
+            </div>
+            <div class="select is-multiple">
+              <select multiple v-model="stateInput" size="3">
                 <option v-for="s in states">{{s}}</option>
               </select>
             </div>
@@ -213,6 +222,19 @@
         <div class="field">
           <div class="control">
             <input class="input" type="text" v-model="collaborators">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Website</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" v-model="website">
           </div>
         </div>
       </div>
@@ -366,11 +388,13 @@ export default {
       country: '',
       countryInput: [],
       state: '',
+      stateInput: [],
       startDate: null,
       endDate: null,
       grants: [],
       funding: '',
       collaborators: '',
+      website: '',
       publications: [],
       files: [],
       progress: '',
@@ -497,11 +521,12 @@ export default {
         description: this.description,
         status: this.status,
         country: this.countryInput.join(', '),
-        state: this.state,
+        state: (this.countryInput.length == 1 && this.countryInput[0] == 'United States of America') ? this.stateInput.join(', ') : this.state,
         startDate: this.startDate,
         endDate: this.endDate,
         funding: this.funding,
         collaborators: this.collaborators,
+        website: this.website,
         progress: this.progress,
         progressTime: this.progressTime
       }
@@ -516,10 +541,12 @@ export default {
         this.country = resp[0].country ? resp[0].country : ''
         this.countryInput = this.country ? this.country.split(', ') : []
         this.state = resp[0].state
+        this.stateInput = this.state ? this.state.split(', ') : []
         this.startDate = resp[0].startDate? (new Date(resp[0].startDate*1000)) : null
         this.endDate = resp[0].endDate? (new Date(resp[0].endDate*1000)) : null
         this.funding = resp[0].funding
         this.collaborators = resp[0].collaborators
+        this.website = resp[0].website
         this.progress = resp[0].progress
         this.progressTime = resp[0].progressTime? (new Date(resp[0].progressTime*1000)) : null
         this.oldThing = this.collectThing()
@@ -616,11 +643,12 @@ export default {
         description: this.description,
         status: this.status,
         country: this.countryInput.join(', '),
-        state: this.state,
+        state: (this.countryInput.length == 1 && this.countryInput[0] == 'United States of America') ? this.stateInput.join(', ') : this.state,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
         endDate: this.endDate == null ? null : Math.floor(this.endDate / 1000),
         funding: this.funding,
         collaborators: this.collaborators,
+        website: this.website,
         progress: this.progress,
         publications: JSON.stringify(this.changedPublications),
         files: JSON.stringify(this.changedFiles),

@@ -119,8 +119,14 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <div class="select">
-              <select v-model="state">
+            <div class="selected-multiple-options">
+              {{stateInput.join(', ')}}
+              <a class="button is-text clear-country-button" @click="stateInput = []" v-if="stateInput.length">
+                <icon name="remove"></icon>
+              </a>
+            </div>
+            <div class="select is-multiple">
+              <select multiple v-model="stateInput" size="3">
                 <option v-for="s in states">{{s}}</option>
               </select>
             </div>
@@ -469,6 +475,7 @@ export default {
       country: '',
       countryInput: [],
       state: '',
+      stateInput: [],
       focusArea: '',
       focusAreaInput: [],
       programId: null,
@@ -573,7 +580,7 @@ export default {
         description: this.description,
         status: this.status,
         country: this.countryInput.join(', '),
-        state: this.state,
+        state: (this.countryInput.length == 1 && this.countryInput[0] == 'United States of America') ? this.stateInput.join(', ') : this.state,
         focusArea: this.focusAreaInput.join(', '),
         programId: this.programId,
         startDate: this.startDate == null ? null : Math.floor(this.startDate / 1000),
