@@ -289,14 +289,12 @@ module MyServer
 
               <footer>
               DWFI <br />
-              <img src="cid:logo@glodet.nebraska.edu">
+              <img src=\"https://glodet.nebraska.edu:4000/dwfi_logo.png\" />
               </footer>
 
               </body>
               </html>
               EOM
-
-            mail.message_resource "./dwfi_logo.png", cid: "logo@glodet.nebraska.edu"
 
             # Enqueue the email to sender
             enqueue mail

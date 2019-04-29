@@ -231,21 +231,43 @@ module MyServer
             mail.from "support@hcc.unl.edu"
             mail.subject "Update Project in UNDA Database"
             mail.to p.email.to_s
-            mail.message <<-EOM
-              Dear #{p.first_name.to_s},
+            mail.message_html <<-EOM
+              <html>
+              <body>
+              <p>Dear #{p.first_name.to_s},</p>
 
-              Our records indicate that you are associated with the project #{project.title} in the UNDA database.
-              Please open the link below in your browser to review, and if needed update, the information associated with your project.
-              #{link}
+              <p>
+              Our records indicate that you are associated with the project #{project.title.to_s} in the UNDA database.
+              Please open this <a href=\"#{link}\">link</a> below in your browser to review, and if needed update, the information associated with your project.
+              </p>
 
-              The UNDA database showcases the work of the University of Nebraska towards the vision of a water and food secure world, and includes work by DWFI, Faculty Fellows, the Nebraska Water Center, the Water Sciences Laboratory, and associated staff and scholars.  High-level information about each project, including description, focus area, status, start and end dates, country, and people involved is displayed on an interactive map on the DWFI website.  Each Faculty involved will have a link out to his or her department research website.  In addition, DWFI uses the UNDA database to collect quarterly project updates to share with the Robert B. Daugherty Foundation and our Board of Directors.
+              <p>
+              The UNDA database showcases the work of the University of Nebraska towards the vision of a water and food secure world, and includes work by DWFI, Faculty Fellows, the Nebraska Water Center, the Water Sciences Laboratory, and associated staff and scholars.  High-level information about each program, including description, focus area, status, start and end dates, country, and people involved is displayed on an interactive map on the DWFI website.  Each Faculty involved will have a link out to his or her department research website.  In addition, DWFI uses the UNDA database to collect quarterly program updates to share with the Robert B. Daugherty Foundation and our Board of Directors.
+              </p>
 
-              You can view the interactive map here: https://waterforfood.nebraska.edu/our-work.
+              <p>
+              You can view the interactive map here: <a href=\"https://waterforfood.nebraska.edu/our-work\">https://waterforfood.nebraska.edu/our-work</a>.
+              </p>
 
-              Questions or comments may be directed to Lacey Bodnar, Research Project Manager, at lbodnar@nebraska.edu.
+              <p>
+              To add a new program or a project to a map, please complete these forms: <br />
+              <a href=\"#{create_program_link}\">New Program</a> <br />
+              <a href=\"#{create_project_link}\">New Project</a> <br />
+              </p>
 
-              Thank you,
-              DWFI
+              <p>
+              Questions or comments may be directed to Lacey Bodnar, Research Project Manager, at <a href=\"mailto:lbodnar@nebraska.edu\">lbodnar@nebraska.edu</a>.
+              </p>
+
+              <p>Thank you,</p>
+
+              <footer>
+              DWFI <br />
+              <img src=\"https://glodet.nebraska.edu:4000/dwfi_logo.png\" />
+              </footer>
+
+              </body>
+              </html>
               EOM
 
             # Enqueue the email to sender
