@@ -1,8 +1,6 @@
 #!/usr/bin/python
 import os, sys
 import requests
-import subprocess
-from requests.exceptions import Timeout
 
 def main(url, service):
     try:
