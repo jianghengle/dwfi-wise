@@ -273,6 +273,24 @@ module MyServer
               DWFI
               EOM
 
+            mail.message_html <<-EOM
+              Dear #{p.first_name.to_s},
+
+              html email:
+              Our records indicate that you are associated with the program #{program.title.to_s} in the UNDA database.
+              Please open the link below in your browser to review, and if needed update, the information associated with your program.
+              <a href=\"#{link}\">link</a>
+
+              The UNDA database showcases the work of the University of Nebraska towards the vision of a water and food secure world, and includes work by DWFI, Faculty Fellows, the Nebraska Water Center, the Water Sciences Laboratory, and associated staff and scholars.  High-level information about each program, including description, focus area, status, start and end dates, country, and people involved is displayed on an interactive map on the DWFI website.  Each Faculty involved will have a link out to his or her department research website.  In addition, DWFI uses the UNDA database to collect quarterly program updates to share with the Robert B. Daugherty Foundation and our Board of Directors.
+
+              You can view the interactive map here: https://waterforfood.nebraska.edu/our-work.
+
+              Questions or comments may be directed to Lacey Bodnar, Research Project Manager, at lbodnar@nebraska.edu.
+
+              Thank you,
+              DWFI
+              EOM
+
             # Enqueue the email to sender
             enqueue mail
           end
