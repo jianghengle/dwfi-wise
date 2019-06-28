@@ -274,6 +274,30 @@ var tables = {
       id: 'grantId',
       url: '/delete_grant'
     }
+  },
+  impacts: {
+    label: 'Impacts',
+    columns: [
+      {name: 'id', type: 'int', label: 'Id'},
+      {name: 'impactIndicator', type: 'str', label: 'Impact Indicator'},
+      {name: 'numberField', type: 'int', label: 'Number'}
+    ],
+    sort: {index: 0, asc: false},
+    search: '',
+    importOption: {
+      columns: ['impactIndicator', 'numberField'],
+      relations: {},
+      notes: [],
+      url: '/create_impact'
+    },
+    exportOption: {
+      columns: ['id', 'impactIndicator', 'numberField'],
+      relations: {},
+    },
+    deleteOption: {
+      id: 'impactId',
+      url: '/delete_impact'
+    }
   }
 }
 

@@ -26,6 +26,8 @@ import NewGrant from '@/components/NewGrant'
 import Requested from '@/components/Requested'
 import RequestNewProgram from '@/components/RequestNewProgram'
 import RequestNewProject from '@/components/RequestNewProject'
+import Impact from '@/components/Impact'
+import NewImpact from '@/components/NewImpact'
 
 Vue.use(Router)
 
@@ -164,6 +166,16 @@ export default new Router({
       path: '/request_new_project/:thing/:key',
       name: 'RequestNewProject',
       component: RequestNewProject
+    },
+    {
+      path: '/impacts/:id',
+      name: 'Impact',
+      component: Impact
+    },
+    {
+      path: '/new/impacts',
+      name: 'NewImpact',
+      component: NewImpact
     },
   ]
 })

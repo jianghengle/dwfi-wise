@@ -351,6 +351,26 @@ module MyServer
         HttpAPI::FacultyController.export_work_plans(env)
       end
 
+      get "/get_impacts" do |env|
+        HttpAPI::ImpactController.get_impacts(env)
+      end
+
+      get "/get_impact/:id" do |env|
+        HttpAPI::ImpactController.get_impact(env)
+      end
+
+      post "/create_impact" do |env|
+        HttpAPI::ImpactController.create_impact(env)
+      end
+
+      post "/update_impact/:id" do |env|
+        HttpAPI::ImpactController.update_impact(env)
+      end
+
+      post "/delete_impact" do |env|
+        HttpAPI::ImpactController.delete_impact(env)
+      end
+
       serve_static({"gzip" => true, "dir_listing" => true})
 
       Kemal.run 4000

@@ -297,6 +297,18 @@ class WorkPlan < Crecto::Model
   end
 end
 
+class Impact < Crecto::Model
+  schema "impacts" do
+    field :impact_indicator, String
+    field :number_field, Int64
+  end
+
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.email.to_s == "jianghengle@gmail.com"
+  end
+end
+
 CrectoAdmin.config do |config|
   config.auth_enabled = true
   config.auth = CrectoAdmin::DatabaseAuth
@@ -324,6 +336,7 @@ admin_resource(MyEvent, Repo)
 admin_resource(VisitingScholar, Repo)
 admin_resource(Faculty, Repo)
 admin_resource(WorkPlan, Repo)
+admin_resource(Impact, Repo)
 
 Kemal::Session.config do |config|
   config.secret = "sTHxjX3R"
