@@ -11,7 +11,7 @@ module MyServer
           str << "{"
           str << "\"id\":" << @id << ","
           str << "\"impactIndicator\":" << @impact_indicator.to_json << ","
-          str << "\"numberField\":" << @number_field
+          str << "\"numberField\":" << @number_field.to_json
           str << "}"
         end
         result
