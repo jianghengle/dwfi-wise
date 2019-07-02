@@ -38,7 +38,8 @@ module MyServer
 
           impact = Impact.new
           impact.impact_indicator = get_param!(ctx, "impactIndicator")
-          impact.number_field = get_param!(ctx, "numberField").to_i64
+          number_field = get_param!(ctx, "numberField")
+          impact.number_field = number_field.to_i64 unless number_field == ""
           Impact.create_impact(impact)
           {ok: true}.to_json
         rescue ex : InsufficientParameters
@@ -56,7 +57,8 @@ module MyServer
           impact = Impact.new
           impact.id = get_param!(ctx, "id").to_i
           impact.impact_indicator = get_param!(ctx, "impactIndicator")
-          impact.number_field = get_param!(ctx, "numberField").to_i64
+          number_field = get_param!(ctx, "numberField")
+          impact.number_field = number_field.to_i64 unless number_field == ""
 
           Impact.update_impact(impact)
           {ok: true}.to_json
