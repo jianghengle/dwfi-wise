@@ -65,6 +65,7 @@ module MyServer
         FileRelation.delete_relations("people", people_id)
         PeopleRelation.delete_people_relations(people_id)
         Faculty.delete_faculty_by_people_id(people_id)
+        Directory.delete_directory_by_people_id(people_id)
 
         people = Repo.get!(People, people_id)
         changeset = Repo.delete(people)

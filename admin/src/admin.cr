@@ -309,6 +309,24 @@ class Impact < Crecto::Model
   end
 end
 
+class Directory < Crecto::Model
+  schema "directories" do
+    field :people_id, Int64
+    field :typ, String
+    field :role, String
+    field :tags, String
+    field :institution, String
+    field :department, String
+    field :area, String
+    field :specialty, String
+  end
+
+  def self.can_access(user)
+    return false unless user.is_a? User
+    user.email.to_s == "jianghengle@gmail.com"
+  end
+end
+
 CrectoAdmin.config do |config|
   config.auth_enabled = true
   config.auth = CrectoAdmin::DatabaseAuth
@@ -337,6 +355,7 @@ admin_resource(VisitingScholar, Repo)
 admin_resource(Faculty, Repo)
 admin_resource(WorkPlan, Repo)
 admin_resource(Impact, Repo)
+admin_resource(Directory, Repo)
 
 Kemal::Session.config do |config|
   config.secret = "sTHxjX3R"

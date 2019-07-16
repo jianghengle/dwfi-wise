@@ -66,6 +66,7 @@ export default {
         {name: 'grants', label: 'Grants', path: '/table/grants'},
         {name: 'files', label: 'Files', path: '/table/files'},
         {name: 'impacts', label: 'Impacts', path: '/table/impacts'},
+        {name: 'directories', label: 'Directory', path: '/table/directories'},
       ],
       staticUrl: xHTTPx + '/dwfi_wise_files'
     }

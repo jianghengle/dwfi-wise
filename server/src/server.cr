@@ -371,6 +371,30 @@ module MyServer
         HttpAPI::ImpactController.delete_impact(env)
       end
 
+      get "/get_directories" do |env|
+        HttpAPI::DirectoryController.get_directories(env)
+      end
+
+      get "/get_directory/:id" do |env|
+        HttpAPI::DirectoryController.get_directory(env)
+      end
+
+      post "/create_directory" do |env|
+        HttpAPI::DirectoryController.create_directory(env)
+      end
+
+      post "/update_directory/:id" do |env|
+        HttpAPI::DirectoryController.update_directory(env)
+      end
+
+      post "/delete_directory" do |env|
+        HttpAPI::DirectoryController.delete_directory(env)
+      end
+
+      get "/kumu_directory" do |env|
+        HttpAPI::DirectoryController.kumu_directory(env)
+      end
+
       serve_static({"gzip" => true, "dir_listing" => true})
 
       Kemal.run 4000

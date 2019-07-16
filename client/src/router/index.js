@@ -28,6 +28,8 @@ import RequestNewProgram from '@/components/RequestNewProgram'
 import RequestNewProject from '@/components/RequestNewProject'
 import Impact from '@/components/Impact'
 import NewImpact from '@/components/NewImpact'
+import Directory from '@/components/Directory'
+import NewDirectory from '@/components/NewDirectory'
 
 Vue.use(Router)
 
@@ -176,6 +178,16 @@ export default new Router({
       path: '/new/impacts',
       name: 'NewImpact',
       component: NewImpact
+    },
+    {
+      path: '/new/directories',
+      name: 'NewDirectory',
+      component: NewDirectory
+    },
+    {
+      path: '/directories/:id',
+      name: 'Directory',
+      component: Directory
     },
   ]
 })

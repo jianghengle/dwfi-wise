@@ -4,7 +4,7 @@
       <a class="button back-button" @click="$router.go(-1)">
         <icon name="chevron-left"></icon>
       </a>&nbsp;&nbsp;&nbsp;&nbsp;
-      Faculty {{peopleId}}
+      Faculty {{facultyId}}
     </h4>
 
     <div class="has-text-centered" v-if="waiting">
@@ -202,7 +202,7 @@ import DateForm from 'dateformat'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
-  name: 'people',
+  name: 'faculty',
   components: {
     Datepicker
   },
