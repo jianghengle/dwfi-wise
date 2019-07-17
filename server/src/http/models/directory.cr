@@ -30,23 +30,21 @@ module MyServer
         end
       end
 
-      def to_kumu_json(people)
+      def to_kumu(people)
         String.build do |str|
           str << "{"
-          str << "\"id\":" << @id << ","
-          str << "\"peopleId\":" << @people_id << ","
           str << "\"Label\":" << (people.first_name.to_s + " " + people.last_name.to_s).to_json << ","
           str << "\"Type\":" << @typ.to_json << ","
           str << "\"Role\":" << @role.to_json << ","
-          str << "\"Tags\":" << @tags.to_json << ","
+          str << "\"Tags\":" << (@tags.to_s.split("|", remove_empty: true).map { |i| i.strip }).to_json << ","
           str << "\"Email\":" << people.email.to_json << ","
           str << "\"Institution\":" << @institution.to_json << ","
           str << "\"Department\":" << @department.to_json << ","
           str << "\"Title\":" << people.title.to_json << ","
           str << "\"Weblink\":" << people.website.to_json << ","
           str << "\"Phone\":" << people.phone.to_json << ","
-          str << "\"Area\":" << @area.to_json << ","
-          str << "\"Specialty\":" << @specialty.to_json
+          str << "\"Area\":" << (@area.to_s.split("|", remove_empty: true).map { |i| i.strip }).to_json << ","
+          str << "\"Specialty\":" << (@specialty.to_s.split("|", remove_empty: true).map { |i| i.strip }).to_json
           str << "}"
         end
       end

@@ -391,8 +391,8 @@ module MyServer
         HttpAPI::DirectoryController.delete_directory(env)
       end
 
-      get "/kumu_directory" do |env|
-        HttpAPI::DirectoryController.kumu_directory(env)
+      get "/kumu_map" do |env|
+        HttpAPI::DirectoryController.kumu_map(env)
       end
 
       serve_static({"gzip" => true, "dir_listing" => true})

@@ -21,14 +21,15 @@ module MyServer
         end
       end
 
-      def kumu_directory(ctx)
+      def kumu_map(ctx)
         begin
           items = Directory.get_directories
           return "[]" if items.empty?
 
           people_ids = items.map { |f| f.people_id }
           people_map = People.get_people_map(people_ids)
-          "[" + (items.join(", ") { |i| i.to_kumu_json(people_map[i.people_id.to_s]) }) + "]"
+          elements = "[" + (items.join(", ") { |i| i.to_kumu(people_map[i.people_id.to_s]) }) + "]"
+          "{\"elements\": #{elements}, \"connections\": []}"
         rescue ex : InsufficientParameters
           error(ctx, "Not all required parameters were present")
         rescue e : Exception
